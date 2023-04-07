@@ -31,7 +31,7 @@ func New(lg *zap.Logger, vp *viper.Viper, projects string) (Config, error) {
 		lg.Error("unable to decode into struct from file", zap.Error(err))
 		return Config{}, err
 	}
-	lg.Info("configuration has been set", zap.Reflect("config", cfg))
+	lg.Debug("configuration has been set", zap.Reflect("config", cfg))
 
 	return cfg, nil
 }

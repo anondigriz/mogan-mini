@@ -6,6 +6,8 @@ import (
 	"path"
 
 	"github.com/anondigriz/mogan-core/pkg/logger"
+	"github.com/anondigriz/mogan-editor/cmd/mogan/cli/create"
+	"github.com/anondigriz/mogan-editor/cmd/mogan/cli/version"
 	"github.com/anondigriz/mogan-editor/internal/config"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -45,6 +47,8 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgName, "cfgname", "cfg", "config file name")
 	rootCmd.PersistentFlags().StringVar(&cfgType, "cfgtype", "yaml", "config type")
 	cobra.OnInitialize(initConfig)
+	rootCmd.AddCommand(version.VersionCmd)
+	rootCmd.AddCommand(create.CreateCmd)
 }
 
 func initConfig() {
