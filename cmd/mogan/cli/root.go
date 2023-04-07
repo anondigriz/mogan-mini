@@ -6,9 +6,8 @@ import (
 	"path"
 
 	"github.com/anondigriz/mogan-core/pkg/logger"
-	"github.com/anondigriz/mogan-editor/cmd/mogan/cli/create"
-	"github.com/anondigriz/mogan-editor/cmd/mogan/cli/version"
-	"github.com/anondigriz/mogan-editor/internal/config"
+	"github.com/anondigriz/mogan-editor-cli/cmd/mogan/cli/create"
+	"github.com/anondigriz/mogan-editor-cli/internal/config"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -25,8 +24,9 @@ var (
 	cfgType  string
 	projects string
 	rootCmd  = &cobra.Command{
-		Use:   "mogan",
-		Short: "mogan is an editor of the Multidimensional Open Gnoseological Active Network",
+		Version: "v0.1",
+		Use:     "mogan",
+		Short:   "mogan is an editor of the Multidimensional Open Gnoseological Active Network",
 		Long: `A Lightweight and Flexible Editor of the Multidimensional Open Gnoseological Active Network (MOGAN) with
 	love by anondigriz and friends in Go. The MOGAN editor is a mathematical 
 	tool for designing artificial intelligence (AI) systems. The MOGAN is a 
@@ -47,7 +47,6 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgName, "cfgname", "cfg", "config file name")
 	rootCmd.PersistentFlags().StringVar(&cfgType, "cfgtype", "yaml", "config type")
 	cobra.OnInitialize(initConfig)
-	rootCmd.AddCommand(version.VersionCmd)
 	rootCmd.AddCommand(create.CreateCmd)
 }
 

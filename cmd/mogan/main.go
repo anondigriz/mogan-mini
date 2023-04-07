@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/anondigriz/mogan-editor/cmd/mogan/cli"
+	"github.com/anondigriz/mogan-editor-cli/cmd/mogan/cli"
 )
 
 func main() {
