@@ -1,10 +1,12 @@
-package create
+package cli
 
 import (
 	"fmt"
 
 	createModel "github.com/anondigriz/mogan-editor-cli/internal/tui/create"
+	"github.com/anondigriz/mogan-editor-cli/internal/utilities/dbcreator"
 	tea "github.com/charmbracelet/bubbletea"
+	"go.uber.org/zap"
 
 	"github.com/spf13/cobra"
 )
@@ -16,8 +18,6 @@ var (
 		Short: "Create a local knowledge base",
 		Long:  `Create a local knowledge base in the base project directory`,
 		Run: func(cmd *cobra.Command, args []string) {
-			// TODO run tea
-
 			if name == "" {
 				n, err := inputName()
 				if err != nil {
@@ -25,23 +25,37 @@ var (
 					return
 				}
 				if n == "" {
-					fmt.Printf("\n---\nYou did not enter the knowledge base name\n")
+					fmt.Printf("\n---\nYou did not enter the knowledge base name!\n")
 					return
 				}
 				name = n
 			}
 
 			fmt.Printf("\n---\nYou entered the knowledge base name: %s\n", name)
+
+			dc := dbcreator.New(lg, cfg)
+			st, err := dc.Create(cmd.Context(), dc.GenerateFilePath())
+			if err != nil {
+				lg.Error("fail to create database for the project of the knowledge base", zap.Error(err))
+				return
+			}
+			defer st.Shutdown()
+			err = st.Ping(cmd.Context())
+			if err != nil {
+				lg.Error("fail to ping database for the project of the knowledge base", zap.Error(err))
+				return
+			}
+			fmt.Printf("\n---\nEverything all right! The project has been created!: %s\n", name)
 		},
 	}
 )
 
-func init() {
+func initCreate() {
 	CreateCmd.PersistentFlags().StringVar(&name, "name", "", "config file")
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(initCreateConfig)
 }
 
-func initConfig() {
+func initCreateConfig() {
 }
 
 func inputName() (string, error) {

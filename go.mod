@@ -5,6 +5,9 @@ go 1.20
 require (
 	github.com/anondigriz/mogan-core v0.0.0-20230326110125-9e1aaeab5ddd
 	github.com/charmbracelet/bubbletea v0.23.2
+	github.com/google/uuid v1.3.0
+	github.com/mattn/go-sqlite3 v1.14.16
+	github.com/pressly/goose/v3 v3.10.0
 	github.com/spf13/viper v1.15.0
 	go.uber.org/zap v1.24.0
 )
@@ -44,7 +47,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
-	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

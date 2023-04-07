@@ -6,7 +6,6 @@ import (
 	"path"
 
 	"github.com/anondigriz/mogan-core/pkg/logger"
-	"github.com/anondigriz/mogan-editor-cli/cmd/mogan/cli/create"
 	"github.com/anondigriz/mogan-editor-cli/internal/config"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -46,11 +45,12 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&projects, "projects", "", "base project directory (default is \"$HOME/mogan\")")
 	rootCmd.PersistentFlags().StringVar(&cfgName, "cfgname", "cfg", "config file name")
 	rootCmd.PersistentFlags().StringVar(&cfgType, "cfgtype", "yaml", "config type")
-	cobra.OnInitialize(initConfig)
-	rootCmd.AddCommand(create.CreateCmd)
+	cobra.OnInitialize(initRootConfig)
+	rootCmd.AddCommand(CreateCmd)
+	initCreate()
 }
 
-func initConfig() {
+func initRootConfig() {
 	vp = viper.New()
 	err := initLogger()
 	if err != nil {
@@ -69,7 +69,7 @@ func initConfig() {
 		os.Exit(1)
 	}
 
-	con, err := config.New(lg, vp, projects)
+	con, err := config.New(lg, vp, debug, projects)
 	if err != nil {
 		lg.Error("fail to parse config", zap.Error(err))
 		os.Exit(1)
