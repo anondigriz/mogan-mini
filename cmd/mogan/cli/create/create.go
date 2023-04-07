@@ -2,7 +2,6 @@ package create
 
 import (
 	"fmt"
-	"os"
 
 	createModel "github.com/anondigriz/mogan-editor-cli/internal/tui/create"
 	tea "github.com/charmbracelet/bubbletea"
@@ -13,16 +12,26 @@ import (
 var (
 	name      string
 	CreateCmd = &cobra.Command{
-		Use:     "create",
-		Short:   "Create a local knowledge base",
-		Long:    `Create a local knowledge base in the base project directory`,
+		Use:   "create",
+		Short: "Create a local knowledge base",
+		Long:  `Create a local knowledge base in the base project directory`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// TODO run tea
-			p := tea.NewProgram(createModel.Initial())
-			if _, err := p.Run(); err != nil {
-				fmt.Printf("Alas, there's been an error: %v", err)
-				os.Exit(1)
+
+			if name == "" {
+				n, err := inputName()
+				if err != nil {
+					fmt.Printf("\n---\nError entering the name of the knowledge base name: %v\n", err)
+					return
+				}
+				if n == "" {
+					fmt.Printf("\n---\nYou did not enter the knowledge base name\n")
+					return
+				}
+				name = n
 			}
+
+			fmt.Printf("\n---\nYou entered the knowledge base name: %s\n", name)
 		},
 	}
 )
@@ -33,4 +42,18 @@ func init() {
 }
 
 func initConfig() {
+}
+
+func inputName() (string, error) {
+	p := tea.NewProgram(createModel.InitialNameModel())
+	m, err := p.Run()
+	if err != nil {
+		fmt.Printf("Alas, there's been an error: %v", err)
+		return "", err
+	}
+	if m, ok := m.(createModel.NameModel); ok && m.TextInput.Value() != "" {
+		n := m.TextInput.Value()
+		return n, nil
+	}
+	return "", fmt.Errorf("knowledge base name was not entered")
 }
