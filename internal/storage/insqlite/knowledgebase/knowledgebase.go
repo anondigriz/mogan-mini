@@ -1,4 +1,4 @@
-package knowledgebases
+package knowledgebase
 
 import (
 	"context"

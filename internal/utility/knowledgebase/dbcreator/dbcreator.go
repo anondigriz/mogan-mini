@@ -7,7 +7,7 @@ import (
 	"path"
 
 	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	"github.com/anondigriz/mogan-editor-cli/internal/storage/insqlite/knowledgebases"
+	"github.com/anondigriz/mogan-editor-cli/internal/storage/insqlite/knowledgebase"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
@@ -34,7 +34,7 @@ func (d *DBCreator) GenerateFilePath() string {
 	return file
 }
 
-func (d *DBCreator) Create(ctx context.Context, file string) (*knowledgebases.Storage, error) {
+func (d *DBCreator) Create(ctx context.Context, file string) (*knowledgebase.Storage, error) {
 	if _, err := os.Stat(file); err != nil {
 		file, err := os.Create(file)
 		if err != nil {
@@ -46,7 +46,7 @@ func (d *DBCreator) Create(ctx context.Context, file string) (*knowledgebases.St
 	}
 	dsn := fmt.Sprintf("file:%s", file)
 
-	st, err := knowledgebases.New(ctx, d.lg, dsn, d.cfg.Databases.LogLevel)
+	st, err := knowledgebase.New(ctx, d.lg, dsn, d.cfg.Databases.LogLevel)
 
 	if err != nil {
 		d.lg.Error("fail to init a new database for the project of the knowledge base", zap.Error(err))

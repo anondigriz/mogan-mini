@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	createModel "github.com/anondigriz/mogan-editor-cli/internal/tui/create"
-	"github.com/anondigriz/mogan-editor-cli/internal/utilities/dbcreator"
+	"github.com/anondigriz/mogan-editor-cli/internal/utility/knowledgebase/dbcreator"
 	tea "github.com/charmbracelet/bubbletea"
 	"go.uber.org/zap"
 
