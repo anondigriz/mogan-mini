@@ -14,15 +14,15 @@ import (
 )
 
 var (
-	debug       bool
-	lg          *zap.Logger
-	vp          *viper.Viper
-	cfg         config.Config
-	cfgFile     string
-	cfgName     string
-	cfgType     string
-	projectBase string
-	rootCmd     = &cobra.Command{
+	debug    bool
+	lg       *zap.Logger
+	vp       *viper.Viper
+	cfg      config.Config
+	cfgFile  string
+	cfgName  string
+	cfgType  string
+	projects string
+	rootCmd  = &cobra.Command{
 		Use:   "mogan",
 		Short: "mogan is an editor of the Multidimensional Open Gnoseological Active Network",
 		Long: `A Lightweight and Flexible Editor of the Multidimensional Open Gnoseological Active Network (MOGAN) with
@@ -41,42 +41,46 @@ var (
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&debug, "debug", "d", false, "enable debug mod")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is \"$HOME/mogan/cfg.yaml\")")
-	rootCmd.PersistentFlags().StringVar(&projectBase, "projectbase", "", "base project directory (default is \"$HOME/mogan\")")
+	rootCmd.PersistentFlags().StringVar(&projects, "projects", "", "base project directory (default is \"$HOME/mogan\")")
 	rootCmd.PersistentFlags().StringVar(&cfgName, "cfgname", "cfg", "config file name")
 	rootCmd.PersistentFlags().StringVar(&cfgType, "cfgtype", "yaml", "config type")
 	cobra.OnInitialize(initConfig)
 }
 
 func initConfig() {
-	// cfgType
 	vp = viper.New()
-	vp.BindPFlag("debug", rootCmd.PersistentFlags().Lookup("debug"))
-	err := initLogger(vp)
+	err := initLogger()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	err = setProjectBase()
+	err = initProjectsDir()
 	if err != nil {
 		lg.Error("fail to set a project base directory", zap.Error(err))
 		os.Exit(1)
 	}
 
-	err = setCfgFile(vp)
+	err = initCfgFile(vp)
 	if err != nil {
 		lg.Error("fail to init config file", zap.Error(err))
 		os.Exit(1)
 	}
 
-	con, err := config.New(lg, vp)
+	con, err := config.New(lg, vp, projects)
 	if err != nil {
 		lg.Error("fail to parse config", zap.Error(err))
 		os.Exit(1)
 	}
 	cfg = con
+
+	err = vp.WriteConfig()
+	if err != nil {
+		lg.Error("fail to write config", zap.Error(err))
+		os.Exit(1)
+	}
 }
 
-func initLogger(vp *viper.Viper) error {
+func initLogger() error {
 	log, err := logger.New(debug)
 	if err != nil {
 		return err
@@ -85,31 +89,46 @@ func initLogger(vp *viper.Viper) error {
 	return nil
 }
 
-func setProjectBase() error {
-	if projectBase == "" {
+func initProjectsDir() error {
+	if projects == "" {
 		// Find home directory.
 		home, err := homedir.Dir()
 		if err != nil {
 			lg.Error("fail to define home directory", zap.Error(err))
 			return err
 		}
-		projectBase = path.Join(home, "mogan")
+		projects = path.Join(home, "mogan")
 	}
-	vp.Set("projectbase", projectBase)
+	err := os.MkdirAll(projects, os.ModePerm)
+	if err != nil {
+		lg.Error("fail to create directory project base directory", zap.Error(err))
+		return err
+	}
 	return nil
 }
 
-func setCfgFile(vp *viper.Viper) error {
+func initCfgFile(vp *viper.Viper) error {
 	vp.SetConfigType(cfgType)
 
 	if cfgFile != "" {
 		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
+		vp.SetConfigFile(cfgFile)
 		return nil
 	}
 	// Search config in "$HOME/mogan" directory with name "cfg" (without extension).
-	vp.AddConfigPath(projectBase)
-	vp.SetConfigName(cfgName)
+	if cfgType != "yaml" && cfgType != "json" {
+		return fmt.Errorf("not supported config type")
+	}
+	cfgFile = path.Join(projects, cfgName+"."+cfgType)
+	vp.SetConfigFile(cfgFile)
+
+	_, err := os.Stat(cfgFile)
+	if !os.IsExist(err) {
+		if _, err := os.Create(cfgFile); err != nil {
+			lg.Error("fail to create config file", zap.Error(err))
+			return err
+		}
+	}
 
 	return nil
 }

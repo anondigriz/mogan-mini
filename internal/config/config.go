@@ -7,22 +7,24 @@ import (
 
 type (
 	Config struct {
-		Debug       bool   `mapstructure:"debug"`
-		Projectbase string `mapstructure:"projectbase"`
-		Test        string `mapstructure:"test"`
+		Test     string `mapstructure:"test"`
+		Projects string
 	}
 )
 
-func New(lg *zap.Logger, vp *viper.Viper) (Config, error) {
+func New(lg *zap.Logger, vp *viper.Viper, projects string) (Config, error) {
 	if err := vp.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			// Config file not found; ignore error if desired
+			lg.Error("config file was not found", zap.Error(err))
+			return Config{}, err
 		} else {
 			lg.Error("fail to read config", zap.Error(err))
 			return Config{}, err
 		}
 	}
-	cfg := Config{}
+	cfg := Config{
+		Projects: projects,
+	}
 
 	err := vp.Unmarshal(&cfg)
 	if err != nil {
@@ -30,5 +32,6 @@ func New(lg *zap.Logger, vp *viper.Viper) (Config, error) {
 		return Config{}, err
 	}
 	lg.Info("configuration has been set", zap.Reflect("config", cfg))
+
 	return cfg, nil
 }
