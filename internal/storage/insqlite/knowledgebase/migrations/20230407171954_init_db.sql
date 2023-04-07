@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "KnowledgeBase" (
     "ShortName" NVARCHAR(50) NOT NULL,
     "CreatedDate" INTEGER NOT NULL,
     "ModifiedDate" INTEGER NOT NULL,
-    "RemoteUUID" NVARCHAR(40) NOT NULL,
+    "RemoteUUID" NVARCHAR(40),
     "ExtraData" TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "Group" (

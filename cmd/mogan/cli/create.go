@@ -34,7 +34,7 @@ var (
 			fmt.Printf("\n---\nYou entered the knowledge base name: %s\n", name)
 
 			dc := dbcreator.New(lg, cfg)
-			st, err := dc.Create(cmd.Context(), dc.GenerateFilePath())
+			st, err := dc.Create(cmd.Context(), name, dc.GenerateFilePath())
 			if err != nil {
 				lg.Error("fail to create database for the project of the knowledge base", zap.Error(err))
 				return

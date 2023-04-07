@@ -13,6 +13,6 @@ type ExtraDataRule struct {
 }
 
 type ParameterRule struct {
-	ShortName     string
-	ParameterUUID string
+	ShortName   string
+	ParameterID string
 }

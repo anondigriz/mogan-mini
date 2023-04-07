@@ -42,3 +42,21 @@ func NewPingFailErr(err error) error {
 		Dt:      map[string]string{},
 	}
 }
+
+func NewNoDataFoundErr(err error, msg string) error {
+	return StorageErr{
+		Stat:    NoDataFound,
+		Message: msg,
+		Err:     err,
+		Dt:      map[string]string{},
+	}
+}
+
+func NewUnexpectedStorageFailErr(err error) error {
+	return StorageErr{
+		Stat:    UnexpectedStorageFail,
+		Message: "unexpected error when working with the storage",
+		Err:     err,
+		Dt:      map[string]string{},
+	}
+}
