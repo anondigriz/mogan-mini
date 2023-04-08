@@ -3,7 +3,6 @@ package dbcreator
 import (
 	"context"
 	"fmt"
-	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -12,6 +11,7 @@ import (
 	"github.com/anondigriz/mogan-editor-cli/internal/config"
 	entKB "github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-editor-cli/internal/storage/insqlite/knowledgebase"
+	"github.com/anondigriz/mogan-editor-cli/internal/utility/filecreator"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
@@ -38,13 +38,15 @@ func (d *DBCreator) GenerateFilePath() string {
 	return file
 }
 
-func (d *DBCreator) Create(ctx context.Context, name string, file string) (*knowledgebase.Storage, error) {
-	err := d.createDbFile(file)
+func (d *DBCreator) Create(ctx context.Context, name string, filePath string) (*knowledgebase.Storage, error) {
+	fc := filecreator.New(d.lg)
+	err := fc.CreateFile(filePath)
 	if err != nil {
 		d.lg.Error("fail to create a database file for the project of the knowledge base", zap.Error(err))
 		return nil, err
 	}
-	dsn := fmt.Sprintf("file:%s", file)
+
+	dsn := fmt.Sprintf("file:%s", filePath)
 
 	st, err := knowledgebase.New(ctx, d.lg, dsn, d.cfg.Databases.LogLevel)
 	if err != nil {
@@ -52,7 +54,7 @@ func (d *DBCreator) Create(ctx context.Context, name string, file string) (*know
 		return nil, err
 	}
 
-	kb := buildKnowledgeBase(file, name)
+	kb := buildKnowledgeBase(filePath, name)
 
 	err = st.CreateKnowledgeBase(ctx, kb)
 	if err != nil {
@@ -61,19 +63,6 @@ func (d *DBCreator) Create(ctx context.Context, name string, file string) (*know
 	}
 
 	return st, nil
-}
-
-func (d *DBCreator) createDbFile(file string) error {
-	if _, err := os.Stat(file); err != nil {
-		file, err := os.Create(file)
-		if err != nil {
-			d.lg.Error("fail to create a database for the project of the knowledge base in directory",
-				zap.Error(err), zap.Reflect("file", file))
-			return err
-		}
-		defer file.Close()
-	}
-	return nil
 }
 
 func buildKnowledgeBase(file string, name string) entKB.KnowledgeBase {

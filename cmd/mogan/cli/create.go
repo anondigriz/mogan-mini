@@ -12,13 +12,13 @@ import (
 )
 
 var (
-	name      string
-	CreateCmd = &cobra.Command{
+	kbName    string
+	createCmd = &cobra.Command{
 		Use:   "create",
 		Short: "Create a local knowledge base",
 		Long:  `Create a local knowledge base in the base project directory`,
 		Run: func(cmd *cobra.Command, args []string) {
-			if name == "" {
+			if kbName == "" {
 				n, err := inputName()
 				if err != nil {
 					fmt.Printf("\n---\nError entering the name of the knowledge base name: %v\n", err)
@@ -28,13 +28,13 @@ var (
 					fmt.Printf("\n---\nYou did not enter the knowledge base name!\n")
 					return
 				}
-				name = n
+				kbName = n
 			}
 
-			fmt.Printf("\n---\nYou entered the knowledge base name: %s\n", name)
+			fmt.Printf("\n---\nYou entered the knowledge base name: %s\n", kbName)
 
 			dc := dbcreator.New(lg, cfg)
-			st, err := dc.Create(cmd.Context(), name, dc.GenerateFilePath())
+			st, err := dc.Create(cmd.Context(), kbName, dc.GenerateFilePath())
 			if err != nil {
 				lg.Error("fail to create database for the project of the knowledge base", zap.Error(err))
 				return
@@ -45,17 +45,17 @@ var (
 				lg.Error("fail to ping database for the project of the knowledge base", zap.Error(err))
 				return
 			}
-			fmt.Printf("\n---\nEverything all right! The project has been created!: %s\n", name)
+			fmt.Printf("\n---\nEverything all right! The project has been created!: %s\n", kbName)
 		},
 	}
 )
 
-func initCreate() {
-	CreateCmd.PersistentFlags().StringVar(&name, "name", "", "config file")
-	cobra.OnInitialize(initCreateConfig)
+func initCreateCmd() {
+	createCmd.PersistentFlags().StringVar(&kbName, "name", "", "config file")
+	cobra.OnInitialize(initCreateCmdCfg)
 }
 
-func initCreateConfig() {
+func initCreateCmdCfg() {
 }
 
 func inputName() (string, error) {
