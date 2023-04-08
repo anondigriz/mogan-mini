@@ -37,6 +37,14 @@ func NewCreate(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Create {
 	return cr
 }
 
+func (c *Create) Init() {
+	c.Cmd.PersistentFlags().StringVar(&c.ShortName, "name", "", "config file")
+	cobra.OnInitialize(c.initConfig)
+}
+
+func (c *Create) initConfig() {
+}
+
 func (c *Create) run(cmd *cobra.Command, args []string) {
 	if c.ShortName == "" {
 		n, err := c.inputName()
@@ -66,14 +74,6 @@ func (c *Create) run(cmd *cobra.Command, args []string) {
 		return
 	}
 	fmt.Printf("\n---\nEverything all right! The project has been created!: %s\n", c.ShortName)
-}
-
-func (c *Create) Init() {
-	c.Cmd.PersistentFlags().StringVar(&c.ShortName, "name", "", "config file")
-	cobra.OnInitialize(c.initConfig)
-}
-
-func (c *Create) initConfig() {
 }
 
 func (c *Create) inputName() (string, error) {

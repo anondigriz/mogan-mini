@@ -21,7 +21,7 @@ var (
 	cfgFilePath  string
 	cfgFileName  string
 	cfgFileType  string
-	projectsPath     string
+	projectsPath string
 	rootCmd      = &cobra.Command{
 		Version: "v0.1",
 		Use:     "mogan",
@@ -54,7 +54,6 @@ func init() {
 	rootCmd.AddCommand(kb.Cmd)
 	kb.Init()
 
-	rootCmd.AddCommand(showCmd)
 	rootCmd.AddCommand(chooseCmd)
 }
 
