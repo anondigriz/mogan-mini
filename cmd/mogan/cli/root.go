@@ -48,13 +48,11 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFileName, "cfgname", "cfg", "config file name")
 	rootCmd.PersistentFlags().StringVar(&cfgFileType, "cfgtype", "yaml", "config type")
 
-	cobra.OnInitialize(initRootCfg)
+	cobra.OnInitialize(initConfig)
 	initVars()
 	kb := kbCLI.NewRoot(lg, vp, cfg)
 	rootCmd.AddCommand(kb.Cmd)
 	kb.Init()
-
-	rootCmd.AddCommand(chooseCmd)
 }
 
 func initVars() {
@@ -69,7 +67,7 @@ func initVars() {
 	lg = log
 }
 
-func initRootCfg() {
+func initConfig() {
 	in := initializer.New(lg)
 	newProjectsPath, err := in.InitProjectsDir(projectsPath)
 	if err != nil {

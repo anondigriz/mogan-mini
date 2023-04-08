@@ -14,11 +14,10 @@ import (
 )
 
 type All struct {
-	lg        *zap.Logger
-	vp        *viper.Viper
-	cfg       *config.Config
-	Cmd       *cobra.Command
-	ShortName string
+	lg  *zap.Logger
+	vp  *viper.Viper
+	cfg *config.Config
+	Cmd *cobra.Command
 }
 
 func NewAll(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *All {

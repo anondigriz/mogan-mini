@@ -38,7 +38,7 @@ func NewCreate(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Create {
 }
 
 func (c *Create) Init() {
-	c.Cmd.PersistentFlags().StringVar(&c.ShortName, "name", "", "config file")
+	c.Cmd.PersistentFlags().StringVar(&c.ShortName, "name", "", "short knowledge base name")
 	cobra.OnInitialize(c.initConfig)
 }
 

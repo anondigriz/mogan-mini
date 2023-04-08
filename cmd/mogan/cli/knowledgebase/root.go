@@ -33,13 +33,17 @@ func NewRoot(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Root {
 func (r *Root) Init() {
 	cobra.OnInitialize(r.initConfig)
 
-	c := NewCreate(r.lg, r.vp, r.cfg)
-	r.Cmd.AddCommand(c.Cmd)
-	c.Init()
+	create := NewCreate(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(create.Cmd)
+	create.Init()
 
-	a := NewAll(r.lg, r.vp, r.cfg)
-	r.Cmd.AddCommand(a.Cmd)
-	a.Init()
+	all := NewAll(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(all.Cmd)
+	all.Init()
+
+	choose := NewChoose(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(choose.Cmd)
+	choose.Init()
 }
 
 func (r *Root) initConfig() {
