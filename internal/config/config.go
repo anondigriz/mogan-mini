@@ -15,35 +15,33 @@ type (
 	}
 	Config struct {
 		// Test     string `mapstructure:"test"`
-		ProjectsPath  string        `mapstructure:"-"`
-		Databases     Databases     `mapstructure:"databases"`
+		ProjectsPath         string        `mapstructure:"-"`
+		Databases            Databases     `mapstructure:"databases"`
 		CurrentKnowledgeBase KnowledgeBase `mapstructure:"currentknowledgebase"`
 	}
 )
 
-func New(lg *zap.Logger, vp *viper.Viper, debug bool, projectsPath string) (Config, error) {
+func (c *Config) Fill(lg *zap.Logger, vp *viper.Viper, debug bool, projectsPath string) error {
 	if err := vp.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			lg.Error("config file was not found", zap.Error(err))
-			return Config{}, err
+			return err
 		} else {
 			lg.Error("fail to read config", zap.Error(err))
-			return Config{}, err
+			return err
 		}
 	}
-	cfg := Config{
-		ProjectsPath: projectsPath,
-	}
-	cfg.setLogLevel(debug)
+	c.ProjectsPath = projectsPath
+	c.setLogLevel(debug)
 
-	err := vp.Unmarshal(&cfg)
+	err := vp.Unmarshal(c)
 	if err != nil {
 		lg.Error("unable to decode into struct from file", zap.Error(err))
-		return Config{}, err
+		return err
 	}
-	lg.Debug("configuration has been set", zap.Reflect("config", cfg))
+	lg.Debug("configuration has been set", zap.Reflect("config", c))
 
-	return cfg, nil
+	return nil
 }
 
 func (c *Config) setLogLevel(debug bool) {

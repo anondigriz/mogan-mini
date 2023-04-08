@@ -49,7 +49,7 @@ func initChooseCmdCfg() {
 }
 
 func chooseKnowledgeBase(ctx context.Context) (string, error) {
-	lf := localfinder.New(lg, cfg)
+	lf := localfinder.New(lg, *cfg)
 	kbs := lf.FindInProjectsDir(ctx)
 	mt := chooseKBTui.New(kbs)
 	p := tea.NewProgram(mt)

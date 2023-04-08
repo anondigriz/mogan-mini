@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	kbCLI "github.com/anondigriz/mogan-editor-cli/cmd/mogan/cli/knowledgebase"
 	"github.com/anondigriz/mogan-editor-cli/internal/config"
 	"github.com/anondigriz/mogan-editor-cli/internal/utility/initializer"
 	"github.com/spf13/cobra"
@@ -16,11 +17,11 @@ var (
 	isConsoleLog bool
 	lg           *zap.Logger
 	vp           *viper.Viper
-	cfg          config.Config
+	cfg          *config.Config
 	cfgFilePath  string
 	cfgFileName  string
 	cfgFileType  string
-	projects     string
+	projectsPath     string
 	rootCmd      = &cobra.Command{
 		Version: "v0.1",
 		Use:     "mogan",
@@ -43,32 +44,35 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&isConsoleLog, "consolelog", "", false, "enable console ")
 
 	rootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "", "config file (default is \"$HOME/mogan/cfg.yaml\")")
-	rootCmd.PersistentFlags().StringVar(&projects, "projects", "", "base project directory (default is \"$HOME/mogan\")")
+	rootCmd.PersistentFlags().StringVar(&projectsPath, "projects", "", "base project directory (default is \"$HOME/mogan\")")
 	rootCmd.PersistentFlags().StringVar(&cfgFileName, "cfgname", "cfg", "config file name")
 	rootCmd.PersistentFlags().StringVar(&cfgFileType, "cfgtype", "yaml", "config type")
 
 	cobra.OnInitialize(initRootCfg)
+	initVars()
+	kb := kbCLI.NewRoot(lg, vp, cfg)
+	rootCmd.AddCommand(kb.Cmd)
+	kb.Init()
 
-	rootCmd.AddCommand(createCmd)
 	rootCmd.AddCommand(showCmd)
 	rootCmd.AddCommand(chooseCmd)
-
-	initCreateCmd()
-	initShowCmd()
-	initChooseCmd()
 }
 
-func initRootCfg() {
+func initVars() {
 	vp = viper.New()
+	cfg = &config.Config{}
+
 	log, err := initializer.InitLogger(isDebug)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 	lg = log
+}
 
+func initRootCfg() {
 	in := initializer.New(lg)
-	projects, err = in.InitProjectsDir(projects)
+	newProjectsPath, err := in.InitProjectsDir(projectsPath)
 	if err != nil {
 		lg.Error("fail to set a project base directory", zap.Error(err))
 		os.Exit(1)
@@ -80,13 +84,13 @@ func initRootCfg() {
 		Name: cfgFileName,
 	}
 
-	err = in.SetCfgFile(vp, projects, cfgFile)
+	err = in.SetCfgFile(vp, newProjectsPath, cfgFile)
 	if err != nil {
 		lg.Error("fail to set config file", zap.Error(err))
 		os.Exit(1)
 	}
 
-	cfg, err = config.New(lg, vp, isDebug, projects)
+	err = cfg.Fill(lg, vp, isDebug, newProjectsPath)
 	if err != nil {
 		lg.Error("fail to parse config", zap.Error(err))
 		os.Exit(1)

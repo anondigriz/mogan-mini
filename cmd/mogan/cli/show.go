@@ -17,7 +17,7 @@ var (
 		Short: "Show local knowledge bases",
 		Long:  `Show all knowledge base projects that are located in the base project directory`,
 		Run: func(cmd *cobra.Command, args []string) {
-			lf := localfinder.New(lg, cfg)
+			lf := localfinder.New(lg, *cfg)
 			kbs := lf.FindInProjectsDir(cmd.Context())
 			err := showKnowledgeBases(kbs)
 			if err != nil {
