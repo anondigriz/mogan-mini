@@ -80,14 +80,14 @@ func (st *Storage) CreateKnowledgeBase(ctx context.Context, knowledgeBase knowle
 	return nil
 }
 
-func (st *Storage) GetKnowledgeBase(ctx context.Context, uuid string) (knowledgebase.KnowledgeBase, error) {
+func (st *Storage) GetKnowledgeBase(ctx context.Context, id string) (knowledgebase.KnowledgeBase, error) {
 	script := `SELECT "ID", "ShortName", "CreatedDate", "ModifiedDate", "ExtraData"
 	FROM "KnowledgeBase" WHERE "ID" = $1;`
 
 	var row mappers.KnowledgeBaseRow
 	err := st.db.QueryRowContext(ctx,
 		script,
-		uuid).Scan(&row.ID, &row.ShortName, &row.CreatedDate, &row.ModifiedDate, &row.ExtraData)
+		id).Scan(&row.ID, &row.ShortName, &row.CreatedDate, &row.ModifiedDate, &row.ExtraData)
 
 	if err != nil {
 		st.lg.Error("unexpected error when trying to get the knowledge base", zap.Error(err))

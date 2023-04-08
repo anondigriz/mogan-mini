@@ -37,25 +37,25 @@ func InitLogger(debug bool) (*zap.Logger, error) {
 	return lg, nil
 }
 
-func (in *Initializer) InitProjectsDir(projects string) (string, error) {
-	if projects == "" {
+func (in *Initializer) InitProjectsDir(projectsPath string) (string, error) {
+	if projectsPath == "" {
 		// Find home directory.
 		home, err := homedir.Dir()
 		if err != nil {
 			in.lg.Error("fail to define home directory", zap.Error(err))
 			return "", err
 		}
-		projects = path.Join(home, "mogan")
+		projectsPath = path.Join(home, "mogan")
 	}
-	err := os.MkdirAll(projects, os.ModePerm)
+	err := os.MkdirAll(projectsPath, os.ModePerm)
 	if err != nil {
 		in.lg.Error("fail to create directory project base directory", zap.Error(err))
 		return "", err
 	}
-	return projects, nil
+	return projectsPath, nil
 }
 
-func (in *Initializer) SetCfgFile(vp *viper.Viper, projects string, file CfgFile) error {
+func (in *Initializer) SetCfgFile(vp *viper.Viper, projectsPath string, file CfgFile) error {
 	vp.SetConfigType(file.Type)
 
 	if file.Path != "" {
@@ -67,7 +67,7 @@ func (in *Initializer) SetCfgFile(vp *viper.Viper, projects string, file CfgFile
 	if file.Type != "yaml" && file.Type != "json" {
 		return fmt.Errorf("not supported config type")
 	}
-	file.Path = path.Join(projects, file.Name+"."+file.Type)
+	file.Path = path.Join(projectsPath, file.Name+"."+file.Type)
 	vp.SetConfigFile(file.Path)
 
 	fc := filecreator.New(in.lg)

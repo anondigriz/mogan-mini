@@ -13,12 +13,12 @@ type (
 	}
 	Config struct {
 		// Test     string `mapstructure:"test"`
-		Projects  string    `mapstructure:"-"`
-		Databases Databases `mapstructure:"Databases"`
+		ProjectsPath string    `mapstructure:"-"`
+		Databases    Databases `mapstructure:"Databases"`
 	}
 )
 
-func New(lg *zap.Logger, vp *viper.Viper, debug bool, projects string) (Config, error) {
+func New(lg *zap.Logger, vp *viper.Viper, debug bool, projectsPath string) (Config, error) {
 	if err := vp.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			lg.Error("config file was not found", zap.Error(err))
@@ -29,7 +29,7 @@ func New(lg *zap.Logger, vp *viper.Viper, debug bool, projects string) (Config, 
 		}
 	}
 	cfg := Config{
-		Projects: projects,
+		ProjectsPath: projectsPath,
 	}
 	cfg.setLogLevel(debug)
 

@@ -13,6 +13,7 @@ type (
 )
 
 type NameModel struct {
+	Question  string
 	TextInput textinput.Model
 	Err       error
 }
@@ -25,6 +26,7 @@ func InitialNameModel() NameModel {
 	ti.Width = 20
 
 	return NameModel{
+		Question:  "What is the name of the knowledge base?\n\n%s\n\n%s",
 		TextInput: ti,
 		Err:       nil,
 	}
@@ -56,7 +58,7 @@ func (n NameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (n NameModel) View() string {
 	return fmt.Sprintf(
-		"What is the name of the knowledge base?\n\n%s\n\n%s",
+		n.Question,
 		n.TextInput.View(),
 		"(esc to quit)",
 	) + "\n"

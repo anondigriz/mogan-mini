@@ -43,18 +43,24 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&projects, "projects", "", "base project directory (default is \"$HOME/mogan\")")
 	rootCmd.PersistentFlags().StringVar(&cfgFileName, "cfgname", "cfg", "config file name")
 	rootCmd.PersistentFlags().StringVar(&cfgFileType, "cfgtype", "yaml", "config type")
+
 	cobra.OnInitialize(initRootCfg)
+
 	rootCmd.AddCommand(createCmd)
+	rootCmd.AddCommand(showCmd)
+
 	initCreateCmd()
+	initShowCmd()
 }
 
 func initRootCfg() {
 	vp = viper.New()
-	lg, err := initializer.InitLogger(debug)
+	log, err := initializer.InitLogger(debug)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	lg = log
 
 	in := initializer.New(lg)
 	projects, err = in.InitProjectsDir(projects)

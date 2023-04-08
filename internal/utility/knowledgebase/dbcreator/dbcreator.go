@@ -34,7 +34,7 @@ func New(lg *zap.Logger, cfg config.Config) *DBCreator {
 
 func (d *DBCreator) GenerateFilePath() string {
 	id := uuid.New()
-	file := path.Join(d.cfg.Projects, id.String()+".db")
+	file := path.Join(d.cfg.ProjectsPath, id.String()+".db")
 	return file
 }
 
