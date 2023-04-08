@@ -8,13 +8,16 @@ import (
 
 type (
 	Databases struct {
-		LogLevel          loglevel.LogLevel
-		KnowledgeBasesDSN string `mapstructure:"KnowledgeBasesDSN"`
+		LogLevel loglevel.LogLevel
+	}
+	KnowledgeBase struct {
+		CurrentID string `mapstructure:"CurrentID"`
 	}
 	Config struct {
 		// Test     string `mapstructure:"test"`
-		ProjectsPath string    `mapstructure:"-"`
-		Databases    Databases `mapstructure:"Databases"`
+		ProjectsPath  string        `mapstructure:"-"`
+		Databases     Databases     `mapstructure:"Databases"`
+		KnowledgeBase KnowledgeBase `mapstructure:"KnowledgeBase"`
 	}
 )
 

@@ -3,6 +3,7 @@ package cli
 import (
 	"context"
 	"fmt"
+	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
@@ -20,15 +21,21 @@ var (
 		Long:  `Choose a knowledge base from the base project directory to be used in the workspace`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if kbID == "" {
-				_, err := chooseKnowledgeBase(cmd.Context())
+				id, err := chooseKnowledgeBase(cmd.Context())
 				if err != nil {
-					fmt.Printf("\n---\nError entering the name of the knowledge base name: %v\n", err)
+					fmt.Printf("\n---\nThere was a problem when choosing a knowledge base: %v\n", err)
 					return
 				}
+				kbID = id
 			}
 
-			fmt.Printf("\n---\nYou entered the knowledge base name: %s\n", kbName)
-
+			fmt.Printf("\n---\nOkay, you have selected a database with an ID %s\n", kbID)
+			vp.Set("KnowledgeBase.CurrentID", kbID)
+			err := vp.WriteConfig()
+			if err != nil {
+				lg.Error("fail to write config", zap.Error(err))
+				os.Exit(1)
+			}
 		},
 	}
 )
@@ -45,9 +52,14 @@ func chooseKnowledgeBase(ctx context.Context) (string, error) {
 	lf := localfinder.New(lg, cfg)
 	kbs := lf.FindInProjectsDir(ctx)
 	mt := chooseKBTui.New(kbs)
-	if _, err := tea.NewProgram(mt).Run(); err != nil {
+	p := tea.NewProgram(mt)
+	m, err := p.Run()
+	if err != nil {
 		lg.Error("Alas, there's been an error: %v", zap.Error(err))
-		return "", nil
+		return "", err
 	}
-	return "", nil
+	if m, ok := m.(chooseKBTui.Model); ok && m.Choice != "" {
+		return m.Choice, nil
+	}
+	return "", fmt.Errorf("Knowledge base was not chosen")
 }

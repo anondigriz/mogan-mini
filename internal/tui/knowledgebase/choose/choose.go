@@ -14,7 +14,8 @@ var baseStyle = lipgloss.NewStyle().
 	BorderForeground(lipgloss.Color("240"))
 
 type Model struct {
-	table table.Model
+	table  table.Model
+	Choice string
 }
 
 func New(kbs []knowledgebase.KnowledgeBase) Model {
@@ -50,7 +51,9 @@ func New(kbs []knowledgebase.KnowledgeBase) Model {
 		Bold(false)
 	t.SetStyles(s)
 
-	m := Model{t}
+	m := Model{
+		table: t,
+	}
 
 	return m
 }
@@ -73,9 +76,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "enter":
-			return m, tea.Batch(
-				tea.Printf("Let's go to %s!", m.table.SelectedRow()[1]),
-			)
+			m.Choice = m.table.SelectedRow()[1]
+			return m, tea.Quit
 		}
 	}
 	m.table, cmd = m.table.Update(msg)
