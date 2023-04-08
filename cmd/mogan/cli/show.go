@@ -38,7 +38,7 @@ func initShowCmdCfg() {
 func showKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
 	list := make([]string, 0, len(kbs))
 	for _, v := range kbs {
-		list = append(list, fmt.Sprintf("name: %s; id: %s; path: %s", v.ShortName, v.ID, v.Path))
+		list = append(list, fmt.Sprintf("name: %s; uuid: %s; path: %s", v.ShortName, v.ID, v.Path))
 	}
 	mt := listshowTui.New(list)
 

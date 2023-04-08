@@ -14,23 +14,23 @@ import (
 )
 
 var (
-	kbID      string
+	kbUUID    string
 	chooseCmd = &cobra.Command{
 		Use:   "choose",
-		Short: "Choose a knowledge base to work with",
-		Long:  `Choose a knowledge base from the base project directory to be used in the workspace`,
+		Short: "Choose a knowledge base project to work with",
+		Long:  `Choose a knowledge base project from the base project directory to be used in the workspace`,
 		Run: func(cmd *cobra.Command, args []string) {
-			if kbID == "" {
-				id, err := chooseKnowledgeBase(cmd.Context())
+			if kbUUID == "" {
+				uuid, err := chooseKnowledgeBase(cmd.Context())
 				if err != nil {
 					fmt.Printf("\n---\nThere was a problem when choosing a knowledge base: %v\n", err)
 					return
 				}
-				kbID = id
+				kbUUID = uuid
 			}
 
-			fmt.Printf("\n---\nOkay, you have selected a database with an ID %s\n", kbID)
-			vp.Set("KnowledgeBase.CurrentID", kbID)
+			fmt.Printf("\n---\nOkay, you have selected a knowledge base project with UUID %s\n", kbUUID)
+			vp.Set("CurrentKnowledgeBase.UUID", kbUUID)
 			err := vp.WriteConfig()
 			if err != nil {
 				lg.Error("fail to write config", zap.Error(err))
@@ -41,7 +41,7 @@ var (
 )
 
 func initChooseCmd() {
-	chooseCmd.PersistentFlags().StringVar(&kbID, "id", "", "knowledge base project id")
+	chooseCmd.PersistentFlags().StringVar(&kbUUID, "uuid", "", "knowledge base project UUID")
 	cobra.OnInitialize(initChooseCmdCfg)
 }
 

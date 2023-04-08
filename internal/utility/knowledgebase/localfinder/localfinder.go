@@ -55,11 +55,12 @@ func (lf *LocalFinder) GetKnowledgeBase(ctx context.Context, filePath string) (k
 	}
 	defer st.Shutdown()
 
-	id := strings.TrimSuffix(filepath.Base(filePath), path.Ext(filePath))
-	kb, err := st.GetKnowledgeBase(ctx, id)
+	uuid := strings.TrimSuffix(filepath.Base(filePath), path.Ext(filePath))
+	kb, err := st.GetKnowledgeBase(ctx)
 	if err != nil {
 		lf.lg.Error("fail to get knowledge base info", zap.Error(err))
 	}
+	kb.UUID = uuid
 	kb.Path = filePath
 	return kb, nil
 }

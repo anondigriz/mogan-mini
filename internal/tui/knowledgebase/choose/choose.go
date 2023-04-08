@@ -21,7 +21,7 @@ type Model struct {
 func New(kbs []knowledgebase.KnowledgeBase) Model {
 	columns := []table.Column{
 		{Title: "#", Width: 4},
-		{Title: "ID", Width: 10},
+		{Title: "UUID", Width: 10},
 		{Title: "Short name", Width: 15},
 		{Title: "Modified", Width: 20},
 	}
@@ -29,7 +29,7 @@ func New(kbs []knowledgebase.KnowledgeBase) Model {
 	rows := make([]table.Row, 0, len(kbs))
 
 	for i, v := range kbs {
-		rows = append(rows, table.Row{strconv.Itoa(i + 1), v.ID, v.ShortName, v.ModifiedDate.Format("02.01.2006 15:04:05")})
+		rows = append(rows, table.Row{strconv.Itoa(i + 1), v.UUID, v.ShortName, v.ModifiedDate.Format("02.01.2006 15:04:05")})
 	}
 
 	t := table.New(

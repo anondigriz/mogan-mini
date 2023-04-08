@@ -11,13 +11,13 @@ type (
 		LogLevel loglevel.LogLevel
 	}
 	KnowledgeBase struct {
-		CurrentID string `mapstructure:"CurrentID"`
+		UUID string `mapstructure:"uuid"`
 	}
 	Config struct {
 		// Test     string `mapstructure:"test"`
 		ProjectsPath  string        `mapstructure:"-"`
-		Databases     Databases     `mapstructure:"Databases"`
-		KnowledgeBase KnowledgeBase `mapstructure:"KnowledgeBase"`
+		Databases     Databases     `mapstructure:"databases"`
+		CurrentKnowledgeBase KnowledgeBase `mapstructure:"currentknowledgebase"`
 	}
 )
 
