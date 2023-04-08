@@ -1,4 +1,4 @@
-package create
+package textinput
 
 import (
 	"fmt"
@@ -12,31 +12,31 @@ type (
 	errMsg error
 )
 
-type NameModel struct {
+type Model struct {
 	Question  string
 	TextInput textinput.Model
 	Err       error
 }
 
-func InitialNameModel() NameModel {
+func New(question, placeholder string) Model {
 	ti := textinput.New()
-	ti.Placeholder = "Awesome knowledge base"
+	ti.Placeholder = placeholder
 	ti.Focus()
 	ti.CharLimit = 50
 	ti.Width = 20
 
-	return NameModel{
-		Question:  "What is the name of the knowledge base?\n\n%s\n\n%s",
+	return Model{
+		Question:  question,
 		TextInput: ti,
 		Err:       nil,
 	}
 }
 
-func (n NameModel) Init() tea.Cmd {
+func (n Model) Init() tea.Cmd {
 	return textinput.Blink
 }
 
-func (n NameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (n Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
 	switch msg := msg.(type) {
@@ -56,8 +56,9 @@ func (n NameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return n, cmd
 }
 
-func (n NameModel) View() string {
+func (n Model) View() string {
 	return fmt.Sprintf(
+		"%s\n\n%s\n\n%s",
 		n.Question,
 		n.TextInput.View(),
 		"(esc to quit)",

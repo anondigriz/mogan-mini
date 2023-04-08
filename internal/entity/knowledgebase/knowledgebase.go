@@ -4,6 +4,7 @@ type KnowledgeBase struct {
 	BaseInfo
 	RemoteUUID string
 	ExtraData  ExtraDataKnowledgeBase
+	Path       string
 }
 
 type ExtraDataKnowledgeBase struct {

@@ -3,8 +3,9 @@ package cli
 import (
 	"fmt"
 
-	showTui "github.com/anondigriz/mogan-editor-cli/internal/tui/show"
-	"github.com/anondigriz/mogan-editor-cli/internal/utility/knowledgebase/show"
+	kbEnt "github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
+	listshowTui "github.com/anondigriz/mogan-editor-cli/internal/tui/listshow"
+	"github.com/anondigriz/mogan-editor-cli/internal/utility/knowledgebase/localfinder"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -13,11 +14,11 @@ import (
 var (
 	showCmd = &cobra.Command{
 		Use:   "show",
-		Short: "Show knowledge bases in the workspace",
+		Short: "Show local knowledge bases",
 		Long:  `Show all knowledge base projects that are located in the base project directory`,
 		Run: func(cmd *cobra.Command, args []string) {
-			sw := show.New(lg, cfg)
-			kbs := sw.FindProjects(cmd.Context())
+			lf := localfinder.New(lg, cfg)
+			kbs := lf.FindInProjectsDir(cmd.Context())
 			err := showKnowledgeBases(kbs)
 			if err != nil {
 				fmt.Printf("\n---\nFail to show list of the knowledge bases: %v\n", err)
@@ -34,13 +35,14 @@ func initShowCmd() {
 func initShowCmdCfg() {
 }
 
-func showKnowledgeBases(kbs []show.KnowledgeBase) error {
-	m := showTui.ListModel{}
+func showKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
+	var list []string
 	for _, v := range kbs {
-		m.List = append(m.List, fmt.Sprintf("id: %s, name: %s, path: %s", v.Id, v.Name, v.Path))
+		list = append(list, fmt.Sprintf("name: %s; id: %s; path: %s", v.ShortName, v.ID, v.Path))
 	}
+	mt := listshowTui.New(list)
 
-	if _, err := tea.NewProgram(m).Run(); err != nil {
+	if _, err := tea.NewProgram(mt).Run(); err != nil {
 		lg.Error("Alas, there's been an error: %v", zap.Error(err))
 		return err
 	}

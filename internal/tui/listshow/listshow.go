@@ -1,14 +1,20 @@
-package show
+package listshow
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type ListModel struct {
+type Model struct {
 	List []string
 }
 
-func (lm ListModel) Init() tea.Cmd {
+func New(list []string) Model {
+	return Model{
+		List: list,
+	}
+}
+
+func (lm Model) Init() tea.Cmd {
 	var batch []tea.Cmd
 	for _, v := range lm.List {
 		batch = append(batch, tea.Println(v))
@@ -22,7 +28,7 @@ func (lm ListModel) Init() tea.Cmd {
 	)
 }
 
-func (lm ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (lm Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg.(type) {
 	case tea.KeyMsg:
 		return lm, tea.Quit
@@ -30,6 +36,6 @@ func (lm ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return lm, nil
 }
 
-func (lm ListModel) View() string {
+func (lm Model) View() string {
 	return ""
 }

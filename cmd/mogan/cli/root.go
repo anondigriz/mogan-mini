@@ -12,15 +12,16 @@ import (
 )
 
 var (
-	debug       bool
-	lg          *zap.Logger
-	vp          *viper.Viper
-	cfg         config.Config
-	cfgFilePath string
-	cfgFileName string
-	cfgFileType string
-	projects    string
-	rootCmd     = &cobra.Command{
+	isDebug      bool
+	isConsoleLog bool
+	lg           *zap.Logger
+	vp           *viper.Viper
+	cfg          config.Config
+	cfgFilePath  string
+	cfgFileName  string
+	cfgFileType  string
+	projects     string
+	rootCmd      = &cobra.Command{
 		Version: "v0.1",
 		Use:     "mogan",
 		Short:   "mogan is an editor of the Multidimensional Open Gnoseological Active Network",
@@ -38,7 +39,9 @@ var (
 )
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&debug, "debug", "d", false, "enable debug mod")
+	rootCmd.PersistentFlags().BoolVarP(&isDebug, "debug", "d", false, "enable debug mod")
+	rootCmd.PersistentFlags().BoolVarP(&isConsoleLog, "consolelog", "", false, "enable console ")
+
 	rootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "", "config file (default is \"$HOME/mogan/cfg.yaml\")")
 	rootCmd.PersistentFlags().StringVar(&projects, "projects", "", "base project directory (default is \"$HOME/mogan\")")
 	rootCmd.PersistentFlags().StringVar(&cfgFileName, "cfgname", "cfg", "config file name")
@@ -48,14 +51,16 @@ func init() {
 
 	rootCmd.AddCommand(createCmd)
 	rootCmd.AddCommand(showCmd)
+	rootCmd.AddCommand(chooseCmd)
 
 	initCreateCmd()
 	initShowCmd()
+	initChooseCmd()
 }
 
 func initRootCfg() {
 	vp = viper.New()
-	log, err := initializer.InitLogger(debug)
+	log, err := initializer.InitLogger(isDebug)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -81,7 +86,7 @@ func initRootCfg() {
 		os.Exit(1)
 	}
 
-	cfg, err = config.New(lg, vp, debug, projects)
+	cfg, err = config.New(lg, vp, isDebug, projects)
 	if err != nil {
 		lg.Error("fail to parse config", zap.Error(err))
 		os.Exit(1)

@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 
-	createModel "github.com/anondigriz/mogan-editor-cli/internal/tui/input"
+	textInputTui "github.com/anondigriz/mogan-editor-cli/internal/tui/textinput"
 	"github.com/anondigriz/mogan-editor-cli/internal/utility/knowledgebase/dbcreator"
 	tea "github.com/charmbracelet/bubbletea"
 	"go.uber.org/zap"
@@ -59,13 +59,14 @@ func initCreateCmdCfg() {
 }
 
 func inputName() (string, error) {
-	p := tea.NewProgram(createModel.InitialNameModel())
+	mt := textInputTui.New("What is the name of the knowledge base?", "Awesome knowledge base")
+	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
 		lg.Error("Alas, there's been an error: %v", zap.Error(err))
 		return "", err
 	}
-	if m, ok := m.(createModel.NameModel); ok && m.TextInput.Value() != "" {
+	if m, ok := m.(textInputTui.Model); ok && m.TextInput.Value() != "" {
 		n := m.TextInput.Value()
 		return n, nil
 	}
