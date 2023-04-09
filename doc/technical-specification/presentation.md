@@ -167,4 +167,4 @@ li {
 
 # Репозиторий проекта CLI
 
-https://github.com/anondigriz/mogan-editor-cli
+https://github.com/anondigriz/mogan-mini
