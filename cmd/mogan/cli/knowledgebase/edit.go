@@ -85,7 +85,7 @@ func (e *Edit) run(cmd *cobra.Command, args []string) {
 }
 
 func (e *Edit) editKnowledgeBase(ctx context.Context, kb kbEnt.KnowledgeBase) (kbEnt.KnowledgeBase, error) {
-	mt := editTui.New(kb.BaseInfo)
+	mt := editTui.New(kb.BaseInfo, kb.ExtraData.Description)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {

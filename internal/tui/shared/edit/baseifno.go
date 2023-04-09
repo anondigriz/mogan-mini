@@ -21,7 +21,7 @@ var (
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Next"))
 )
 
-type BaseInfoModel struct {
+type baseInfoModel struct {
 	focusIndex   int
 	inputs       []textinput.Model
 	ID           string
@@ -30,8 +30,8 @@ type BaseInfoModel struct {
 	IsEdited     bool
 }
 
-func newBaseInfo(bi entKB.BaseInfo) BaseInfoModel {
-	m := BaseInfoModel{
+func newBaseInfoModel(bi entKB.BaseInfo) baseInfoModel {
+	m := baseInfoModel{
 		inputs:       make([]textinput.Model, 2),
 		ID:           bi.ID,
 		ShortName:    bi.ShortName,
@@ -63,6 +63,10 @@ func newBaseInfo(bi entKB.BaseInfo) BaseInfoModel {
 	return m
 }
 
+func (m baseInfoModel) init() tea.Cmd {
+	return textinput.Blink
+}
+
 func (m Model) updateBaseInfo(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -79,7 +83,7 @@ func (m Model) updateBaseInfo(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.BaseInfo.ShortName = m.BaseInfo.inputs[1].Value()
 				m.BaseInfo.ModifiedDate = time.Now().UTC()
 
-				return m, tea.Quit
+				return m, m.Description.init()
 			}
 
 			// Cycle indexes
@@ -120,7 +124,7 @@ func (m Model) updateBaseInfo(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m *BaseInfoModel) updateInputs(msg tea.Msg) tea.Cmd {
+func (m *baseInfoModel) updateInputs(msg tea.Msg) tea.Cmd {
 	cmds := make([]tea.Cmd, len(m.inputs))
 
 	// Only text inputs with Focus() set will respond, so it's safe to simply
@@ -132,7 +136,7 @@ func (m *BaseInfoModel) updateInputs(msg tea.Msg) tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
-func (m BaseInfoModel) view() string {
+func (m baseInfoModel) view() string {
 	var b strings.Builder
 
 	for i := range m.inputs {
@@ -146,7 +150,10 @@ func (m BaseInfoModel) view() string {
 	if m.focusIndex == len(m.inputs) {
 		button = &focusedButton
 	}
-	fmt.Fprintf(&b, "\n\n%s\n\n%s\n", *button, "(esc or q to quit)")
+	fmt.Fprintf(&b,
+		"\n\n%s\n\n%s\n\n",
+		*button,
+		"(esc or ctrl+c to quit)")
 
 	return b.String()
 }
