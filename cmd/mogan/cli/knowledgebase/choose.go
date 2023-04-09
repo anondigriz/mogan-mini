@@ -49,7 +49,7 @@ func (c *Choose) initConfig() {
 
 func (c *Choose) run(cmd *cobra.Command, args []string) {
 	if c.kbUUID == "" {
-		uuid, err := c.chooseKnowledgeBase(cmd.Context())
+		uuid, err := chooseKnowledgeBase(cmd.Context(), c.lg, *c.cfg)
 		if err != nil {
 			fmt.Printf("\n---\nThere was a problem when choosing a knowledge base: %v\n", err)
 			return
@@ -66,14 +66,14 @@ func (c *Choose) run(cmd *cobra.Command, args []string) {
 	}
 }
 
-func (c *Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
-	lf := localfinder.New(c.lg, *c.cfg)
+func chooseKnowledgeBase(ctx context.Context, lg *zap.Logger, cfg config.Config) (string, error) {
+	lf := localfinder.New(lg, cfg)
 	kbs := lf.FindInProjectsDir(ctx)
 	mt := chooseKBTui.New(kbs)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		c.lg.Error("Alas, there's been an error: %v", zap.Error(err))
+		lg.Error("Alas, there's been an error: %v", zap.Error(err))
 		return "", err
 	}
 	if m, ok := m.(chooseKBTui.Model); ok && m.Choice != "" {

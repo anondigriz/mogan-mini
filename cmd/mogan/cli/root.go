@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	grCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/group"
 	kbCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/knowledgebase"
+
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/utility/initializer"
 	"github.com/spf13/cobra"
@@ -53,6 +55,10 @@ func init() {
 	kb := kbCLI.NewRoot(lg, vp, cfg)
 	rootCmd.AddCommand(kb.Cmd)
 	kb.Init()
+
+	gr := grCLI.NewRoot(lg, vp, cfg)
+	rootCmd.AddCommand(gr.Cmd)
+	gr.Init()
 }
 
 func initVars() {

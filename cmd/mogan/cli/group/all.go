@@ -23,20 +23,20 @@ func NewAll(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *All {
 
 	all.Cmd = &cobra.Command{
 		Use:   "all",
-		Short: "Groups base management",
+		Short: "Show all groups",
 		Long:  `Show all groups in the knowledge base`,
 		Run:   all.run,
 	}
 	return all
 }
 
-func (r *All) Init() {
-	cobra.OnInitialize(r.initConfig)
+func (a *All) Init() {
+	cobra.OnInitialize(a.initConfig)
 }
 
-func (r *All) initConfig() {
+func (a *All) initConfig() {
 }
 
-func (r *All) run(cmd *cobra.Command, args []string) {
+func (a *All) run(cmd *cobra.Command, args []string) {
 	cmd.Help()
 }
