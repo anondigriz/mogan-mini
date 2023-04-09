@@ -7,6 +7,7 @@ import (
 )
 
 type BaseInfoForRow struct {
+	UUID         string
 	ID           string
 	ShortName    string
 	CreatedDate  int64
@@ -14,6 +15,7 @@ type BaseInfoForRow struct {
 }
 
 func (bi *BaseInfoForRow) Fill(base knowledgebase.BaseInfo) {
+	bi.UUID = base.UUID
 	bi.ID = base.ID
 	bi.ShortName = base.ShortName
 	bi.CreatedDate = base.CreatedDate.UTC().Unix()
@@ -22,6 +24,7 @@ func (bi *BaseInfoForRow) Fill(base knowledgebase.BaseInfo) {
 
 func (bi *BaseInfoForRow) Extract() knowledgebase.BaseInfo {
 	var b knowledgebase.BaseInfo
+	b.UUID = bi.UUID
 	b.ID = bi.ID
 	b.ShortName = bi.ShortName
 	b.CreatedDate = time.Unix(bi.CreatedDate, 0).UTC()

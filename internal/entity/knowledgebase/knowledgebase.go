@@ -2,7 +2,6 @@ package knowledgebase
 
 type KnowledgeBase struct {
 	BaseInfo
-	UUID       string
 	RemoteUUID string
 	ExtraData  ExtraDataKnowledgeBase
 	Path       string

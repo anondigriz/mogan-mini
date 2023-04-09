@@ -71,6 +71,7 @@ func buildKnowledgeBase(file string, name string) entKB.KnowledgeBase {
 	now := time.Now().UTC()
 	kb := entKB.KnowledgeBase{
 		BaseInfo: entKB.BaseInfo{
+			UUID:         id,
 			ID:           id,
 			ShortName:    name,
 			CreatedDate:  now,
