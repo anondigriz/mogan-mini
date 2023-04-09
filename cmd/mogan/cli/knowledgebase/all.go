@@ -21,19 +21,19 @@ type All struct {
 }
 
 func NewAll(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *All {
-	s := &All{
+	a := &All{
 		lg:  lg,
 		vp:  vp,
 		cfg: cfg,
 	}
 
-	s.Cmd = &cobra.Command{
+	a.Cmd = &cobra.Command{
 		Use:   "all",
 		Short: "Show all local knowledge bases",
 		Long:  `Show all knowledge base projects that are located in the base project directory`,
-		Run:   s.run,
+		Run:   a.run,
 	}
-	return s
+	return a
 }
 
 func (a *All) Init() {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io/fs"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -33,7 +34,7 @@ func (lf *LocalFinder) FindInProjectsDir(ctx context.Context) []kbEnt.KnowledgeB
 	paths := lf.find(lf.cfg.ProjectsPath, ".db")
 
 	for i := 0; i < len(paths); i++ {
-		kbInfo, err := lf.GetKnowledgeBase(ctx, paths[i])
+		kbInfo, err := lf.GetByPath(ctx, paths[i])
 		if err != nil {
 			lf.lg.Error("fail to get knowledge base info", zap.Error(err))
 			continue
@@ -45,7 +46,17 @@ func (lf *LocalFinder) FindInProjectsDir(ctx context.Context) []kbEnt.KnowledgeB
 	return kbs
 }
 
-func (lf *LocalFinder) GetKnowledgeBase(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
+func (lf *LocalFinder) GetByUUID(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
+	filePath := path.Join(lf.cfg.ProjectsPath, uuid+".db")
+	if _, err := os.Stat(filePath); err != nil {
+		lf.lg.Error("Knowledge base project does not exist", zap.Error(err))
+		return kbEnt.KnowledgeBase{}, err
+
+	}
+	return lf.GetByPath(ctx, filePath)
+}
+
+func (lf *LocalFinder) GetByPath(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
 	dsn := fmt.Sprintf("file:%s", filePath)
 
 	st, err := knowledgebase.New(ctx, lf.lg, dsn, lf.cfg.Databases.LogLevel)

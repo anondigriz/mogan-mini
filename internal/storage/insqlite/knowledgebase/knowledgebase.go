@@ -104,7 +104,7 @@ func (st *Storage) GetKnowledgeBase(ctx context.Context) (knowledgebase.Knowledg
 
 func (st *Storage) UpdateKnowledgeBase(ctx context.Context, knowledgeBase knowledgebase.KnowledgeBase) error {
 	script := `UPDATE "KnowledgeBase"
-	SET  "ShortName" = $3, "ModifiedDate" = $4, "ExtraData" = $5
+	SET  "ShortName" = $2, "ModifiedDate" = $3, "ExtraData" = $4
 	WHERE "ID" = $1;`
 
 	var row mappers.KnowledgeBaseRow

@@ -44,6 +44,10 @@ func (r *Root) Init() {
 	choose := NewChoose(r.lg, r.vp, r.cfg)
 	r.Cmd.AddCommand(choose.Cmd)
 	choose.Init()
+
+	edit := NewEdit(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(edit.Cmd)
+	edit.Init()
 }
 
 func (r *Root) initConfig() {

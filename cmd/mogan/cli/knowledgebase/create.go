@@ -22,19 +22,19 @@ type Create struct {
 }
 
 func NewCreate(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Create {
-	cr := &Create{
+	c := &Create{
 		lg:  lg,
 		vp:  vp,
 		cfg: cfg,
 	}
 
-	cr.Cmd = &cobra.Command{
+	c.Cmd = &cobra.Command{
 		Use:   "init",
 		Short: "Create a local knowledge base",
 		Long:  `Create a local knowledge base in the base project directory`,
-		Run:   cr.run,
+		Run:   c.run,
 	}
-	return cr
+	return c
 }
 
 func (c *Create) Init() {
