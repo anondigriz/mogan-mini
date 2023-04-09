@@ -34,6 +34,7 @@ require (
 
 require (
 	github.com/charmbracelet/bubbles v0.15.0
+	github.com/fogleman/ease v0.0.0-20170301025033-8da417bf1776
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect

@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	kbEnt "github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
-	baseinfoKBTui "github.com/anondigriz/mogan-editor-cli/internal/tui/baseinfo/edit"
+	editTui "github.com/anondigriz/mogan-editor-cli/internal/tui/shared/edit"
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/anondigriz/mogan-editor-cli/cmd/mogan/cli/errors"
@@ -85,22 +85,23 @@ func (e *Edit) run(cmd *cobra.Command, args []string) {
 }
 
 func (e *Edit) editKnowledgeBase(ctx context.Context, kb kbEnt.KnowledgeBase) (kbEnt.KnowledgeBase, error) {
-	mt := baseinfoKBTui.New(kb.BaseInfo)
+	mt := editTui.New(kb.BaseInfo)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
 		e.lg.Error("Alas, there's been an error: %v", zap.Error(err))
 		return kbEnt.KnowledgeBase{}, err
 	}
-	def := kbEnt.BaseInfo{}
-	if m, ok := m.(baseinfoKBTui.Model); ok && m.BaseInfo != def {
+	if m, ok := m.(editTui.Model); ok && m.BaseInfo.IsEdited {
 		if m.BaseInfo.ID == "" {
 			return kbEnt.KnowledgeBase{}, errors.IDIsEmptyErr
 		}
 		if m.BaseInfo.ShortName == "" {
 			return kbEnt.KnowledgeBase{}, errors.ShortNameIsEmptyErr
 		}
-		kb.BaseInfo = m.BaseInfo
+		kb.BaseInfo.ID = m.BaseInfo.ID
+		kb.BaseInfo.ShortName = m.BaseInfo.ShortName
+		kb.BaseInfo.ModifiedDate = m.BaseInfo.ModifiedDate
 		return kb, nil
 	}
 	return kbEnt.KnowledgeBase{}, fmt.Errorf("Knowledge base has not been edited")
