@@ -8,7 +8,7 @@ import (
 type Model struct {
 	BaseInfo    baseInfoModel
 	Description descriptionModel
-	IsQuitting  bool
+	IsQuitted  bool
 }
 
 func New(bi entKB.BaseInfo, description string) Model {
@@ -28,8 +28,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// Make sure these keys always quit
 	if msg, ok := msg.(tea.KeyMsg); ok {
 		k := msg.String()
-		if k == "esc" || k == "ctrl+c" {
-			m.IsQuitting = true
+		if k == "ctrl+c" || k == "esc" {
+			m.IsQuitted = true
 			return m, tea.Quit
 		}
 	}

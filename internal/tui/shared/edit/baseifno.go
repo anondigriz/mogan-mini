@@ -16,26 +16,27 @@ var (
 	blurredStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
 	cursorStyle  = focusedStyle.Copy()
 	noStyle      = lipgloss.NewStyle()
-
-	focusedButton = focusedStyle.Copy().Render("[ Next ]")
-	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Next"))
 )
 
 type baseInfoModel struct {
-	focusIndex   int
-	inputs       []textinput.Model
-	ID           string
-	ShortName    string
-	ModifiedDate time.Time
-	IsEdited     bool
+	focusIndex    int
+	focusedButton string
+	blurredButton string
+	inputs        []textinput.Model
+	ID            string
+	ShortName     string
+	ModifiedDate  time.Time
+	IsEdited      bool
 }
 
 func newBaseInfoModel(bi entKB.BaseInfo) baseInfoModel {
 	m := baseInfoModel{
-		inputs:       make([]textinput.Model, 2),
-		ID:           bi.ID,
-		ShortName:    bi.ShortName,
-		ModifiedDate: bi.ModifiedDate,
+		inputs:        make([]textinput.Model, 2),
+		ID:            bi.ID,
+		ShortName:     bi.ShortName,
+		ModifiedDate:  bi.ModifiedDate,
+		focusedButton: focusedStyle.Copy().Render("[ Next ]"),
+		blurredButton: fmt.Sprintf("[ %s ]", blurredStyle.Render("Next")),
 	}
 
 	var t textinput.Model
@@ -146,9 +147,9 @@ func (m baseInfoModel) view() string {
 		}
 	}
 
-	button := &blurredButton
+	button := &m.blurredButton
 	if m.focusIndex == len(m.inputs) {
-		button = &focusedButton
+		button = &m.focusedButton
 	}
 	fmt.Fprintf(&b,
 		"\n\n%s\n\n%s\n\n",

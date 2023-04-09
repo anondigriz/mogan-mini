@@ -92,17 +92,25 @@ func (e *Edit) editKnowledgeBase(ctx context.Context, kb kbEnt.KnowledgeBase) (k
 		e.lg.Error("Alas, there's been an error: %v", zap.Error(err))
 		return kbEnt.KnowledgeBase{}, err
 	}
-	if m, ok := m.(editTui.Model); ok && m.BaseInfo.IsEdited {
-		if m.BaseInfo.ID == "" {
-			return kbEnt.KnowledgeBase{}, errors.IDIsEmptyErr
-		}
-		if m.BaseInfo.ShortName == "" {
-			return kbEnt.KnowledgeBase{}, errors.ShortNameIsEmptyErr
-		}
-		kb.BaseInfo.ID = m.BaseInfo.ID
-		kb.BaseInfo.ShortName = m.BaseInfo.ShortName
-		kb.BaseInfo.ModifiedDate = m.BaseInfo.ModifiedDate
-		return kb, nil
+	result, ok := m.(editTui.Model)
+	if !ok {
+		e.lg.Error("Received a response form that was not expected")
+		return kbEnt.KnowledgeBase{}, fmt.Errorf("Received a response form that was not expected")
 	}
-	return kbEnt.KnowledgeBase{}, fmt.Errorf("Knowledge base has not been edited")
+	if result.IsQuitted || !result.BaseInfo.IsEdited || !result.Description.IsEdited {
+		return kbEnt.KnowledgeBase{}, fmt.Errorf("Knowledge base has not been edited")
+	}
+
+	if result.BaseInfo.ID == "" {
+		return kbEnt.KnowledgeBase{}, errors.IDIsEmptyErr
+	}
+	if result.BaseInfo.ShortName == "" {
+		return kbEnt.KnowledgeBase{}, errors.ShortNameIsEmptyErr
+	}
+	kb.BaseInfo.ID = result.BaseInfo.ID
+	kb.BaseInfo.ShortName = result.BaseInfo.ShortName
+	kb.BaseInfo.ModifiedDate = result.BaseInfo.ModifiedDate
+	kb.ExtraData.Description = result.Description.Description
+
+	return kb, nil
 }

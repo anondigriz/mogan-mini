@@ -23,6 +23,7 @@ func newDescriptionModel(description string) descriptionModel {
 	ti := textarea.New()
 	ti.Placeholder = "This is a very important object..."
 	ti.Focus()
+	ti.SetValue(description)
 
 	return descriptionModel{
 		Description: description,
@@ -42,11 +43,9 @@ func (m Model) updateDescription(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type {
-		case tea.KeyEsc:
-			if m.Description.textarea.Focused() {
-				m.Description.textarea.Blur()
-			}
-		case tea.KeyCtrlC:
+		case tea.KeyCtrlS:
+			m.Description.IsEdited = true
+			m.Description.Description = m.Description.textarea.Value()
 			return m, tea.Quit
 		default:
 			if !m.Description.textarea.Focused() {
@@ -68,8 +67,8 @@ func (m Model) updateDescription(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m descriptionModel) view() string {
 	return fmt.Sprintf(
-		"Edit the description.\n\n%s\n\n%s",
+		"Edit the description:\n\n%s\n\n%s\n\n",
 		m.textarea.View(),
-		"(esc or ctrl+c to quit)",
-	) + "\n\n"
+		"(ctrl+s to save, esc or ctrl+c to quit)",
+	)
 }
