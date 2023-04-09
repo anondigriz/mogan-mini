@@ -29,7 +29,7 @@ func NewCreate(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Create {
 	}
 
 	c.Cmd = &cobra.Command{
-		Use:   "init",
+		Use:   "new",
 		Short: "Create a local knowledge base",
 		Long:  `Create a local knowledge base in the base project directory`,
 		Run:   c.run,

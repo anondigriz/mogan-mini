@@ -1,4 +1,4 @@
-package knowledgebase
+package group
 
 import (
 	"github.com/anondigriz/mogan-editor-cli/internal/config"
@@ -22,9 +22,9 @@ func NewRoot(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Root {
 	}
 
 	root.Cmd = &cobra.Command{
-		Use:   "kb",
-		Short: "Knowledge base management",
-		Long:  `Local knowledge bases projects management`,
+		Use:   "gr",
+		Short: "Groups management",
+		Long:  `Knowledge base groups management`,
 		Run:   root.run,
 	}
 	return root
@@ -33,21 +33,9 @@ func NewRoot(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Root {
 func (r *Root) Init() {
 	cobra.OnInitialize(r.initConfig)
 
-	create := NewCreate(r.lg, r.vp, r.cfg)
-	r.Cmd.AddCommand(create.Cmd)
-	create.Init()
-
 	all := NewAll(r.lg, r.vp, r.cfg)
 	r.Cmd.AddCommand(all.Cmd)
 	all.Init()
-
-	choose := NewChoose(r.lg, r.vp, r.cfg)
-	r.Cmd.AddCommand(choose.Cmd)
-	choose.Init()
-
-	edit := NewEdit(r.lg, r.vp, r.cfg)
-	r.Cmd.AddCommand(edit.Cmd)
-	edit.Init()
 }
 
 func (r *Root) initConfig() {
