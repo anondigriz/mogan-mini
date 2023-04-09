@@ -84,9 +84,17 @@ func (c *Create) inputName() (string, error) {
 		c.lg.Error("Alas, there's been an error: %v", zap.Error(err))
 		return "", err
 	}
-	if m, ok := m.(textInputTui.Model); ok && m.TextInput.Value() != "" {
-		n := m.TextInput.Value()
-		return n, nil
+	result, ok := m.(textInputTui.Model)
+	if !ok {
+		c.lg.Error("Received a response form that was not expected")
+		return "", fmt.Errorf("Received a response form that was not expected")
+
 	}
-	return "", fmt.Errorf("Knowledge base name was not entered")
+
+	if result.IsQuitted {
+		return "", fmt.Errorf("Knowledge base name was not entered")
+	}
+
+	n := result.TextInput.Value()
+	return n, nil
 }

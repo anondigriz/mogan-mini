@@ -68,13 +68,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "esc":
-			if m.table.Focused() {
-				m.table.Blur()
-			} else {
-				m.table.Focus()
-			}
-		case "q", "ctrl+c":
+		case "esc", "ctrl+c":
 			return m, tea.Quit
 		case "enter":
 			m.Choice = m.table.SelectedRow()[1]
@@ -86,5 +80,5 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) View() string {
-	return baseStyle.Render(m.table.View()) + "\n(q to quit)\n"
+	return baseStyle.Render(m.table.View()) + "\n(esc or ctrl+c to quit)\n"
 }

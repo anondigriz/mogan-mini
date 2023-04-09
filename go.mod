@@ -3,7 +3,7 @@ module github.com/anondigriz/mogan-mini
 go 1.20
 
 require (
-	github.com/anondigriz/mogan-core v0.0.0-20230326110125-9e1aaeab5ddd
+	github.com/anondigriz/mogan-core v0.0.0-20230409175400-8ebf547ccf79
 	github.com/charmbracelet/bubbletea v0.23.2
 	github.com/google/uuid v1.3.0
 	github.com/mattn/go-sqlite3 v1.14.16

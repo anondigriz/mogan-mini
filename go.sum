@@ -40,6 +40,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/anondigriz/mogan-core v0.0.0-20230326110125-9e1aaeab5ddd h1:2UeL+Ym7IVdfxfWENMB0YK8MsEWn3yQi2MLZNZZZW5U=
 github.com/anondigriz/mogan-core v0.0.0-20230326110125-9e1aaeab5ddd/go.mod h1:D0QPZCTOqe60C1ueAas5rESeoYlSjIWO4QsXLge0lyU=
+github.com/anondigriz/mogan-core v0.0.0-20230409175400-8ebf547ccf79 h1:FpABeOJdTQzWweEbAD5MeGI78S3Vhkr9kby3A36cSf8=
+github.com/anondigriz/mogan-core v0.0.0-20230409175400-8ebf547ccf79/go.mod h1:Z8dgrnXl9hn/iEfieuQaZ3lWOXLkQzatDl2coCK/OOY=
 github.com/atotto/clipboard v0.1.4 h1:EH0zSVneZPSuFR11BlR9YppQTVDbh5+16AmcJi4g1z4=
 github.com/atotto/clipboard v0.1.4/go.mod h1:ZY9tmq7sm5xIbd9bOK4onWV4S6X0u6GY7Vn0Yu86PYI=
 github.com/aymanbagabas/go-osc52 v1.0.3/go.mod h1:zT8H+Rk4VSabYN90pWyugflM3ZhpTZNC7cASDfUCdT4=
