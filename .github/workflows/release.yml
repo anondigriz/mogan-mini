@@ -1,0 +1,31 @@
+name: release
+
+# run only on tags
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write # needed to write releases
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/goreleaser/goreleaser-cross:v1.20.3
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # this is important, otherwise it won't checkout the full tree (i.e. no previous tags)
+      # temporary work around for https://github.com/actions/checkout/issues/1169
+      - run: git config --system --add safe.directory /__w/mogan-mini/mogan-mini
+      - run: git fetch --force --tags
+      - uses: actions/setup-go@v4
+        with:
+          go-version: stable
+          cache: true
+      - run: |
+          goreleaser release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

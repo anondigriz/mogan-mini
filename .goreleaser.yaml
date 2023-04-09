@@ -1,0 +1,58 @@
+project_name: mogan
+env:
+  - CGO_ENABLED=1
+builds:
+  - id: darwin-amd64
+    main: ./cmd/mogan
+    binary: mogan
+    goos:
+      - darwin
+    goarch:
+      - amd64
+    env:
+      - CC=o64-clang
+      - CXX=o64-clang++
+    flags:
+      - -mod=readonly
+  - id: darwin-arm64
+    main: ./cmd/mogan
+    binary: mogan
+    goos:
+      - darwin
+    goarch:
+      - arm64
+    env:
+      - CC=oa64-clang
+      - CXX=oa64-clang++
+    flags:
+      - -mod=readonly
+  - id: windows-amd64
+    main: ./cmd/mogan
+    binary: mogan
+    goos:
+      - windows
+    goarch:
+      - amd64
+    env:
+      - CC=x86_64-w64-mingw32-gcc
+      - CXX=x86_64-w64-mingw32-g++
+    flags:
+      - -mod=readonly
+    ldflags:
+      - -buildmode=exe
+archives:
+  - id: mogan
+    builds:
+      - darwin-amd64
+      - darwin-arm64
+      - windows-amd64
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    wrap_in_directory: true
+    format_overrides:
+      - goos: windows
+        format: zip
+nfpms:
+  - maintainer: Dmitry Aladin <root@carlosbecker.dev>
+    description: Local editor of the Multidimensional Open Gnoseological Active Network (MOGAN) .
+    homepage: https://github.com/anondigriz/mogan-mini
+    license: MPL-2.0 license
