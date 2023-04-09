@@ -3,10 +3,10 @@ package knowledgebase
 import (
 	"fmt"
 
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	kbEnt "github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
-	listshowTui "github.com/anondigriz/mogan-editor-cli/internal/tui/listshow"
-	"github.com/anondigriz/mogan-editor-cli/internal/utility/knowledgebase/localfinder"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	listshowTui "github.com/anondigriz/mogan-mini/internal/tui/listshow"
+	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/localfinder"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

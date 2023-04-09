@@ -3,9 +3,9 @@ package knowledgebase
 import (
 	"fmt"
 
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	textInputTui "github.com/anondigriz/mogan-editor-cli/internal/tui/textinput"
-	"github.com/anondigriz/mogan-editor-cli/internal/utility/knowledgebase/dbcreator"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	textInputTui "github.com/anondigriz/mogan-mini/internal/tui/textinput"
+	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/dbcreator"
 	tea "github.com/charmbracelet/bubbletea"
 	"go.uber.org/zap"
 

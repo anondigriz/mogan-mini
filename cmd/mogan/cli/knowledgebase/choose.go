@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	chooseKBTui "github.com/anondigriz/mogan-editor-cli/internal/tui/knowledgebase/choose"
-	"github.com/anondigriz/mogan-editor-cli/internal/utility/knowledgebase/localfinder"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	chooseKBTui "github.com/anondigriz/mogan-mini/internal/tui/knowledgebase/choose"
+	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/localfinder"
 )
 
 type Choose struct {

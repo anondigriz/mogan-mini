@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	kbEnt "github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
-	"github.com/anondigriz/mogan-editor-cli/internal/storage/insqlite/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase"
 	"go.uber.org/zap"
 )
 

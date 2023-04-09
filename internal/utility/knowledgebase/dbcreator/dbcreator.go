@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	entKB "github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
-	"github.com/anondigriz/mogan-editor-cli/internal/storage/insqlite/knowledgebase"
-	"github.com/anondigriz/mogan-editor-cli/internal/utility/filecreator"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/utility/filecreator"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )

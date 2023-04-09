@@ -6,8 +6,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	"github.com/anondigriz/mogan-editor-cli/internal/storage/insqlite/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase"
 	"go.uber.org/zap"
 )
 

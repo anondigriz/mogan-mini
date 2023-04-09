@@ -6,10 +6,10 @@ import (
 	"embed"
 
 	"github.com/anondigriz/mogan-core/pkg/loglevel"
-	"github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
-	"github.com/anondigriz/mogan-editor-cli/internal/storage/insqlite/errors"
-	"github.com/anondigriz/mogan-editor-cli/internal/storage/insqlite/knowledgebase/mappers"
-	"github.com/anondigriz/mogan-editor-cli/pkg/insqlite/migrator"
+	"github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/storage/insqlite/errors"
+	"github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase/mappers"
+	"github.com/anondigriz/mogan-mini/pkg/insqlite/migrator"
 
 	"go.uber.org/zap"
 )

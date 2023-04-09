@@ -3,7 +3,7 @@ package choose
 import (
 	"strconv"
 
-	"github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"

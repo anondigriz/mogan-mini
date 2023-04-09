@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	entKB "github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
+	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"

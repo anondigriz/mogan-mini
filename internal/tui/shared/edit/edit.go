@@ -1,14 +1,14 @@
 package edit
 
 import (
-	entKB "github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
+	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 type Model struct {
 	BaseInfo    baseInfoModel
 	Description descriptionModel
-	IsQuitted  bool
+	IsQuitted   bool
 }
 
 func New(bi entKB.BaseInfo, description string) Model {

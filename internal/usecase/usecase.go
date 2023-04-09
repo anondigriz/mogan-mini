@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	"github.com/anondigriz/mogan-editor-cli/internal/core"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/core"
 	"go.uber.org/zap"
 )
 

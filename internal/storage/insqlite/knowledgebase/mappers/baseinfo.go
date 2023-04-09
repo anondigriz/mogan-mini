@@ -3,7 +3,7 @@ package mappers
 import (
 	"time"
 
-	"github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 )
 
 type BaseInfoForRow struct {

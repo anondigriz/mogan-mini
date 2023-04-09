@@ -6,7 +6,7 @@ import (
 	"path"
 
 	"github.com/anondigriz/mogan-core/pkg/logger"
-	"github.com/anondigriz/mogan-editor-cli/internal/utility/filecreator"
+	"github.com/anondigriz/mogan-mini/internal/utility/filecreator"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"

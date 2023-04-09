@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	kbEnt "github.com/anondigriz/mogan-editor-cli/internal/entity/knowledgebase"
-	editTui "github.com/anondigriz/mogan-editor-cli/internal/tui/shared/edit"
+	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	editTui "github.com/anondigriz/mogan-mini/internal/tui/shared/edit"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/anondigriz/mogan-editor-cli/cmd/mogan/cli/errors"
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	"github.com/anondigriz/mogan-editor-cli/internal/utility/knowledgebase/connection"
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/connection"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"

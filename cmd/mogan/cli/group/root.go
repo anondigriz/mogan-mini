@@ -1,7 +1,7 @@
 package group
 
 import (
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"

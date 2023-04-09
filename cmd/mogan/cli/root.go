@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	kbCLI "github.com/anondigriz/mogan-editor-cli/cmd/mogan/cli/knowledgebase"
-	"github.com/anondigriz/mogan-editor-cli/internal/config"
-	"github.com/anondigriz/mogan-editor-cli/internal/utility/initializer"
+	kbCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/utility/initializer"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
