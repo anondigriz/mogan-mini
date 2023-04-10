@@ -52,7 +52,7 @@ archives:
       - goos: windows
         format: zip
 nfpms:
-  - maintainer: Dmitry Aladin <root@carlosbecker.dev>
+  - maintainer: Dmitry Aladin <anon.digriz@gmail.com>
     description: Local editor of the Multidimensional Open Gnoseological Active Network (MOGAN) .
     homepage: https://github.com/anondigriz/mogan-mini
     license: MPL-2.0 license
