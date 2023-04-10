@@ -1,13 +1,15 @@
 package mappers
 
 import (
-	"github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"encoding/json"
+
+	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 )
 
 type PatternRow struct {
 	BaseInfoForRow
 	Type      int
-	ExtraData ExtraDataPatternForRow
+	ExtraData string
 }
 
 type ExtraDataPatternForRow struct {
@@ -23,12 +25,12 @@ type ParameterPatternForRow struct {
 	Type      int    `json:"type"`
 }
 
-func (pp *ParameterPatternForRow) Fill(base knowledgebase.ParameterPattern) {
+func (pp *ParameterPatternForRow) Fill(base kbEnt.ParameterPattern) {
 	pp.ShortName = base.ShortName
 	pp.Type = int(base.Type)
 }
 
-func (ex *ExtraDataPatternForRow) Fill(base knowledgebase.ExtraDataPattern) {
+func (ex *ExtraDataPatternForRow) Fill(base kbEnt.ExtraDataPattern) {
 	ex.Description = base.Description
 	ex.Language = int(base.Language)
 	ex.Script = base.Script
@@ -46,39 +48,70 @@ func (ex *ExtraDataPatternForRow) Fill(base knowledgebase.ExtraDataPattern) {
 	}
 }
 
-func (pr *PatternRow) Fill(base knowledgebase.Pattern) {
+func (pr *PatternRow) Fill(base kbEnt.Pattern) error {
 	pr.BaseInfoForRow.Fill(base.BaseInfo)
 	pr.Type = int(base.Type)
-	pr.ExtraData.Fill(base.ExtraData)
+	err := pr.fillExtraData(base)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (pp *ParameterPatternForRow) Extract() knowledgebase.ParameterPattern {
-	p := knowledgebase.ParameterPattern{}
+func (kr *PatternRow) fillExtraData(base kbEnt.Pattern) error {
+	ex := ExtraDataPatternForRow{}
+	ex.Fill(base.ExtraData)
+
+	b, err := json.Marshal(ex)
+	if err != nil {
+		return err
+	}
+
+	kr.ExtraData = string(b)
+	return nil
+}
+
+func (pp ParameterPatternForRow) Extract() kbEnt.ParameterPattern {
+	p := kbEnt.ParameterPattern{}
 	p.ShortName = pp.ShortName
-	p.Type = knowledgebase.TypeParameter(pp.Type)
+	p.Type = kbEnt.TypeParameter(pp.Type)
 	return p
 }
 
-func (ex *ExtraDataPatternForRow) Extract() knowledgebase.ExtraDataPattern {
-	e := knowledgebase.ExtraDataPattern{}
+func (ex ExtraDataPatternForRow) Extract() kbEnt.ExtraDataPattern {
+	e := kbEnt.ExtraDataPattern{}
 	e.Description = ex.Description
-	e.Language = knowledgebase.Language(ex.Language)
+	e.Language = kbEnt.Language(ex.Language)
 	e.Script = ex.Script
-	e.InputParameters = []knowledgebase.ParameterPattern{}
+	e.InputParameters = []kbEnt.ParameterPattern{}
 	for _, v := range ex.InputParameters {
 		e.InputParameters = append(e.InputParameters, v.Extract())
 	}
-	e.OutputParameters = []knowledgebase.ParameterPattern{}
+	e.OutputParameters = []kbEnt.ParameterPattern{}
 	for _, v := range ex.OutputParameters {
 		e.OutputParameters = append(e.OutputParameters, v.Extract())
 	}
 	return e
 }
 
-func (pr *PatternRow) Extract() knowledgebase.Pattern {
-	k := knowledgebase.Pattern{}
-	k.BaseInfo = pr.BaseInfoForRow.Extract()
-	k.Type = knowledgebase.TypePattern(pr.Type)
-	k.ExtraData = pr.ExtraData.Extract()
-	return k
+func (pr PatternRow) Extract() (kbEnt.Pattern, error) {
+	p := kbEnt.Pattern{}
+	p.BaseInfo = pr.BaseInfoForRow.Extract()
+	p.Type = kbEnt.TypePattern(pr.Type)
+
+	ex, err := pr.extractExtraData()
+	if err != nil {
+		return kbEnt.Pattern{}, err
+	}
+	p.ExtraData = ex
+	return p, nil
+}
+
+func (pr PatternRow) extractExtraData() (kbEnt.ExtraDataPattern, error) {
+	ex := &ExtraDataPatternForRow{}
+	err := json.Unmarshal([]byte(pr.ExtraData), &ex)
+	if err != nil {
+		return kbEnt.ExtraDataPattern{}, nil
+	}
+	return ex.Extract(), nil
 }
