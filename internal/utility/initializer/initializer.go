@@ -5,7 +5,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/anondigriz/mogan-core/pkg/logger"
 	"github.com/anondigriz/mogan-mini/internal/utility/filecreator"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -29,27 +28,17 @@ func New(lg *zap.Logger) *Initializer {
 	return in
 }
 
-func InitLogger(debug bool) (*zap.Logger, error) {
-	lg, err := logger.New(debug)
-	if err != nil {
-		return nil, err
-	}
-	return lg, nil
-}
-
-func (in *Initializer) InitProjectsDir(projectsPath string) (string, error) {
+func InitProjectsDir(projectsPath string) (string, error) {
 	if projectsPath == "" {
 		// Find home directory.
 		home, err := homedir.Dir()
 		if err != nil {
-			in.lg.Error("fail to define home directory", zap.Error(err))
 			return "", err
 		}
 		projectsPath = path.Join(home, "mogan")
 	}
 	err := os.MkdirAll(projectsPath, os.ModePerm)
 	if err != nil {
-		in.lg.Error("fail to create directory project base directory", zap.Error(err))
 		return "", err
 	}
 	return projectsPath, nil

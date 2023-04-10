@@ -3,6 +3,7 @@ package knowledgebase
 import (
 	"fmt"
 
+	"github.com/anondigriz/mogan-mini/internal/logger"
 	choicesTui "github.com/anondigriz/mogan-mini/internal/tui/choices"
 	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/dbremover"
 	tea "github.com/charmbracelet/bubbletea"
@@ -16,14 +17,14 @@ import (
 var confirmChoices = []string{"Confirm ⚠️", "Abort 🚫"}
 
 type Remove struct {
-	lg     *zap.Logger
+	lg     *logger.Logger
 	vp     *viper.Viper
 	cfg    *config.Config
 	Cmd    *cobra.Command
 	kbUUID string
 }
 
-func NewRemove(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Remove {
+func NewRemove(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Remove {
 	remove := &Remove{
 		lg:  lg,
 		vp:  vp,
@@ -49,7 +50,7 @@ func (r *Remove) initConfig() {
 
 func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 	if r.kbUUID == "" {
-		uuid, err := chooseKnowledgeBase(cmd.Context(), r.lg, *r.cfg)
+		uuid, err := chooseKnowledgeBase(cmd.Context(), r.lg.Zap, *r.cfg)
 		if err != nil {
 			fmt.Printf("\n---\nThere was a problem when choosing a knowledge base: %v\n", err)
 			return err
@@ -80,7 +81,7 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	d := dbremover.New(r.lg, *r.cfg)
+	d := dbremover.New(r.lg.Zap, *r.cfg)
 	err = d.RemoveByUUID(cmd.Context(), r.kbUUID)
 	if err != nil {
 		fmt.Printf("\n---\nSomething went wrong when trying to delete a local knowledge base project: %v\n", err)
@@ -97,12 +98,12 @@ func (r *Remove) askConfirm() (bool, error) {
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		r.lg.Error("Alas, there's been an error: %v", zap.Error(err))
+		r.lg.Zap.Error("Alas, there's been an error: %v", zap.Error(err))
 		return false, err
 	}
 	result, ok := m.(choicesTui.Model)
 	if !ok {
-		r.lg.Error("Received a response form that was not expected")
+		r.lg.Zap.Error("Received a response form that was not expected")
 		return false, fmt.Errorf("Received a response form that was not expected")
 	}
 
@@ -122,7 +123,7 @@ func (r *Remove) updateConfig() error {
 	r.vp.Set("CurrentKnowledgeBase.UUID", "")
 	err := r.vp.WriteConfig()
 	if err != nil {
-		r.lg.Error("fail to write config", zap.Error(err))
+		r.lg.Zap.Error("fail to write config", zap.Error(err))
 		return err
 	}
 	return nil
