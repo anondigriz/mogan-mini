@@ -3,7 +3,8 @@ package choose
 import (
 	"strconv"
 
-	"github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -14,11 +15,12 @@ var baseStyle = lipgloss.NewStyle().
 	BorderForeground(lipgloss.Color("240"))
 
 type Model struct {
-	table  table.Model
-	Choice string
+	table      table.Model
+	ChosenUUID string
+	IsQuitted  bool
 }
 
-func New(kbs []knowledgebase.KnowledgeBase) Model {
+func New(kbs []entKB.BaseInfo) Model {
 	columns := []table.Column{
 		{Title: "#", Width: 4},
 		{Title: "UUID", Width: 10},
@@ -68,16 +70,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "esc":
-			if m.table.Focused() {
-				m.table.Blur()
-			} else {
-				m.table.Focus()
-			}
-		case "q", "ctrl+c":
+		case "esc", "ctrl+c":
+			m.IsQuitted = true
 			return m, tea.Quit
 		case "enter":
-			m.Choice = m.table.SelectedRow()[1]
+			m.ChosenUUID = m.table.SelectedRow()[1]
 			return m, tea.Quit
 		}
 	}
@@ -86,5 +83,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) View() string {
-	return baseStyle.Render(m.table.View()) + "\n(q to quit)\n"
+	return baseStyle.Render(m.table.View()) +
+		"\n(esc or ctrl+c to quit)\n"
 }

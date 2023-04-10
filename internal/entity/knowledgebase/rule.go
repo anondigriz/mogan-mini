@@ -2,8 +2,8 @@ package knowledgebase
 
 type Rule struct {
 	BaseInfo
-	PatternID string
-	ExtraData ExtraDataRule
+	PatternUUID string
+	ExtraData   ExtraDataRule
 }
 
 type ExtraDataRule struct {
@@ -13,6 +13,6 @@ type ExtraDataRule struct {
 }
 
 type ParameterRule struct {
-	ShortName   string
-	ParameterID string
+	ShortName     string
+	ParameterUUID string
 }

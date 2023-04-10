@@ -36,6 +36,18 @@ func (r *Root) Init() {
 	all := NewAll(r.lg, r.vp, r.cfg)
 	r.Cmd.AddCommand(all.Cmd)
 	all.Init()
+
+	create := NewCreate(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(create.Cmd)
+	create.Init()
+
+	edit := NewEdit(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(edit.Cmd)
+	edit.Init()
+
+	remove := NewRemove(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(remove.Cmd)
+	remove.Init()
 }
 
 func (r *Root) initConfig() {

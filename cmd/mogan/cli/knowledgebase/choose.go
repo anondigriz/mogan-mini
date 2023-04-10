@@ -3,15 +3,15 @@ package knowledgebase
 import (
 	"context"
 	"fmt"
-	"os"
 
+	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
-	chooseKBTui "github.com/anondigriz/mogan-mini/internal/tui/knowledgebase/choose"
+	chooseTui "github.com/anondigriz/mogan-mini/internal/tui/shared/choose"
 	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/localfinder"
 )
 
@@ -34,7 +34,7 @@ func NewChoose(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Choose {
 		Use:   "choose",
 		Short: "Choose a knowledge base project to work with",
 		Long:  `Choose a knowledge base project from the base project directory to be used in the workspace`,
-		Run:   c.run,
+		RunE:  c.runE,
 	}
 	return c
 }
@@ -47,37 +47,51 @@ func (c *Choose) Init() {
 func (c *Choose) initConfig() {
 }
 
-func (c *Choose) run(cmd *cobra.Command, args []string) {
+func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 	if c.kbUUID == "" {
-		uuid, err := c.chooseKnowledgeBase(cmd.Context())
+		uuid, err := chooseKnowledgeBase(cmd.Context(), c.lg, *c.cfg)
 		if err != nil {
 			fmt.Printf("\n---\nThere was a problem when choosing a knowledge base: %v\n", err)
-			return
+			return err
 		}
 		c.kbUUID = uuid
 	}
 
-	fmt.Printf("\n---\nOkay, you have selected a knowledge base project with UUID %s\n", c.kbUUID)
+	fmt.Printf("\n---\nOkay, you have chosen a knowledge base project with UUID %s\n", c.kbUUID)
 	c.vp.Set("CurrentKnowledgeBase.UUID", c.kbUUID)
 	err := c.vp.WriteConfig()
 	if err != nil {
-		c.lg.Error("fail to write config", zap.Error(err))
-		os.Exit(1)
+		fmt.Printf("\n---\nFail to update config %v\n", err)
+		c.lg.Error("fail to update config", zap.Error(err))
+		return err
 	}
+	return nil
 }
 
-func (c *Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
-	lf := localfinder.New(c.lg, *c.cfg)
+func chooseKnowledgeBase(ctx context.Context, lg *zap.Logger, cfg config.Config) (string, error) {
+	lf := localfinder.New(lg, cfg)
 	kbs := lf.FindInProjectsDir(ctx)
-	mt := chooseKBTui.New(kbs)
+	bis := make([]entKB.BaseInfo, 0, len(kbs))
+
+	for _, v := range kbs {
+		bis = append(bis, v.BaseInfo)
+	}
+
+	mt := chooseTui.New(bis)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		c.lg.Error("Alas, there's been an error: %v", zap.Error(err))
+		lg.Error("Alas, there's been an error: %v", zap.Error(err))
 		return "", err
 	}
-	if m, ok := m.(chooseKBTui.Model); ok && m.Choice != "" {
-		return m.Choice, nil
+	result, ok := m.(chooseTui.Model)
+	if !ok {
+		lg.Error("Received a response form that was not expected")
+		return "", fmt.Errorf("Received a response form that was not expected")
 	}
-	return "", fmt.Errorf("Knowledge base was not chosen")
+
+	if result.IsQuitted {
+		return "", fmt.Errorf("Knowledge base was not chosen")
+	}
+	return result.ChosenUUID, nil
 }

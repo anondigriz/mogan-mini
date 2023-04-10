@@ -2,7 +2,7 @@ package knowledgebase
 
 type Parameter struct {
 	BaseInfo
-	GroupID   string
+	GroupUUID string
 	Type      TypeParameter
 	ExtraData ExtraDataParameter
 }

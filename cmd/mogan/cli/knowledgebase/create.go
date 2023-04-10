@@ -32,7 +32,7 @@ func NewCreate(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Create {
 		Use:   "new",
 		Short: "Create a local knowledge base",
 		Long:  `Create a local knowledge base in the base project directory`,
-		Run:   c.run,
+		RunE:  c.runE,
 	}
 	return c
 }
@@ -45,16 +45,17 @@ func (c *Create) Init() {
 func (c *Create) initConfig() {
 }
 
-func (c *Create) run(cmd *cobra.Command, args []string) {
+func (c *Create) runE(cmd *cobra.Command, args []string) error {
 	if c.ShortName == "" {
 		n, err := c.inputName()
 		if err != nil {
 			fmt.Printf("\n---\nError entering the name of the knowledge base name: %v\n", err)
-			return
+			return err
 		}
 		if n == "" {
-			fmt.Printf("\n---\nYou did not enter the knowledge base name!\n")
-			return
+			err = fmt.Errorf("You did not enter the knowledge base name!")
+			fmt.Printf("\n---\n%v\n", err)
+			return err
 		}
 		c.ShortName = n
 	}
@@ -65,15 +66,16 @@ func (c *Create) run(cmd *cobra.Command, args []string) {
 	st, err := dc.Create(cmd.Context(), c.ShortName, dc.GenerateFilePath())
 	if err != nil {
 		c.lg.Error("fail to create database for the project of the knowledge base", zap.Error(err))
-		return
+		return err
 	}
 	defer st.Shutdown()
 	err = st.Ping(cmd.Context())
 	if err != nil {
 		c.lg.Error("fail to ping database for the project of the knowledge base", zap.Error(err))
-		return
+		return err
 	}
 	fmt.Printf("\n---\nEverything all right! The project has been created!: %s\n", c.ShortName)
+	return nil
 }
 
 func (c *Create) inputName() (string, error) {
@@ -84,9 +86,17 @@ func (c *Create) inputName() (string, error) {
 		c.lg.Error("Alas, there's been an error: %v", zap.Error(err))
 		return "", err
 	}
-	if m, ok := m.(textInputTui.Model); ok && m.TextInput.Value() != "" {
-		n := m.TextInput.Value()
-		return n, nil
+	result, ok := m.(textInputTui.Model)
+	if !ok {
+		c.lg.Error("Received a response form that was not expected")
+		return "", fmt.Errorf("Received a response form that was not expected")
+
 	}
-	return "", fmt.Errorf("Knowledge base name was not entered")
+
+	if result.IsQuitted {
+		return "", fmt.Errorf("Knowledge base name was not entered")
+	}
+
+	n := result.TextInput.Value()
+	return n, nil
 }

@@ -38,6 +38,11 @@ func (d *DBCreator) GenerateFilePath() string {
 	return file
 }
 
+func (d *DBCreator) GenerateFilePathWithUUID(uuid string) string {
+	file := path.Join(d.cfg.ProjectsPath, uuid+".db")
+	return file
+}
+
 func (d *DBCreator) Create(ctx context.Context, name string, filePath string) (*knowledgebase.Storage, error) {
 	fc := filecreator.New(d.lg)
 	err := fc.CreateFile(filePath)

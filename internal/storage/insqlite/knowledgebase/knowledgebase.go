@@ -9,7 +9,7 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/storage/insqlite/errors"
 	"github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase/mappers"
-	"github.com/anondigriz/mogan-mini/pkg/insqlite/migrator"
+	"github.com/anondigriz/mogan-core/pkg/insqlite/migrator"
 
 	"go.uber.org/zap"
 )

@@ -15,6 +15,7 @@ type (
 type Model struct {
 	Question  string
 	TextInput textinput.Model
+	IsQuitted bool
 	Err       error
 }
 
@@ -32,35 +33,38 @@ func New(question, placeholder string) Model {
 	}
 }
 
-func (n Model) Init() tea.Cmd {
+func (m Model) Init() tea.Cmd {
 	return textinput.Blink
 }
 
-func (n Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type {
-		case tea.KeyEnter, tea.KeyCtrlC, tea.KeyEsc:
-			return n, tea.Quit
+		case tea.KeyEnter:
+			return m, tea.Quit
+		case tea.KeyCtrlC, tea.KeyEsc:
+			m.IsQuitted = true
+			return m, tea.Quit
 		}
 
 	// We handle errors just like any other message
 	case errMsg:
-		n.Err = msg
-		return n, nil
+		m.Err = msg
+		return m, nil
 	}
 
-	n.TextInput, cmd = n.TextInput.Update(msg)
-	return n, cmd
+	m.TextInput, cmd = m.TextInput.Update(msg)
+	return m, cmd
 }
 
-func (n Model) View() string {
+func (m Model) View() string {
 	return fmt.Sprintf(
 		"%s\n\n%s\n\n%s",
-		n.Question,
-		n.TextInput.View(),
-		"(esc to quit)",
+		m.Question,
+		m.TextInput.View(),
+		"(esc or ctrl+c to quit)",
 	) + "\n"
 }

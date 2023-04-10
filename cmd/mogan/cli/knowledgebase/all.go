@@ -31,7 +31,7 @@ func NewAll(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *All {
 		Use:   "all",
 		Short: "Show all local knowledge bases",
 		Long:  `Show all knowledge base projects that are located in the base project directory`,
-		Run:   a.run,
+		RunE:  a.runE,
 	}
 	return a
 }
@@ -43,14 +43,15 @@ func (a *All) Init() {
 func (a *All) initConfig() {
 }
 
-func (a *All) run(cmd *cobra.Command, args []string) {
+func (a *All) runE(cmd *cobra.Command, args []string) error {
 	lf := localfinder.New(a.lg, *a.cfg)
 	kbs := lf.FindInProjectsDir(cmd.Context())
 	err := a.showKnowledgeBases(kbs)
 	if err != nil {
 		fmt.Printf("\n---\nFail to show list of the knowledge bases: %v\n", err)
-		return
+		return err
 	}
+	return nil
 }
 
 func (a *All) showKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
