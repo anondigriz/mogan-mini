@@ -15,6 +15,7 @@ type (
 	}
 	Config struct {
 		// Test     string `mapstructure:"test"`
+		IsDebug              bool
 		ProjectsPath         string        `mapstructure:"-"`
 		Databases            Databases     `mapstructure:"databases"`
 		CurrentKnowledgeBase KnowledgeBase `mapstructure:"currentknowledgebase"`
@@ -33,6 +34,7 @@ func (c *Config) Fill(lg *zap.Logger, vp *viper.Viper, debug bool, projectsPath 
 	}
 	c.ProjectsPath = projectsPath
 	c.setLogLevel(debug)
+	c.IsDebug = debug
 
 	err := vp.Unmarshal(c)
 	if err != nil {

@@ -28,6 +28,10 @@ func (lg *Logger) Init(projectsPath string, debug bool) error {
 	logFileName := path.Join(logsPath, time.Now().Format("2006-01-02")+".txt")
 
 	config := zap.NewProductionEncoderConfig()
+	if debug {
+		config = zap.NewDevelopmentEncoderConfig()
+	}
+
 	config.EncodeTime = zapcore.ISO8601TimeEncoder
 	fileEncoder := zapcore.NewJSONEncoder(config)
 	logFile, err := os.OpenFile(logFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
