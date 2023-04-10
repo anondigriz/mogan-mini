@@ -32,9 +32,9 @@ func NewRemove(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Remove {
 
 	remove.Cmd = &cobra.Command{
 		Use:   "rm",
-		Short: "Remove the knowledge base",
-		Long:  `Remove the knowledge base`,
-		Run:   remove.run,
+		Short: "Remove the local knowledge base",
+		Long:  `Remove the local knowledge base from the project base directory`,
+		RunE:  remove.runE,
 	}
 	return remove
 }
@@ -47,12 +47,12 @@ func (r *Remove) Init() {
 func (r *Remove) initConfig() {
 }
 
-func (r *Remove) run(cmd *cobra.Command, args []string) {
+func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 	if r.kbUUID == "" {
 		uuid, err := chooseKnowledgeBase(cmd.Context(), r.lg, *r.cfg)
 		if err != nil {
 			fmt.Printf("\n---\nThere was a problem when choosing a knowledge base: %v\n", err)
-			return
+			return err
 		}
 		r.kbUUID = uuid
 	}
@@ -65,28 +65,30 @@ func (r *Remove) run(cmd *cobra.Command, args []string) {
 	if err != nil {
 		if err != nil {
 			fmt.Printf("\n---\nAn error occurred when requesting confirmation: %v\n", err)
-			return
+			return err
 		}
 	}
 	if !check {
-		fmt.Printf("\n---\nYou have not confirmed the removing of the knowledge base project\n")
-		return
+		err = fmt.Errorf("You have not confirmed the removing of the knowledge base projec")
+		fmt.Printf("\n---\n%v\n", err)
+		return err
 	}
 
 	err = r.updateConfig()
 	if err != nil {
 		fmt.Printf("\n---\nAn error occurred while updating the configuration: %v\n", err)
-		return
+		return err
 	}
 
 	d := dbremover.New(r.lg, *r.cfg)
 	err = d.RemoveByUUID(cmd.Context(), r.kbUUID)
 	if err != nil {
 		fmt.Printf("\n---\nSomething went wrong when trying to delete a local knowledge base project: %v\n", err)
-		return
+		return err
 	}
 
 	fmt.Printf("\n---\nThe local knowledge base project was successfully removed\n")
+	return nil
 }
 
 func (r *Remove) askConfirm() (bool, error) {

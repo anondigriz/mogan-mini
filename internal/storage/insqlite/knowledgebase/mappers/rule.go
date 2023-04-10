@@ -6,8 +6,8 @@ import (
 
 type RuleRow struct {
 	BaseInfoForRow
-	PatternID string
-	ExtraData ExtraDataRuleForRow
+	PatternUUID string
+	ExtraData   ExtraDataRuleForRow
 }
 
 type ExtraDataRuleForRow struct {
@@ -17,13 +17,13 @@ type ExtraDataRuleForRow struct {
 }
 
 type ParameterRuleForRow struct {
-	ShortName   string `json:"shortName"`
-	ParameterID string `json:"parameterID"`
+	ShortName     string `json:"shortName"`
+	ParameterUUID string `json:"parameterID"`
 }
 
 func (pr *ParameterRuleForRow) Fill(base knowledgebase.ParameterRule) {
 	pr.ShortName = base.ShortName
-	pr.ParameterID = base.ParameterID
+	pr.ParameterUUID = base.ParameterUUID
 }
 
 func (ex *ExtraDataRuleForRow) Fill(base knowledgebase.ExtraDataRule) {
@@ -44,14 +44,14 @@ func (ex *ExtraDataRuleForRow) Fill(base knowledgebase.ExtraDataRule) {
 
 func (rr *RuleRow) Fill(base knowledgebase.Rule) {
 	rr.BaseInfoForRow.Fill(base.BaseInfo)
-	rr.PatternID = base.PatternID
+	rr.PatternUUID = base.PatternUUID
 	rr.ExtraData.Fill(base.ExtraData)
 }
 
 func (pr *ParameterRuleForRow) Extract() knowledgebase.ParameterRule {
 	p := knowledgebase.ParameterRule{}
 	p.ShortName = pr.ShortName
-	p.ParameterID = pr.ParameterID
+	p.ParameterUUID = pr.ParameterUUID
 	return p
 }
 
@@ -71,7 +71,7 @@ func (ex *ExtraDataRuleForRow) Extract() knowledgebase.ExtraDataRule {
 func (rr *RuleRow) Extract() knowledgebase.Rule {
 	k := knowledgebase.Rule{}
 	k.BaseInfo = rr.BaseInfoForRow.Extract()
-	k.PatternID = rr.PatternID
+	k.PatternUUID = rr.PatternUUID
 	k.ExtraData = rr.ExtraData.Extract()
 	return k
 }

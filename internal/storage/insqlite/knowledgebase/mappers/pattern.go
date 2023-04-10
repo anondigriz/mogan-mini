@@ -6,9 +6,8 @@ import (
 
 type PatternRow struct {
 	BaseInfoForRow
-	KnowledgeBaseUUID string
-	Type              int
-	ExtraData         ExtraDataPatternForRow
+	Type      int
+	ExtraData ExtraDataPatternForRow
 }
 
 type ExtraDataPatternForRow struct {

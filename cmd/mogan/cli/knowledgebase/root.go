@@ -52,6 +52,10 @@ func (r *Root) Init() {
 	remove := NewRemove(r.lg, r.vp, r.cfg)
 	r.Cmd.AddCommand(remove.Cmd)
 	remove.Init()
+
+	im := NewImport(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(im.Cmd)
+	im.Init()
 }
 
 func (r *Root) initConfig() {

@@ -34,7 +34,7 @@ func NewChoose(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Choose {
 		Use:   "choose",
 		Short: "Choose a knowledge base project to work with",
 		Long:  `Choose a knowledge base project from the base project directory to be used in the workspace`,
-		Run:   c.run,
+		RunE:  c.runE,
 	}
 	return c
 }
@@ -47,12 +47,12 @@ func (c *Choose) Init() {
 func (c *Choose) initConfig() {
 }
 
-func (c *Choose) run(cmd *cobra.Command, args []string) {
+func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 	if c.kbUUID == "" {
 		uuid, err := chooseKnowledgeBase(cmd.Context(), c.lg, *c.cfg)
 		if err != nil {
 			fmt.Printf("\n---\nThere was a problem when choosing a knowledge base: %v\n", err)
-			return
+			return err
 		}
 		c.kbUUID = uuid
 	}
@@ -61,9 +61,11 @@ func (c *Choose) run(cmd *cobra.Command, args []string) {
 	c.vp.Set("CurrentKnowledgeBase.UUID", c.kbUUID)
 	err := c.vp.WriteConfig()
 	if err != nil {
-		c.lg.Error("fail to write config", zap.Error(err))
-		return
+		fmt.Printf("\n---\nFail to update config %v\n", err)
+		c.lg.Error("fail to update config", zap.Error(err))
+		return err
 	}
+	return nil
 }
 
 func chooseKnowledgeBase(ctx context.Context, lg *zap.Logger, cfg config.Config) (string, error) {

@@ -5,9 +5,8 @@ go 1.20
 require (
 	github.com/anondigriz/mogan-core v0.0.0-20230409175400-8ebf547ccf79
 	github.com/charmbracelet/bubbletea v0.23.2
+	github.com/charmbracelet/lipgloss v0.6.0
 	github.com/google/uuid v1.3.0
-	github.com/mattn/go-sqlite3 v1.14.16
-	github.com/pressly/goose/v3 v3.10.0
 	github.com/spf13/viper v1.15.0
 	go.uber.org/zap v1.24.0
 )
@@ -15,16 +14,19 @@ require (
 require (
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52 v1.2.1 // indirect
-	github.com/charmbracelet/lipgloss v0.6.0 // indirect
 	github.com/containerd/console v1.0.3 // indirect
+	github.com/lestrrat-go/libxml2 v0.0.0-20201123224832-e6d9de61b80d // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
+	github.com/mattn/go-sqlite3 v1.14.16 // indirect
 	github.com/muesli/ansi v0.0.0-20211018074035-2e021307bc4b // indirect
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.14.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pressly/goose/v3 v3.10.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
@@ -34,7 +36,6 @@ require (
 
 require (
 	github.com/charmbracelet/bubbles v0.15.0
-	github.com/fogleman/ease v0.0.0-20170301025033-8da417bf1776
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect

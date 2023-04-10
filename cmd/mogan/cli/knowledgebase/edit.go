@@ -34,7 +34,7 @@ func NewEdit(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Edit {
 		Use:   "edit",
 		Short: "Editing the database",
 		Long:  `Editing basic information about the knowledge base`,
-		Run:   e.run,
+		RunE:  e.runE,
 	}
 	return e
 }
@@ -46,19 +46,19 @@ func (e *Edit) Init() {
 func (e *Edit) initConfig() {
 }
 
-func (e *Edit) run(cmd *cobra.Command, args []string) {
+func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 	if e.cfg.CurrentKnowledgeBase.UUID == "" {
 		err := errors.KnowledgeBaseNotChosenErr
 		e.lg.Error(err.Error(), zap.Error(err))
 		fmt.Print(err.Error())
-		return
+		return err
 	}
 	con := connection.New(e.lg, *e.cfg)
 	st, err := con.GetByUUID(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {
 		e.lg.Error("Error to get connection with database connection", zap.Error(err))
 		fmt.Printf("An unexpected error occurred when opening a knowledge base project: %v\n", err)
-		return
+		return err
 	}
 	defer st.Shutdown()
 
@@ -66,22 +66,23 @@ func (e *Edit) run(cmd *cobra.Command, args []string) {
 	if err != nil {
 		e.lg.Error("Error getting knowledge base information", zap.Error(err))
 		fmt.Printf("\n---\nError getting knowledge base information: %v\n", err)
-		return
+		return err
 	}
 	updKb, err := e.editKnowledgeBase(cmd.Context(), kb)
 	if err != nil {
 		e.lg.Error("An error occurred while editing the knowledge base", zap.Error(err))
 		fmt.Printf("\n---\nAn error occurred while editing the knowledge base: %v\n", err)
-		return
+		return err
 	}
 
 	err = st.UpdateKnowledgeBase(cmd.Context(), updKb)
 	if err != nil {
 		e.lg.Error("An error occurred while updating the knowledge base", zap.Error(err))
 		fmt.Printf("\n---\nAn error occurred while updating the knowledge base: %v\n", err)
-		return
+		return err
 	}
 	fmt.Print("\n---\nGreat, you've changed the basic information about the knowledge base!\n")
+	return nil
 }
 
 func (e *Edit) editKnowledgeBase(ctx context.Context, kb kbEnt.KnowledgeBase) (kbEnt.KnowledgeBase, error) {

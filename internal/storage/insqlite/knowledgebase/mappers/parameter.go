@@ -6,7 +6,7 @@ import (
 
 type ParameterRow struct {
 	BaseInfoForRow
-	GroupID   string
+	GroupUUID   string
 	Type      int
 	ExtraData ExtraDataParameterForRow
 }
@@ -23,7 +23,7 @@ func (ex *ExtraDataParameterForRow) Fill(base knowledgebase.ExtraDataParameter) 
 
 func (pr *ParameterRow) Fill(base knowledgebase.Parameter) {
 	pr.BaseInfoForRow.Fill(base.BaseInfo)
-	pr.GroupID = base.GroupID
+	pr.GroupUUID = base.GroupUUID
 	pr.Type = int(base.Type)
 	pr.ExtraData.Fill(base.ExtraData)
 }
@@ -38,7 +38,7 @@ func (ex *ExtraDataParameterForRow) Extract() knowledgebase.ExtraDataParameter {
 func (pr *ParameterRow) Extract() knowledgebase.Parameter {
 	k := knowledgebase.Parameter{}
 	k.BaseInfo = pr.BaseInfoForRow.Extract()
-	k.GroupID = pr.GroupID
+	k.GroupUUID = pr.GroupUUID
 	k.Type = knowledgebase.TypeParameter(pr.Type)
 	k.ExtraData = pr.ExtraData.Extract()
 	return k
