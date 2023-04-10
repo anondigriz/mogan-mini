@@ -4,7 +4,9 @@
 
 mogan-mini implements a local Editor of the Multidimensional Open Gnoseological Active Network (MOGAN) on macOS, Linux, and Windows.
 
-![demo](doc/demo.gif)
+## Demo
+
+[![asciicast](https://asciinema.org/a/576444.svg)](https://asciinema.org/a/576444)
 
 ## Development
 
