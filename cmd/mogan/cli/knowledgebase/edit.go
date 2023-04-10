@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 	editTui "github.com/anondigriz/mogan-mini/internal/tui/shared/edit"
 	tea "github.com/charmbracelet/bubbletea"
 
@@ -17,13 +18,13 @@ import (
 )
 
 type Edit struct {
-	lg  *zap.Logger
+	lg  *logger.Logger
 	vp  *viper.Viper
 	cfg *config.Config
 	Cmd *cobra.Command
 }
 
-func NewEdit(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Edit {
+func NewEdit(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Edit {
 	e := &Edit{
 		lg:  lg,
 		vp:  vp,
@@ -49,14 +50,14 @@ func (e *Edit) initConfig() {
 func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 	if e.cfg.CurrentKnowledgeBase.UUID == "" {
 		err := errors.KnowledgeBaseNotChosenErr
-		e.lg.Error(err.Error(), zap.Error(err))
+		e.lg.Zap.Error(err.Error(), zap.Error(err))
 		fmt.Print(err.Error())
 		return err
 	}
-	con := connection.New(e.lg, *e.cfg)
+	con := connection.New(e.lg.Zap, *e.cfg)
 	st, err := con.GetByUUID(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {
-		e.lg.Error("Error to get connection with database connection", zap.Error(err))
+		e.lg.Zap.Error("Error to get connection with database connection", zap.Error(err))
 		fmt.Printf("An unexpected error occurred when opening a knowledge base project: %v\n", err)
 		return err
 	}
@@ -64,20 +65,20 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 
 	kb, err := st.GetKnowledgeBase(cmd.Context())
 	if err != nil {
-		e.lg.Error("Error getting knowledge base information", zap.Error(err))
+		e.lg.Zap.Error("Error getting knowledge base information", zap.Error(err))
 		fmt.Printf("\n---\nError getting knowledge base information: %v\n", err)
 		return err
 	}
 	updKb, err := e.editKnowledgeBase(cmd.Context(), kb)
 	if err != nil {
-		e.lg.Error("An error occurred while editing the knowledge base", zap.Error(err))
+		e.lg.Zap.Error("An error occurred while editing the knowledge base", zap.Error(err))
 		fmt.Printf("\n---\nAn error occurred while editing the knowledge base: %v\n", err)
 		return err
 	}
 
 	err = st.UpdateKnowledgeBase(cmd.Context(), updKb)
 	if err != nil {
-		e.lg.Error("An error occurred while updating the knowledge base", zap.Error(err))
+		e.lg.Zap.Error("An error occurred while updating the knowledge base", zap.Error(err))
 		fmt.Printf("\n---\nAn error occurred while updating the knowledge base: %v\n", err)
 		return err
 	}
@@ -90,12 +91,12 @@ func (e *Edit) editKnowledgeBase(ctx context.Context, kb kbEnt.KnowledgeBase) (k
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		e.lg.Error("Alas, there's been an error: %v", zap.Error(err))
+		e.lg.Zap.Error("Alas, there's been an error: %v", zap.Error(err))
 		return kbEnt.KnowledgeBase{}, err
 	}
 	result, ok := m.(editTui.Model)
 	if !ok {
-		e.lg.Error("Received a response form that was not expected")
+		e.lg.Zap.Error("Received a response form that was not expected")
 		return kbEnt.KnowledgeBase{}, fmt.Errorf("Received a response form that was not expected")
 	}
 	if result.IsQuitted || !result.BaseInfo.IsEdited || !result.Description.IsEdited {

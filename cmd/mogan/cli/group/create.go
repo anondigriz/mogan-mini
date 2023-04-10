@@ -2,19 +2,19 @@ package group
 
 import (
 	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
 )
 
 type Create struct {
-	lg  *zap.Logger
+	lg  *logger.Logger
 	vp  *viper.Viper
 	cfg *config.Config
 	Cmd *cobra.Command
 }
 
-func NewCreate(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Create {
+func NewCreate(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Create {
 	create := &Create{
 		lg:  lg,
 		vp:  vp,

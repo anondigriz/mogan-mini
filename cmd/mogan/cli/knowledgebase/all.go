@@ -5,6 +5,7 @@ import (
 
 	"github.com/anondigriz/mogan-mini/internal/config"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 	listshowTui "github.com/anondigriz/mogan-mini/internal/tui/listshow"
 	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/localfinder"
 	tea "github.com/charmbracelet/bubbletea"
@@ -14,13 +15,13 @@ import (
 )
 
 type All struct {
-	lg  *zap.Logger
+	lg  *logger.Logger
 	vp  *viper.Viper
 	cfg *config.Config
 	Cmd *cobra.Command
 }
 
-func NewAll(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *All {
+func NewAll(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *All {
 	a := &All{
 		lg:  lg,
 		vp:  vp,
@@ -44,7 +45,7 @@ func (a *All) initConfig() {
 }
 
 func (a *All) runE(cmd *cobra.Command, args []string) error {
-	lf := localfinder.New(a.lg, *a.cfg)
+	lf := localfinder.New(a.lg.Zap, *a.cfg)
 	kbs := lf.FindInProjectsDir(cmd.Context())
 	err := a.showKnowledgeBases(kbs)
 	if err != nil {
@@ -62,7 +63,7 @@ func (a *All) showKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
 	mt := listshowTui.New(list)
 
 	if _, err := tea.NewProgram(mt).Run(); err != nil {
-		a.lg.Error("Alas, there's been an error: %v", zap.Error(err))
+		a.lg.Zap.Error("Alas, there's been an error: %v", zap.Error(err))
 		return err
 	}
 	return nil

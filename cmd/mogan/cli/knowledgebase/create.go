@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 	textInputTui "github.com/anondigriz/mogan-mini/internal/tui/textinput"
 	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/dbcreator"
 	tea "github.com/charmbracelet/bubbletea"
@@ -14,14 +15,14 @@ import (
 )
 
 type Create struct {
-	lg        *zap.Logger
+	lg        *logger.Logger
 	vp        *viper.Viper
 	cfg       *config.Config
 	Cmd       *cobra.Command
 	ShortName string
 }
 
-func NewCreate(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Create {
+func NewCreate(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Create {
 	c := &Create{
 		lg:  lg,
 		vp:  vp,
@@ -62,16 +63,16 @@ func (c *Create) runE(cmd *cobra.Command, args []string) error {
 
 	fmt.Printf("\n---\nYou entered the knowledge base name: %s\n", c.ShortName)
 
-	dc := dbcreator.New(c.lg, *c.cfg)
+	dc := dbcreator.New(c.lg.Zap, *c.cfg)
 	st, err := dc.Create(cmd.Context(), c.ShortName, dc.GenerateFilePath())
 	if err != nil {
-		c.lg.Error("fail to create database for the project of the knowledge base", zap.Error(err))
+		c.lg.Zap.Error("fail to create database for the project of the knowledge base", zap.Error(err))
 		return err
 	}
 	defer st.Shutdown()
 	err = st.Ping(cmd.Context())
 	if err != nil {
-		c.lg.Error("fail to ping database for the project of the knowledge base", zap.Error(err))
+		c.lg.Zap.Error("fail to ping database for the project of the knowledge base", zap.Error(err))
 		return err
 	}
 	fmt.Printf("\n---\nEverything all right! The project has been created!: %s\n", c.ShortName)
@@ -83,12 +84,12 @@ func (c *Create) inputName() (string, error) {
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		c.lg.Error("Alas, there's been an error: %v", zap.Error(err))
+		c.lg.Zap.Error("Alas, there's been an error: %v", zap.Error(err))
 		return "", err
 	}
 	result, ok := m.(textInputTui.Model)
 	if !ok {
-		c.lg.Error("Received a response form that was not expected")
+		c.lg.Zap.Error("Received a response form that was not expected")
 		return "", fmt.Errorf("Received a response form that was not expected")
 
 	}

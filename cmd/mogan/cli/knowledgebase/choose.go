@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -16,14 +17,14 @@ import (
 )
 
 type Choose struct {
-	lg     *zap.Logger
+	lg     *logger.Logger
 	vp     *viper.Viper
 	cfg    *config.Config
 	Cmd    *cobra.Command
 	kbUUID string
 }
 
-func NewChoose(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Choose {
+func NewChoose(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Choose {
 	c := &Choose{
 		lg:  lg,
 		vp:  vp,
@@ -49,7 +50,7 @@ func (c *Choose) initConfig() {
 
 func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 	if c.kbUUID == "" {
-		uuid, err := chooseKnowledgeBase(cmd.Context(), c.lg, *c.cfg)
+		uuid, err := chooseKnowledgeBase(cmd.Context(), c.lg.Zap, *c.cfg)
 		if err != nil {
 			fmt.Printf("\n---\nThere was a problem when choosing a knowledge base: %v\n", err)
 			return err
@@ -62,7 +63,7 @@ func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 	err := c.vp.WriteConfig()
 	if err != nil {
 		fmt.Printf("\n---\nFail to update config %v\n", err)
-		c.lg.Error("fail to update config", zap.Error(err))
+		c.lg.Zap.Error("fail to update config", zap.Error(err))
 		return err
 	}
 	return nil

@@ -9,6 +9,7 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/config"
 	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 	"github.com/anondigriz/mogan-mini/internal/utility/exchange/kbimport"
 	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/dbcreator"
 	"github.com/google/uuid"
@@ -18,14 +19,14 @@ import (
 )
 
 type Import struct {
-	lg      *zap.Logger
+	lg      *logger.Logger
 	vp      *viper.Viper
 	cfg     *config.Config
 	Cmd     *cobra.Command
 	xmlPath string
 }
 
-func NewImport(lg *zap.Logger, vp *viper.Viper, cfg *config.Config) *Import {
+func NewImport(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Import {
 	im := &Import{
 		lg:  lg,
 		vp:  vp,
@@ -79,14 +80,14 @@ func (im *Import) runE(cmd *cobra.Command, args []string) error {
 func (im *Import) openFile() (*os.File, error) {
 	f, err := os.Open(im.xmlPath)
 	if err != nil {
-		im.lg.Error("Fail to open the XML file", zap.Error(err))
+		im.lg.Zap.Error("Fail to open the XML file", zap.Error(err))
 		return nil, err
 	}
 	return f, nil
 }
 
 func (im *Import) parseFile(ctx context.Context, f *os.File) (kbEnt.Container, error) {
-	kbim := kbimport.New(im.lg, *im.cfg)
+	kbim := kbimport.New(im.lg.Zap, *im.cfg)
 	uuid := uuid.New().String()
 	arg := argsCore.ImportKnowledgeBase{
 		KnowledgeBaseUUID: uuid,
@@ -95,24 +96,24 @@ func (im *Import) parseFile(ctx context.Context, f *os.File) (kbEnt.Container, e
 	}
 	cont, err := kbim.Parse(ctx, arg)
 	if err != nil {
-		im.lg.Error("Fail to parse xml file", zap.Error(err))
+		im.lg.Zap.Error("Fail to parse xml file", zap.Error(err))
 		return kbEnt.Container{}, err
 	}
 	return cont, nil
 }
 
 func (im *Import) createDB(ctx context.Context, cont kbEnt.Container) error {
-	dc := dbcreator.New(im.lg, *im.cfg)
+	dc := dbcreator.New(im.lg.Zap, *im.cfg)
 	st, err := dc.Create(ctx, cont.KnowledgeBase.ShortName, dc.GenerateFilePathWithUUID(cont.KnowledgeBase.UUID))
 	if err != nil {
-		im.lg.Error("fail to create database for the project of the knowledge base", zap.Error(err))
+		im.lg.Zap.Error("fail to create database for the project of the knowledge base", zap.Error(err))
 		return err
 	}
 	defer st.Shutdown()
 
 	err = st.FillFromContainer(ctx, cont)
 	if err != nil {
-		im.lg.Error("fail to fill the database of the knowledge base project by the data from the xml file", zap.Error(err))
+		im.lg.Zap.Error("fail to fill the database of the knowledge base project by the data from the xml file", zap.Error(err))
 		return err
 	}
 	return nil

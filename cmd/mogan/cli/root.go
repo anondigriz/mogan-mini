@@ -8,6 +8,7 @@ import (
 	kbCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/knowledgebase"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 	"github.com/anondigriz/mogan-mini/internal/utility/initializer"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -17,7 +18,7 @@ import (
 var (
 	isDebug      bool
 	isConsoleLog bool
-	lg           *zap.Logger
+	lg           *logger.Logger
 	vp           *viper.Viper
 	cfg          *config.Config
 	cfgFilePath  string
@@ -65,21 +66,23 @@ func initVars() {
 	vp = viper.New()
 	cfg = &config.Config{}
 
-	log, err := initializer.InitLogger(isDebug)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	lg = log
+	lg = logger.New()
 }
 
 func initConfig() {
-	in := initializer.New(lg)
-	newProjectsPath, err := in.InitProjectsDir(projectsPath)
+	newProjectsPath, err := initializer.InitProjectsDir(projectsPath)
 	if err != nil {
-		lg.Error("fail to set a project base directory", zap.Error(err))
+		lg.Zap.Error("fail to set a project base directory", zap.Error(err))
 		os.Exit(1)
 	}
+
+	err = lg.Init(newProjectsPath, isDebug)
+	if err != nil {
+		lg.Zap.Error("fail to init logger", zap.Error(err))
+		os.Exit(1)
+	}
+
+	in := initializer.New(lg.Zap)
 
 	cfgFile := initializer.CfgFile{
 		Type: cfgFileType,
@@ -89,19 +92,19 @@ func initConfig() {
 
 	err = in.SetCfgFile(vp, newProjectsPath, cfgFile)
 	if err != nil {
-		lg.Error("fail to set config file", zap.Error(err))
+		lg.Zap.Error("fail to set config file", zap.Error(err))
 		os.Exit(1)
 	}
 
-	err = cfg.Fill(lg, vp, isDebug, newProjectsPath)
+	err = cfg.Fill(lg.Zap, vp, isDebug, newProjectsPath)
 	if err != nil {
-		lg.Error("fail to parse config", zap.Error(err))
+		lg.Zap.Error("fail to parse config", zap.Error(err))
 		os.Exit(1)
 	}
 
 	err = vp.WriteConfig()
 	if err != nil {
-		lg.Error("fail to write config", zap.Error(err))
+		lg.Zap.Error("fail to write config", zap.Error(err))
 		os.Exit(1)
 	}
 }
