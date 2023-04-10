@@ -3,7 +3,7 @@ module github.com/anondigriz/mogan-mini
 go 1.20
 
 require (
-	github.com/anondigriz/mogan-core v0.0.0-20230409175400-8ebf547ccf79
+	github.com/anondigriz/mogan-core v0.1.1
 	github.com/charmbracelet/bubbletea v0.23.2
 	github.com/charmbracelet/lipgloss v0.6.0
 	github.com/google/uuid v1.3.0
@@ -15,7 +15,6 @@ require (
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52 v1.2.1 // indirect
 	github.com/containerd/console v1.0.3 // indirect
-	github.com/lestrrat-go/libxml2 v0.0.0-20201123224832-e6d9de61b80d // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
@@ -25,7 +24,6 @@ require (
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.14.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pressly/goose/v3 v3.10.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect

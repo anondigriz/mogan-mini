@@ -3,11 +3,11 @@ package errors
 import (
 	"errors"
 
-	validatorErr "github.com/anondigriz/mogan-core/pkg/knowledgebases/exchange/validator/errors"
+	exchangeErr "github.com/anondigriz/mogan-core/pkg/knowledgebases/exchange/errors"
 )
 
 func WrapXMLValidationErr(err error) error {
-	var e validatorErr.ValidatorErr
+	var e exchangeErr.ValidatorErr
 	if errors.As(err, &e) {
 		return UtilityErr{
 			Stat:    e.Stat,

@@ -86,11 +86,7 @@ func (im *Import) openFile() (*os.File, error) {
 }
 
 func (im *Import) parseFile(ctx context.Context, f *os.File) (kbEnt.Container, error) {
-	kbim, err := kbimport.New(im.lg, *im.cfg)
-	if err != nil {
-		im.lg.Error("Fail to init knowledge base importer", zap.Error(err))
-		return kbEnt.Container{}, err
-	}
+	kbim := kbimport.New(im.lg, *im.cfg)
 	uuid := uuid.New().String()
 	arg := argsCore.ImportKnowledgeBase{
 		KnowledgeBaseUUID: uuid,

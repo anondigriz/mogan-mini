@@ -5,7 +5,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/anondigriz/mogan-core/pkg/knowledgebases/exchange/validator"
+	"github.com/anondigriz/mogan-core/pkg/knowledgebases/exchange/detector"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/core/args"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
@@ -19,31 +19,28 @@ const (
 )
 
 type KBImport struct {
-	lg        *zap.Logger
-	cfg       config.Config
-	validator *validator.Validator
-	v2m0      *v2m0.V2M0
+	lg       *zap.Logger
+	cfg      config.Config
+	detector *detector.Detector
+	v2m0     *v2m0.V2M0
 }
 
-func New(lg *zap.Logger, cfg config.Config) (*KBImport, error) {
-	v, err := validator.New(lg)
-	if err != nil {
-		lg.Error("xml validator initialization error", zap.Error(err))
-		return nil, err
-	}
+func New(lg *zap.Logger, cfg config.Config) *KBImport {
+	d := detector.New(lg)
+
 	parser := v2m0.New(lg)
 	i := &KBImport{
-		lg:        lg,
-		cfg:       cfg,
-		validator: v,
-		v2m0:      parser,
+		lg:       lg,
+		cfg:      cfg,
+		detector: d,
+		v2m0:     parser,
 	}
-	return i, nil
+	return i
 }
 
 func (kb *KBImport) Parse(ctx context.Context, arg args.ImportKnowledgeBase) (kbEnt.Container, error) {
 	scanner := bufio.NewScanner(arg.XMLFile)
-	ver, err := kb.validator.DetectVersion(scanner)
+	ver, err := kb.detector.DetectVersion(scanner)
 	if err != nil {
 		kb.lg.Error("xml exchange document file version could not be detected", zap.Error(err))
 		return kbEnt.Container{}, errors.WrapXMLValidationErr(err)
