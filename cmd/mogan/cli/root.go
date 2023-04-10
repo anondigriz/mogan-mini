@@ -6,6 +6,7 @@ import (
 
 	grCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/group"
 	kbCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/knowledgebase"
+	uiCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/ui"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
@@ -60,6 +61,10 @@ func init() {
 	gr := grCLI.NewRoot(lg, vp, cfg)
 	rootCmd.AddCommand(gr.Cmd)
 	gr.Init()
+
+	u := uiCLI.NewRoot(lg, vp, cfg)
+	rootCmd.AddCommand(u.Cmd)
+	u.Init()
 }
 
 func initVars() {
