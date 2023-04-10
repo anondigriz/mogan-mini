@@ -3,15 +3,15 @@ package knowledgebase
 import (
 	"context"
 	"fmt"
-	"os"
 
+	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
-	chooseKBTui "github.com/anondigriz/mogan-mini/internal/tui/knowledgebase/choose"
+	chooseTui "github.com/anondigriz/mogan-mini/internal/tui/shared/choose"
 	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/localfinder"
 )
 
@@ -57,27 +57,39 @@ func (c *Choose) run(cmd *cobra.Command, args []string) {
 		c.kbUUID = uuid
 	}
 
-	fmt.Printf("\n---\nOkay, you have selected a knowledge base project with UUID %s\n", c.kbUUID)
+	fmt.Printf("\n---\nOkay, you have chosen a knowledge base project with UUID %s\n", c.kbUUID)
 	c.vp.Set("CurrentKnowledgeBase.UUID", c.kbUUID)
 	err := c.vp.WriteConfig()
 	if err != nil {
 		c.lg.Error("fail to write config", zap.Error(err))
-		os.Exit(1)
+		return
 	}
 }
 
 func chooseKnowledgeBase(ctx context.Context, lg *zap.Logger, cfg config.Config) (string, error) {
 	lf := localfinder.New(lg, cfg)
 	kbs := lf.FindInProjectsDir(ctx)
-	mt := chooseKBTui.New(kbs)
+	bis := make([]entKB.BaseInfo, 0, len(kbs))
+
+	for _, v := range kbs {
+		bis = append(bis, v.BaseInfo)
+	}
+
+	mt := chooseTui.New(bis)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
 		lg.Error("Alas, there's been an error: %v", zap.Error(err))
 		return "", err
 	}
-	if m, ok := m.(chooseKBTui.Model); ok && m.Choice != "" {
-		return m.Choice, nil
+	result, ok := m.(chooseTui.Model)
+	if !ok {
+		lg.Error("Received a response form that was not expected")
+		return "", fmt.Errorf("Received a response form that was not expected")
 	}
-	return "", fmt.Errorf("Knowledge base was not chosen")
+
+	if result.IsQuitted {
+		return "", fmt.Errorf("Knowledge base was not chosen")
+	}
+	return result.ChosenUUID, nil
 }
