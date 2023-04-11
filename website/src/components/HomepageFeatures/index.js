@@ -2,17 +2,21 @@ import React from "react";
 import clsx from "clsx";
 import styles from "./styles.module.css";
 
+import Translate, {translate} from '@docusaurus/Translate';
+
 const FeatureList = [
   {
-    title: "Lightweight and Flexible",
+    title: translate({
+      id: "homepage.mainBlock1.label",
+      message: "Lightweight and Flexible",
+      description: 'The homepage icon alt message',
+    }),
     Svg: require("@site/static/img/lightweight-and-flexible.svg").default,
-    description: (
-      <>
-        A Lightweight and Flexible Editor of the Multidimensional Open
-        Gnoseological Active Network (MOGAN) with love by anondigriz and friends
-        in Go.
-      </>
-    ),
+    description: translate({
+      id: "homepage.mainBlock1.description",
+      message: "A Lightweight and Flexible Editor of the Multidimensional Open Gnoseological Active Network (MOGAN) with love by anondigriz and friends in Go.",
+      description: 'The homepage icon alt message',
+    }),
   },
   {
     title: "Based on the Mivar-based approach",

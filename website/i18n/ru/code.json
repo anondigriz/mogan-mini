@@ -273,5 +273,13 @@
   "homepage.button.label": {
     "message": "Узнайте о том, как это сделать 🚀",
     "description": "The homepage main button"
+  },
+  "homepage.mainBlock1.label": {
+    "message": "Легкий и гибкий",
+    "description": "The homepage icon alt message"
+  },
+  "homepage.mainBlock1.description": {
+    "message": "Легкий и гибкий редактор многомерной открытой гносеологической активной сети (MOGAN), созданный с любовью anondigriz и его друзьями на Go.",
+    "description": "The homepage icon alt message"
   }
 }

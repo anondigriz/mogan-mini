@@ -112,12 +112,12 @@ const config = {
             title: "Community",
             items: [
               {
-                label: "Mivar's VK",
-                href: "https://vk.com/mivarllc",
-              },
-              {
                 label: "Balabza lab's VK",
                 href: "https://vk.com/balabza",
+              },
+              {
+                label: "Mivar's VK",
+                href: "https://vk.com/mivarllc",
               },
               {
                 label: "Mivar's Twitter",
@@ -133,13 +133,17 @@ const config = {
                 to: "/blog",
               },
               {
+                label: "Balabza lab",
+                href: "https://balabza.com/",
+              },
+              {
                 label: "RI Mivar",
                 href: "https://mivar.org/",
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} <a link="https://mivar.org/">Research Institute Mivar</a> and <a link="https://balabza.com/">Balabza lab</a>.`,
+        copyright: `Copyright © ${new Date().getFullYear()} <a link="https://balabza.com/">Balabza lab</a> and <a link="https://mivar.org/">Research Institute Mivar</a>.`,
       },
       prism: {
         theme: lightCodeTheme,

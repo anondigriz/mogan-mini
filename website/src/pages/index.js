@@ -21,7 +21,10 @@ function HomepageHeader() {
             className="button button--secondary button--lg"
             to="/docs/intro"
           >
-            <Translate id="homepage.button.label" description="The homepage main button">
+            <Translate
+              id="homepage.button.label"
+              description="The homepage main button"
+            >
               Learn about how to use it 🚀
             </Translate>
           </Link>
