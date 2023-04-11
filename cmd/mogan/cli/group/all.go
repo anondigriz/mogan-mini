@@ -1,10 +1,12 @@
 package group
 
 import (
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
 type All struct {
@@ -25,7 +27,7 @@ func NewAll(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *All {
 		Use:   "all",
 		Short: "Show all groups",
 		Long:  `Show all groups in the knowledge base`,
-		Run:   all.run,
+		RunE:  all.runE,
 	}
 	return all
 }
@@ -37,6 +39,11 @@ func (a *All) Init() {
 func (a *All) initConfig() {
 }
 
-func (a *All) run(cmd *cobra.Command, args []string) {
-	cmd.Help()
+func (a *All) runE(cmd *cobra.Command, args []string) error {
+	if a.cfg.CurrentKnowledgeBase.UUID == "" {
+		err := errors.KnowledgeBaseNotChosenErr
+		a.lg.Zap.Error(err.Error(), zap.Error(err))
+		return err
+	}
+	return nil
 }
