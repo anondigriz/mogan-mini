@@ -1,10 +1,12 @@
 package group
 
 import (
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
 type Create struct {
@@ -25,7 +27,7 @@ func NewCreate(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Create {
 		Use:   "new",
 		Short: "Create a group",
 		Long:  `Create a knowledge base group`,
-		Run:   create.run,
+		RunE:  create.runE,
 	}
 	return create
 }
@@ -37,6 +39,11 @@ func (c *Create) Init() {
 func (c *Create) initConfig() {
 }
 
-func (c *Create) run(cmd *cobra.Command, args []string) {
-	cmd.Help()
+func (c *Create) runE(cmd *cobra.Command, args []string) error {
+	if c.cfg.CurrentKnowledgeBase.UUID == "" {
+		err := errors.KnowledgeBaseNotChosenErr
+		c.lg.Zap.Error(err.Error(), zap.Error(err))
+		return err
+	}
+	return nil
 }

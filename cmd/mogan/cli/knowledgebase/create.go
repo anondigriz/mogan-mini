@@ -75,7 +75,7 @@ func (c *Create) runE(cmd *cobra.Command, args []string) error {
 		c.lg.Zap.Error("fail to ping database for the project of the knowledge base", zap.Error(err))
 		return err
 	}
-	fmt.Printf("\n---\nEverything all right! The project has been created!: %s\n", c.ShortName)
+	fmt.Printf("\n---\nEverything all right! The project has been created! The knowledge base name: %s\n", c.ShortName)
 	return nil
 }
 

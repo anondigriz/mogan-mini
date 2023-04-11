@@ -25,7 +25,7 @@ func NewRoot(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Root {
 		Use:   "gr",
 		Short: "Groups management",
 		Long:  `Knowledge base groups management`,
-		Run:   root.run,
+		RunE:  root.runE,
 	}
 	return root
 }
@@ -53,6 +53,7 @@ func (r *Root) Init() {
 func (r *Root) initConfig() {
 }
 
-func (r *Root) run(cmd *cobra.Command, args []string) {
+func (r *Root) runE(cmd *cobra.Command, args []string) error {
 	cmd.Help()
+	return nil
 }

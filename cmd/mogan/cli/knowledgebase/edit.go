@@ -51,7 +51,6 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 	if e.cfg.CurrentKnowledgeBase.UUID == "" {
 		err := errors.KnowledgeBaseNotChosenErr
 		e.lg.Zap.Error(err.Error(), zap.Error(err))
-		fmt.Print(err.Error())
 		return err
 	}
 	con := connection.New(e.lg.Zap, *e.cfg)

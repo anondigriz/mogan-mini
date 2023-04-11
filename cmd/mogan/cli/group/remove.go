@@ -1,10 +1,12 @@
 package group
 
 import (
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
 type Remove struct {
@@ -25,7 +27,7 @@ func NewRemove(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Remove {
 		Use:   "rm",
 		Short: "Remove the group",
 		Long:  `Remove the group from the knowledge base`,
-		Run:   remove.run,
+		RunE:  remove.runE,
 	}
 	return remove
 }
@@ -37,6 +39,11 @@ func (r *Remove) Init() {
 func (r *Remove) initConfig() {
 }
 
-func (r *Remove) run(cmd *cobra.Command, args []string) {
-	cmd.Help()
+func (r *Remove) runE(cmd *cobra.Command, args []string) error {
+	if r.cfg.CurrentKnowledgeBase.UUID == "" {
+		err := errors.KnowledgeBaseNotChosenErr
+		r.lg.Zap.Error(err.Error(), zap.Error(err))
+		return err
+	}
+	return nil
 }
