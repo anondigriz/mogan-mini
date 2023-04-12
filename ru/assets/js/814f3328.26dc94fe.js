@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebsite=self.webpackChunkwebsite||[]).push([[535],{5641:e=>{e.exports=JSON.parse('{"title":"\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 \u043f\u0443\u0431\u043b\u0438\u043a\u0430\u0446\u0438\u0438","items":[{"title":"\u041f\u0440\u0438\u0432\u0435\u0442, \u043c\u0438\u0440!","permalink":"/ru/blog/welcome"}]}')}}]);
