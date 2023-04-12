@@ -1,0 +1,46 @@
+{
+  "link.title.Docs": {
+    "message": "Документация",
+    "description": "The title of the footer links column with title=Docs in the footer"
+  },
+  "link.title.Community": {
+    "message": "Сообщество",
+    "description": "The title of the footer links column with title=Community in the footer"
+  },
+  "link.title.More": {
+    "message": "Дополнительно",
+    "description": "The title of the footer links column with title=More in the footer"
+  },
+  "link.item.label.Tutorial": {
+    "message": "Руководство",
+    "description": "The label of footer link with label=Tutorial linking to /docs/intro"
+  },
+  "link.item.label.Mivar's VK": {
+    "message": "Мивар в ВК",
+    "description": "The label of footer link with label=Mivar's VK linking to https://vk.com/mivarllc"
+  },
+  "link.item.label.Balabza lab's VK": {
+    "message": "Balabza lab в ВК",
+    "description": "The label of footer link with label=Balabza lab's VK linking to https://vk.com/balabza"
+  },
+  "link.item.label.Mivar's Twitter": {
+    "message": "Мивар в Птичке",
+    "description": "The label of footer link with label=Mivar's Twitter linking to https://twitter.com/MivarLLC"
+  },
+  "link.item.label.Blog": {
+    "message": "Блог",
+    "description": "The label of footer link with label=Blog linking to /blog"
+  },
+  "link.item.label.RI Mivar": {
+    "message": "НИИ Мивар",
+    "description": "The label of footer link with label=RI Mivar linking to https://mivar.org/"
+  },
+  "copyright": {
+    "message": "Copyright © 2023 <a link=\"https://balabza.com/\">Balabza lab</a> и <a link=\"https://mivar.org/\">НИИ Мивар</a>.",
+    "description": "The footer copyright"
+  },
+  "link.item.label.Balabza lab": {
+    "message": "Balabza lab",
+    "description": "The label of footer link with label=Balabza lab linking to https://balabza.com/"
+  }
+}

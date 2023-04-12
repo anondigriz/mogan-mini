@@ -1,0 +1,10 @@
+{
+  "version.label": {
+    "message": "Далее",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Commands": {
+    "message": "Команды",
+    "description": "The label for category Commands in sidebar tutorialSidebar"
+  }
+}

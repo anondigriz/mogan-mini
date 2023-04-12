@@ -30,13 +30,10 @@ var (
 		Version: "v0.1",
 		Use:     "mogan",
 		Short:   "mogan is an editor of the Multidimensional Open Gnoseological Active Network",
-		Long: `A Lightweight and Flexible Editor of the Multidimensional Open Gnoseological Active Network (MOGAN) with
-	love by anondigriz and friends in Go. The MOGAN editor is a mathematical 
-	tool for designing artificial intelligence (AI) systems. The MOGAN is a 
-	combination of the production rule system and Petri nets. The knowledge 
-	bases based on the MOGAN are used for semantic analysis and adequate 
-	representation of humanitarian epistemological and axiological 
-	principles in the process of developing AI.`,
+		Long: `A Lightweight and Flexible Editor of the Multidimensional Open Gnoseological Active Network (MOGAN) 
+		with love by anondigriz and friends in Go. This is an implementation of a local editor of the MOGAN 
+		knowledge bases (aka the Mivar knowledge bases) editor. The MOGAN editor is a mathematical tool for 
+		designing artificial intelligence (AI) systems.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.Help()
 		},

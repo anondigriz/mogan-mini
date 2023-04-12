@@ -14,20 +14,7 @@ The project is inspired by [Wi!Mi (KESMI)](https://mivar.org/en/services/project
 
 **Wi!Mi** (KESMI – Mivar expert system designer) is a tool for designing knowledge models with unlimited number of connections, parameters and relations, which has logical inference.
 
-## How to use
-
-See tutorial [here](doc/tutorial/README.md). 
-
-## Demo
-
-[![asciicast](https://asciinema.org/a/576444.svg)](https://asciinema.org/a/576444)
-
-## Roadmap
-
-The project is at the MVP preparation stage and is being developed by an in-house team of developers from the [Research Institute Mivar](https://mivar.org/en) and [Balabza lab](https://balabza.com/). [Here](https://github.com/anondigriz/mogan-mini/milestone/1) is the roadmap for preparing the MVP.
-
-
-## Available features
+## Features
 
 !!! IT IS NOT READY YET. These features are expected from the project as a result of creating an MVP.
 
@@ -38,6 +25,30 @@ mogan-mini provides a CLI for:
 3. Prepare of a **logical inference** from the knowledge base (this is a task after passing the MVP stage). 
 
 mogan-mini also provides a user interface based on [Vue.js](https://vuejs.org/) for knowledge base management.
+
+
+## Installation
+
+Download the latest [here](https://github.com/anondigriz/mogan-mini/releases/latest).
+
+Available platforms:
+
+- macOS amd64 (Intel) and arm64 (M1)
+- Linux amd64 and arm64
+- Windows amd64
+
+
+## Documentation
+
+See tutorial [here](https://mini.mivar.org/docs/intro). 
+
+## Demo
+
+[![asciicast](https://asciinema.org/a/576444.svg)](https://asciinema.org/a/576444)
+
+## Roadmap
+
+The project is at the MVP preparation stage and is being developed by an in-house team of developers from the [Research Institute Mivar](https://mivar.org/en) and [Balabza lab](https://balabza.com/). [Here](https://github.com/anondigriz/mogan-mini/milestone/1) is the roadmap for preparing the MVP.
 
 ## Development
 
