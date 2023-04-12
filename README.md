@@ -48,7 +48,7 @@ See tutorial [here](https://mini.mivar.org/docs/intro).
 
 ## Roadmap
 
-The project is at the MVP preparation stage and is being developed by an in-house team of developers from the [Research Institute Mivar](https://mivar.org/en) and [Balabza lab](https://balabza.com/). [Here](https://github.com/anondigriz/mogan-mini/milestone/1) is the roadmap for preparing the MVP.
+The project is at the MVP preparation stage and is being developed by an in-house team of developers from the [Balabza lab](https://balabza.com/) and [Research Institute Mivar](https://mivar.org/en). [Here](https://github.com/anondigriz/mogan-mini/milestone/1) is the roadmap for preparing the MVP.
 
 ## Development
 
