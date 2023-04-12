@@ -276,10 +276,30 @@
   },
   "homepage.mainBlock1.label": {
     "message": "Легкий и гибкий",
-    "description": "The homepage icon alt message"
+    "description": "The label of the block 1 of the homepage"
   },
   "homepage.mainBlock1.description": {
     "message": "Легкий и гибкий редактор многомерной открытой гносеологической активной сети (MOGAN), созданный с любовью anondigriz и его друзьями на Go.",
-    "description": "The homepage icon alt message"
+    "description": "The description of the block 1 of the homepage"
+  },
+  "homepage.top.tagline": {
+    "message": "Запустите редактор MOGAN локально",
+    "description": "The homepage tagline"
+  },
+  "homepage.mainBlock2.label": {
+    "message": "Основан на миварном подходе",
+    "description": "The label of the block 2 of the homepage"
+  },
+  "homepage.mainBlock2.description": {
+    "message": "Миварный подход представляет собой математический инструмент для проектирования систем искусственного интеллекта (ИИ). Мивар (Многомерная Информационная Варьирующаяся Адаптивная Реальность) был разработан путем объединения продукций и сетей Петри.",
+    "description": "The description of the block 2 of the homepage"
+  },
+  "homepage.mainBlock3.label": {
+    "message": "Инструмент для создания ИИ систем",
+    "description": "The label of the block 2 of the homepage"
+  },
+  "homepage.mainBlock3.description": {
+    "message": "Базы знаний, основанные на миварном подходе, используются для семантического анализа и адекватного представления гуманитарных эпистемологических и аксиологических принципов в процессе разработки ИИ.",
+    "description": "The description of the block 2 of the homepage"
   }
 }

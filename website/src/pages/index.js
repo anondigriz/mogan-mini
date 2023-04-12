@@ -5,7 +5,7 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import HomepageFeatures from "@site/src/components/HomepageFeatures";
 
-import Translate from "@docusaurus/Translate";
+import Translate, { translate } from "@docusaurus/Translate";
 
 import styles from "./index.module.css";
 
@@ -15,7 +15,14 @@ function HomepageHeader() {
     <header className={clsx("hero hero--primary", styles.heroBanner)}>
       <div className="container">
         <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <p className="hero__subtitle">
+          <Translate
+            id="homepage.top.tagline"
+            description="The homepage tagline"
+          >
+            Run MOGAN Editor locally
+          </Translate>
+        </p>
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
