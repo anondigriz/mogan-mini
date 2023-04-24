@@ -2,31 +2,39 @@ package connection
 
 import (
 	"context"
-	"fmt"
 	"os"
-	"path"
 
 	"go.uber.org/zap"
 
+	"github.com/anondigriz/mogan-core/pkg/loglevel"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	kbStorage "github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/pathmaker"
 )
 
-type Connection struct {
-	lg  *zap.Logger
-	cfg config.Config
+type settings struct {
+	LogLevel loglevel.LogLevel
 }
 
-func New(lg *zap.Logger, cfg config.Config) *Connection {
+type Connection struct {
+	lg       *zap.Logger
+	pm       *pathmaker.PathMaker
+	settings settings
+}
+
+func New(lg *zap.Logger, cfg config.Config, pm *pathmaker.PathMaker) *Connection {
 	c := &Connection{
-		lg:  lg,
-		cfg: cfg,
+		lg: lg,
+		pm: pm,
+		settings: settings{
+			LogLevel: cfg.Databases.LogLevel,
+		},
 	}
 	return c
 }
 
 func (c Connection) GetStorageByProjectUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
-	filePath := path.Join(c.cfg.ProjectsPath, uuid+".db")
+	filePath := c.pm.GetProjectPath(uuid)
 	return c.GetStorageByProjectPath(ctx, filePath)
 }
 
@@ -36,8 +44,8 @@ func (c Connection) GetStorageByProjectPath(ctx context.Context, filePath string
 		return nil, err
 	}
 
-	dsn := fmt.Sprintf("file:%s", filePath)
-	st, err := kbStorage.New(ctx, c.lg, dsn, c.cfg.Databases.LogLevel)
+	dsn := c.pm.GetStorageDSN(filePath)
+	st, err := kbStorage.New(ctx, c.lg, dsn, c.settings.LogLevel)
 	if err != nil {
 		c.lg.Error("fail to connect a new database for the project of the knowledge base", zap.Error(err))
 		return nil, err

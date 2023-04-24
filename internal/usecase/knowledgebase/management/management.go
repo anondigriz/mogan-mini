@@ -7,64 +7,51 @@ import (
 
 	"github.com/anondigriz/mogan-mini/internal/config"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
-	kbStorage "github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/connection"
-	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/creator"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/finder"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/manager"
-	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/remover"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/pathmaker"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/project"
+	"github.com/anondigriz/mogan-mini/internal/utility/filecreator"
 )
 
 type Management struct {
-	creator    *creator.Creator
-	finder     *finder.Finder
-	remover    *remover.Remover
-	connection *connection.Connection
-	manager    *manager.Manager
+	manager *manager.Manager
+	project *project.Project
 }
 
 func New(lg *zap.Logger, cfg config.Config) *Management {
-	r := remover.New(lg, cfg)
+	pm := pathmaker.New(cfg)
+	f := finder.New(lg, cfg)
+	fc := filecreator.New(lg)
 
-	c := creator.New(lg, cfg)
-	con := connection.New(lg, cfg)
-	man := manager.New(lg)
-	f := finder.New(lg, cfg, con, man)
+	con := connection.New(lg, cfg, pm)
+	man := manager.New(lg, con, f)
+	p := project.New(lg, cfg, con, pm, man, fc)
 
 	m := &Management{
-		creator:    c,
-		remover:    r,
-		finder:     f,
-		connection: con,
-		manager:    man,
+		manager: man,
+		project: p,
 	}
 	return m
 }
 
+func (m Management) CreateProject(ctx context.Context, name string) error {
+	return m.project.Create(ctx, name)
+}
+
 func (m Management) RemoveProjectByUUID(ctx context.Context, uuid string) error {
-	return m.remover.RemoveProjectByUUID(ctx, uuid)
+	return m.project.RemoveByUUID(ctx, uuid)
 }
 
-func (m Management) FindAllProjects(ctx context.Context) []kbEnt.KnowledgeBase {
-	return m.finder.FindAllProjects(ctx)
+func (m Management) Get(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
+	return m.manager.Get(ctx, uuid)
 }
 
-func (m Management) FindProjectByUUID(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
-	return m.finder.FindProjectByUUID(ctx, uuid)
+func (m Management) GetAll(ctx context.Context) ([]kbEnt.KnowledgeBase, error) {
+	return m.manager.GetAll(ctx)
 }
 
-func (m Management) FindProjectByPath(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
-	return m.finder.FindProjectByPath(ctx, filePath)
-}
-
-func (m Management) CreateProject(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
-	return m.creator.CreateProject(ctx, filePath)
-}
-
-func (m Management) GetStorageByProjectUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
-	return m.connection.GetStorageByProjectUUID(ctx, uuid)
-}
-
-func (m Management) GetStorageByProjectPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
-	return m.connection.GetStorageByProjectPath(ctx, filePath)
+func (m Management) Update(ctx context.Context, ent kbEnt.KnowledgeBase) error {
+	return m.manager.Update(ctx, ent)
 }

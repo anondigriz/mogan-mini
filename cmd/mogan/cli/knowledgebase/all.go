@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/logger"
@@ -45,18 +46,25 @@ func (a *All) Init() {
 func (a *All) initConfig() {
 }
 
-func (a *All) runE(cmd *cobra.Command, args []string) error {
+func (a All) runE(cmd *cobra.Command, args []string) error {
 	man := kbManagement.New(a.lg.Zap, *a.cfg)
-	kbs := man.FindAllProjects(cmd.Context())
-	err := a.showKnowledgeBases(kbs)
+	kbs, err := man.GetAll(cmd.Context())
 	if err != nil {
-		fmt.Printf("\n---\nFail to show list of the knowledge bases: %v\n", err)
+		a.lg.Zap.Error(errors.GetAllKnowledgeBasesErrMsg, zap.Error(err))
+		fmt.Printf(errors.ShowErrorPattern, errors.GetAllKnowledgeBasesErrMsg)
+		return err
+	}
+
+	err = a.showTUIKnowledgeBases(kbs)
+	if err != nil {
+		a.lg.Zap.Error(errors.ShowTUIKnowledgeBasesErrMsg, zap.Error(err))
+		fmt.Printf(errors.ShowErrorPattern, errors.ShowTUIKnowledgeBasesErrMsg)
 		return err
 	}
 	return nil
 }
 
-func (a *All) showKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
+func (a All) showTUIKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
 	list := make([]string, 0, len(kbs))
 	for _, v := range kbs {
 		list = append(list, fmt.Sprintf("name: %s; uuid: %s; path: %s", v.ShortName, v.ID, v.Path))
@@ -64,7 +72,7 @@ func (a *All) showKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
 	mt := listShowTui.New(list)
 
 	if _, err := tea.NewProgram(mt).Run(); err != nil {
-		a.lg.Zap.Error("Alas, there's been an error: %v", zap.Error(err))
+		a.lg.Zap.Error(errors.RunTUIProgramErrMsg, zap.Error(err))
 		return err
 	}
 	return nil
