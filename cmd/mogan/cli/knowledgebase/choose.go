@@ -4,16 +4,16 @@ import (
 	"context"
 	"fmt"
 
-	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/logger"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
+	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 	chooseTui "github.com/anondigriz/mogan-mini/internal/tui/shared/choose"
-	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/localfinder"
+	kbManagement "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management"
 )
 
 type Choose struct {
@@ -70,8 +70,8 @@ func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 }
 
 func chooseKnowledgeBase(ctx context.Context, lg *zap.Logger, cfg config.Config) (string, error) {
-	lf := localfinder.New(lg, cfg)
-	kbs := lf.FindInProjectsDir(ctx)
+	lf := kbManagement.New(lg, cfg)
+	kbs := lf.FindAllKnowledgeBase(ctx)
 	bis := make([]entKB.BaseInfo, 0, len(kbs))
 
 	for _, v := range kbs {

@@ -4,17 +4,17 @@ import (
 	"context"
 	"fmt"
 
-	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/logger"
-	editTui "github.com/anondigriz/mogan-mini/internal/tui/shared/edit"
 	tea "github.com/charmbracelet/bubbletea"
-
-	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
-	"github.com/anondigriz/mogan-mini/internal/config"
-	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/connection"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/logger"
+	editTui "github.com/anondigriz/mogan-mini/internal/tui/shared/edit"
+	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/connection"
 )
 
 type Edit struct {

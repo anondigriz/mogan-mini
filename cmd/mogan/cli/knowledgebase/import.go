@@ -6,16 +6,17 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/anondigriz/mogan-mini/internal/config"
-	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
-	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/logger"
-	"github.com/anondigriz/mogan-mini/internal/utility/exchange/kbimport"
-	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/dbcreator"
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/internal/config"
+	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
+	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/logger"
+	kbManagement "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management"
+	"github.com/anondigriz/mogan-mini/internal/utility/exchange/kbimport"
 )
 
 type Import struct {
@@ -103,8 +104,8 @@ func (im *Import) parseFile(ctx context.Context, f *os.File) (kbEnt.Container, e
 }
 
 func (im *Import) createDB(ctx context.Context, cont kbEnt.Container) error {
-	dc := dbcreator.New(im.lg.Zap, *im.cfg)
-	st, err := dc.Create(ctx, cont.KnowledgeBase.ShortName, dc.GenerateFilePathWithUUID(cont.KnowledgeBase.UUID))
+	dc := kbManagement.New(im.lg.Zap, *im.cfg)
+	st, err := dc.CreateKnowledgeBase(ctx, cont.KnowledgeBase.ShortName)
 	if err != nil {
 		im.lg.Zap.Error("fail to create database for the project of the knowledge base", zap.Error(err))
 		return err

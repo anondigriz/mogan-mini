@@ -3,15 +3,15 @@ package knowledgebase
 import (
 	"fmt"
 
-	"github.com/anondigriz/mogan-mini/internal/logger"
-	choicesTui "github.com/anondigriz/mogan-mini/internal/tui/choices"
-	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/dbremover"
 	tea "github.com/charmbracelet/bubbletea"
-
-	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/logger"
+	choicesTui "github.com/anondigriz/mogan-mini/internal/tui/choices"
+	kbManagement "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management"
 )
 
 var confirmChoices = []string{"Confirm ⚠️", "Abort 🚫"}
@@ -81,8 +81,8 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	d := dbremover.New(r.lg.Zap, *r.cfg)
-	err = d.RemoveByUUID(cmd.Context(), r.kbUUID)
+	d := kbManagement.New(r.lg.Zap, *r.cfg)
+	err = d.RemoveKnowledgeBaseByUUID(cmd.Context(), r.kbUUID)
 	if err != nil {
 		fmt.Printf("\n---\nSomething went wrong when trying to delete a local knowledge base project: %v\n", err)
 		return err

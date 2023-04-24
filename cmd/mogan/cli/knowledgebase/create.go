@@ -3,15 +3,15 @@ package knowledgebase
 import (
 	"fmt"
 
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
+
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	textInputTui "github.com/anondigriz/mogan-mini/internal/tui/textinput"
-	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/dbcreator"
-	tea "github.com/charmbracelet/bubbletea"
-	"go.uber.org/zap"
-
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	kbManagement "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management"
 )
 
 type Create struct {
@@ -63,8 +63,8 @@ func (c *Create) runE(cmd *cobra.Command, args []string) error {
 
 	fmt.Printf("\n---\nYou entered the knowledge base name: %s\n", c.ShortName)
 
-	dc := dbcreator.New(c.lg.Zap, *c.cfg)
-	st, err := dc.Create(cmd.Context(), c.ShortName, dc.GenerateFilePath())
+	dc := kbManagement.New(c.lg.Zap, *c.cfg)
+	st, err := dc.CreateKnowledgeBase(cmd.Context(), c.ShortName)
 	if err != nil {
 		c.lg.Zap.Error("fail to create database for the project of the knowledge base", zap.Error(err))
 		return err
