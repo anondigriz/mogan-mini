@@ -24,22 +24,30 @@ func New(lg *zap.Logger, cfg config.Config) *KnowledgeBase {
 	return k
 }
 
-func (m *KnowledgeBase) RemoveKnowledgeBaseByUUID(ctx context.Context, uuid string) error {
-	return m.management.RemoveKnowledgeBaseByUUID(ctx, uuid)
+func (k KnowledgeBase) RemoveKnowledgeBaseByUUID(ctx context.Context, uuid string) error {
+	return k.management.RemoveKnowledgeBaseByUUID(ctx, uuid)
 }
 
-func (m *KnowledgeBase) FindAllKnowledgeBase(ctx context.Context) []kbEnt.KnowledgeBase {
-	return m.management.FindAllKnowledgeBase(ctx)
+func (k KnowledgeBase) FindAllKnowledgeBase(ctx context.Context) []kbEnt.KnowledgeBase {
+	return k.management.FindAllKnowledgeBase(ctx)
 }
 
-func (m *KnowledgeBase) FindKnowledgeBaseByUUID(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
-	return m.management.FindKnowledgeBaseByUUID(ctx, uuid)
+func (k KnowledgeBase) FindKnowledgeBaseByUUID(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
+	return k.management.FindKnowledgeBaseByUUID(ctx, uuid)
 }
 
-func (m *KnowledgeBase) FindKnowledgeBaseByPath(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
-	return m.management.FindKnowledgeBaseByUUID(ctx, filePath)
+func (k KnowledgeBase) FindKnowledgeBaseByPath(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
+	return k.management.FindKnowledgeBaseByUUID(ctx, filePath)
 }
 
-func (m *KnowledgeBase) CreateKnowledgeBase(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
-	return m.management.CreateKnowledgeBase(ctx, filePath)
+func (k KnowledgeBase) CreateKnowledgeBase(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
+	return k.management.CreateKnowledgeBase(ctx, filePath)
+}
+
+func (k KnowledgeBase) GetKnowledgeBaseConnectionByUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
+	return k.management.GetKnowledgeBaseConnectionByUUID(ctx, uuid)
+}
+
+func (k KnowledgeBase) GetKnowledgeBaseConnectionByPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
+	return k.management.GetKnowledgeBaseConnectionByPath(ctx, filePath)
 }

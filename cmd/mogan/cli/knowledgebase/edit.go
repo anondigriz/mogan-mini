@@ -14,7 +14,7 @@ import (
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	editTui "github.com/anondigriz/mogan-mini/internal/tui/shared/edit"
-	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/connection"
+	kbManagement "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management"
 )
 
 type Edit struct {
@@ -53,8 +53,8 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 		e.lg.Zap.Error(err.Error(), zap.Error(err))
 		return err
 	}
-	con := connection.New(e.lg.Zap, *e.cfg)
-	st, err := con.GetByUUID(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
+	con := kbManagement.New(e.lg.Zap, *e.cfg)
+	st, err := con.GetKnowledgeBaseConnectionByUUID(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {
 		e.lg.Zap.Error("Error to get connection with database connection", zap.Error(err))
 		fmt.Printf("An unexpected error occurred when opening a knowledge base project: %v\n", err)

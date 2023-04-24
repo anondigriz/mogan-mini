@@ -6,9 +6,10 @@ import (
 	"os"
 	"path"
 
-	"github.com/anondigriz/mogan-mini/internal/config"
-	"github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase"
 	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/internal/config"
+	kbStorage "github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase"
 )
 
 type Connection struct {
@@ -23,20 +24,20 @@ func New(lg *zap.Logger, cfg config.Config) *Connection {
 	}
 	return s
 }
-func (c *Connection) GetByUUID(ctx context.Context, uuid string) (*knowledgebase.Storage, error) {
-	filePath := path.Join(c.cfg.ProjectsPath, uuid+".db")
-	if _, err := os.Stat(filePath); err != nil {
-		c.lg.Error("Knowledge base project does not exist", zap.Error(err))
-		return nil, err
 
-	}
+func (c Connection) GetByUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
+	filePath := path.Join(c.cfg.ProjectsPath, uuid+".db")
 	return c.GetByPath(ctx, filePath)
 }
 
-func (c *Connection) GetByPath(ctx context.Context, filePath string) (*knowledgebase.Storage, error) {
-	dsn := fmt.Sprintf("file:%s", filePath)
+func (c Connection) GetByPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
+	if _, err := os.Stat(filePath); err != nil {
+		c.lg.Error("knowledge base project does not exist", zap.Error(err))
+		return nil, err
+	}
 
-	st, err := knowledgebase.New(ctx, c.lg, dsn, c.cfg.Databases.LogLevel)
+	dsn := fmt.Sprintf("file:%s", filePath)
+	st, err := kbStorage.New(ctx, c.lg, dsn, c.cfg.Databases.LogLevel)
 	if err != nil {
 		c.lg.Error("fail to connect a new database for the project of the knowledge base", zap.Error(err))
 		return nil, err

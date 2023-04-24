@@ -23,10 +23,10 @@ func New(lg *zap.Logger, cfg config.Config) *Remover {
 	return s
 }
 
-func (lf *Remover) RemoveByUUID(ctx context.Context, uuid string) error {
-	filePath := path.Join(lf.cfg.ProjectsPath, uuid+".db")
+func (r Remover) RemoveByUUID(ctx context.Context, uuid string) error {
+	filePath := path.Join(r.cfg.ProjectsPath, uuid+".db")
 	if err := os.Remove(filePath); err != nil {
-		lf.lg.Error("Fail to delete the knowledge base project", zap.Error(err))
+		r.lg.Error("fail to delete the knowledge base project", zap.Error(err))
 		return err
 	}
 	return nil
