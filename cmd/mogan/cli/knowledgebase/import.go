@@ -104,8 +104,8 @@ func (im *Import) parseFile(ctx context.Context, f *os.File) (kbEnt.Container, e
 }
 
 func (im *Import) createDB(ctx context.Context, cont kbEnt.Container) error {
-	dc := kbManagement.New(im.lg.Zap, *im.cfg)
-	st, err := dc.CreateKnowledgeBase(ctx, cont.KnowledgeBase.ShortName)
+	man := kbManagement.New(im.lg.Zap, *im.cfg)
+	st, err := man.CreateProject(ctx, cont.KnowledgeBase.ShortName)
 	if err != nil {
 		im.lg.Zap.Error("fail to create database for the project of the knowledge base", zap.Error(err))
 		return err

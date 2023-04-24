@@ -11,6 +11,7 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/connection"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/creator"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/finder"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/manager"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/remover"
 )
 
@@ -19,47 +20,51 @@ type Management struct {
 	finder     *finder.Finder
 	remover    *remover.Remover
 	connection *connection.Connection
+	manager    *manager.Manager
 }
 
 func New(lg *zap.Logger, cfg config.Config) *Management {
 	r := remover.New(lg, cfg)
-	f := finder.New(lg, cfg)
+
 	c := creator.New(lg, cfg)
 	con := connection.New(lg, cfg)
+	man := manager.New(lg)
+	f := finder.New(lg, cfg, con, man)
 
 	m := &Management{
 		creator:    c,
 		remover:    r,
 		finder:     f,
 		connection: con,
+		manager:    man,
 	}
 	return m
 }
 
-func (m Management) RemoveKnowledgeBaseByUUID(ctx context.Context, uuid string) error {
-	return m.remover.RemoveByUUID(ctx, uuid)
+func (m Management) RemoveProjectByUUID(ctx context.Context, uuid string) error {
+	return m.remover.RemoveProjectByUUID(ctx, uuid)
 }
 
-func (m Management) FindAllKnowledgeBase(ctx context.Context) []kbEnt.KnowledgeBase {
-	return m.finder.FindAll(ctx)
+func (m Management) FindAllProjects(ctx context.Context) []kbEnt.KnowledgeBase {
+	return m.finder.FindAllProjects(ctx)
 }
 
-func (m Management) FindKnowledgeBaseByUUID(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
-	return m.finder.FindByUUID(ctx, uuid)
+func (m Management) FindProjectByUUID(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
+	return m.finder.FindProjectByUUID(ctx, uuid)
 }
 
-func (m Management) FindKnowledgeBaseByPath(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
-	return m.finder.FindByPath(ctx, filePath)
+func (m Management) FindProjectByPath(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
+	return m.finder.FindProjectByPath(ctx, filePath)
 }
 
-func (m Management) CreateKnowledgeBase(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
-	return m.creator.Create(ctx, filePath)
+func (m Management) CreateProject(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
+	return m.creator.CreateProject(ctx, filePath)
 }
 
-func (m Management) GetKnowledgeBaseConnectionByUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
-	return m.connection.GetByUUID(ctx, uuid)
+func (m Management) GetStorageByProjectUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
+	return m.connection.GetStorageByProjectUUID(ctx, uuid)
 }
 
-func (m Management) GetKnowledgeBaseConnectionByPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
-	return m.connection.GetByPath(ctx, filePath)
+func (m Management) GetStorageByProjectPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
+	return m.connection.GetStorageByProjectPath(ctx, filePath)
 }

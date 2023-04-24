@@ -40,7 +40,7 @@ func (c Creator) generateFilePath(fileName string) string {
 	return file
 }
 
-func (c Creator) Create(ctx context.Context, name string) (*kbStorage.Storage, error) {
+func (c Creator) CreateProject(ctx context.Context, name string) (*kbStorage.Storage, error) {
 	kbUUID := uuid.New().String()
 	filePath := c.generateFilePath(kbUUID)
 	err := c.fc.CreateFile(filePath)

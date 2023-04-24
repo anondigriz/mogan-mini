@@ -81,8 +81,8 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	d := kbManagement.New(r.lg.Zap, *r.cfg)
-	err = d.RemoveKnowledgeBaseByUUID(cmd.Context(), r.kbUUID)
+	man := kbManagement.New(r.lg.Zap, *r.cfg)
+	err = man.RemoveProjectByUUID(cmd.Context(), r.kbUUID)
 	if err != nil {
 		fmt.Printf("\n---\nSomething went wrong when trying to delete a local knowledge base project: %v\n", err)
 		return err

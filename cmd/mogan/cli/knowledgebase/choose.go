@@ -70,8 +70,8 @@ func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 }
 
 func chooseKnowledgeBase(ctx context.Context, lg *zap.Logger, cfg config.Config) (string, error) {
-	lf := kbManagement.New(lg, cfg)
-	kbs := lf.FindAllKnowledgeBase(ctx)
+	man := kbManagement.New(lg, cfg)
+	kbs := man.FindAllProjects(ctx)
 	bis := make([]entKB.BaseInfo, 0, len(kbs))
 
 	for _, v := range kbs {

@@ -46,8 +46,8 @@ func (a *All) initConfig() {
 }
 
 func (a *All) runE(cmd *cobra.Command, args []string) error {
-	lf := kbManagement.New(a.lg.Zap, *a.cfg)
-	kbs := lf.FindAllKnowledgeBase(cmd.Context())
+	man := kbManagement.New(a.lg.Zap, *a.cfg)
+	kbs := man.FindAllProjects(cmd.Context())
 	err := a.showKnowledgeBases(kbs)
 	if err != nil {
 		fmt.Printf("\n---\nFail to show list of the knowledge bases: %v\n", err)

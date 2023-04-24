@@ -18,19 +18,19 @@ type Connection struct {
 }
 
 func New(lg *zap.Logger, cfg config.Config) *Connection {
-	s := &Connection{
+	c := &Connection{
 		lg:  lg,
 		cfg: cfg,
 	}
-	return s
+	return c
 }
 
-func (c Connection) GetByUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
+func (c Connection) GetStorageByProjectUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
 	filePath := path.Join(c.cfg.ProjectsPath, uuid+".db")
-	return c.GetByPath(ctx, filePath)
+	return c.GetStorageByProjectPath(ctx, filePath)
 }
 
-func (c Connection) GetByPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
+func (c Connection) GetStorageByProjectPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
 	if _, err := os.Stat(filePath); err != nil {
 		c.lg.Error("knowledge base project does not exist", zap.Error(err))
 		return nil, err

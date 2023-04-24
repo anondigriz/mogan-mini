@@ -53,8 +53,8 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 		e.lg.Zap.Error(err.Error(), zap.Error(err))
 		return err
 	}
-	con := kbManagement.New(e.lg.Zap, *e.cfg)
-	st, err := con.GetKnowledgeBaseConnectionByUUID(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
+	man := kbManagement.New(e.lg.Zap, *e.cfg)
+	st, err := man.GetStorageByProjectUUID(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {
 		e.lg.Zap.Error("Error to get connection with database connection", zap.Error(err))
 		fmt.Printf("An unexpected error occurred when opening a knowledge base project: %v\n", err)

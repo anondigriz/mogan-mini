@@ -12,6 +12,7 @@ import (
 )
 
 type KnowledgeBase struct {
+	lg         *zap.Logger
 	management *management.Management
 }
 
@@ -19,35 +20,36 @@ func New(lg *zap.Logger, cfg config.Config) *KnowledgeBase {
 	m := management.New(lg, cfg)
 
 	k := &KnowledgeBase{
+		lg:         lg,
 		management: m,
 	}
 	return k
 }
 
-func (k KnowledgeBase) RemoveKnowledgeBaseByUUID(ctx context.Context, uuid string) error {
-	return k.management.RemoveKnowledgeBaseByUUID(ctx, uuid)
+func (k KnowledgeBase) RemoveProjectByUUID(ctx context.Context, uuid string) error {
+	return k.management.RemoveProjectByUUID(ctx, uuid)
 }
 
-func (k KnowledgeBase) FindAllKnowledgeBase(ctx context.Context) []kbEnt.KnowledgeBase {
-	return k.management.FindAllKnowledgeBase(ctx)
+func (k KnowledgeBase) FindAllProjects(ctx context.Context) []kbEnt.KnowledgeBase {
+	return k.management.FindAllProjects(ctx)
 }
 
-func (k KnowledgeBase) FindKnowledgeBaseByUUID(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
-	return k.management.FindKnowledgeBaseByUUID(ctx, uuid)
+func (k KnowledgeBase) FindProjectByUUID(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
+	return k.management.FindProjectByUUID(ctx, uuid)
 }
 
-func (k KnowledgeBase) FindKnowledgeBaseByPath(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
-	return k.management.FindKnowledgeBaseByUUID(ctx, filePath)
+func (k KnowledgeBase) FindProjectByPath(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
+	return k.management.FindProjectByPath(ctx, filePath)
 }
 
-func (k KnowledgeBase) CreateKnowledgeBase(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
-	return k.management.CreateKnowledgeBase(ctx, filePath)
+func (k KnowledgeBase) CreateProject(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
+	return k.management.CreateProject(ctx, filePath)
 }
 
-func (k KnowledgeBase) GetKnowledgeBaseConnectionByUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
-	return k.management.GetKnowledgeBaseConnectionByUUID(ctx, uuid)
+func (k KnowledgeBase) GetStorageByProjectUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
+	return k.management.GetStorageByProjectUUID(ctx, uuid)
 }
 
-func (k KnowledgeBase) GetKnowledgeBaseConnectionByPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
-	return k.management.GetKnowledgeBaseConnectionByPath(ctx, filePath)
+func (k KnowledgeBase) GetStorageByProjectPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
+	return k.management.GetStorageByProjectPath(ctx, filePath)
 }

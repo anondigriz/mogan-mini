@@ -63,8 +63,8 @@ func (c *Create) runE(cmd *cobra.Command, args []string) error {
 
 	fmt.Printf("\n---\nYou entered the knowledge base name: %s\n", c.ShortName)
 
-	dc := kbManagement.New(c.lg.Zap, *c.cfg)
-	st, err := dc.CreateKnowledgeBase(cmd.Context(), c.ShortName)
+	man := kbManagement.New(c.lg.Zap, *c.cfg)
+	st, err := man.CreateProject(cmd.Context(), c.ShortName)
 	if err != nil {
 		c.lg.Zap.Error("fail to create database for the project of the knowledge base", zap.Error(err))
 		return err
