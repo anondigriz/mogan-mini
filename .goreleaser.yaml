@@ -45,10 +45,25 @@ builds:
       - linux
     goarch:
       - arm
+    goarm:
+      - 6
     env:
       - CC=arm-linux-gnueabihf-gcc
       - CXX=arm-linux-gnueabihf-g++
-      - GOARM=6
+    ldflags:
+      - -extldflags "-lc -lrt -lpthread --static"
+  - id: linux-armv7
+    main: ./cmd/mogan
+    binary: mogan
+    goos:
+      - linux
+    goarch:
+      - arm
+    goarm:
+      - 7
+    env:
+      - CC=arm-linux-gnueabihf-gcc
+      - CXX=arm-linux-gnueabihf-g++
     ldflags:
       - -extldflags "-lc -lrt -lpthread --static"
   - id: linux-arm64
@@ -82,6 +97,11 @@ archives:
     builds:
       - linux-armv6
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_armv6"
+    wrap_in_directory: true
+  - id: mogan-armv7
+    builds:
+      - linux-armv7
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_armv7"
     wrap_in_directory: true
   - id: mogan
     builds:
