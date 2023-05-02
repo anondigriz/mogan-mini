@@ -1,6 +1,7 @@
 package knowledgebase
 
 import (
+	"context"
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -8,13 +9,19 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	choicesTui "github.com/anondigriz/mogan-mini/internal/tui/choices"
-	kbManagement "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management"
+	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
 )
 
-var confirmChoices = []string{"Confirm ⚠️", "Abort 🚫"}
+var removeConfirmChoices = []string{"Confirm ✅", "Abort 🚫"}
+
+const (
+	removeQuestion string = "Confirm the removing of the local knowledge base project. This action cannot be undone."
+)
 
 type Remove struct {
 	lg     *logger.Logger
@@ -50,80 +57,87 @@ func (r *Remove) initConfig() {
 
 func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 	if r.kbUUID == "" {
-		uuid, err := chooseKnowledgeBase(cmd.Context(), r.lg.Zap, *r.cfg)
+		choose := NewChoose(r.lg, r.vp, r.cfg)
+		uuid, err := choose.chooseKnowledgeBase(cmd.Context())
 		if err != nil {
-			fmt.Printf("\n---\nThere was a problem when choosing a knowledge base: %v\n", err)
+			r.lg.Zap.Error(errors.ChooseKnowledgeBaseErrMsg, zap.Error(err))
+			messages.PrintFail(errors.ChooseKnowledgeBaseErrMsg)
 			return err
 		}
 		r.kbUUID = uuid
 	}
+	messages.PrintChosenKnowledgeBase(r.kbUUID)
 
-	fmt.Printf("\n---\nOkay, you have chosen a knowledge base project with UUID %s\n", r.kbUUID)
-
-	fmt.Printf("\n---\n")
-
-	check, err := r.askConfirm()
+	check, err := r.askTUIConfirm()
 	if err != nil {
-		if err != nil {
-			fmt.Printf("\n---\nAn error occurred when requesting confirmation: %v\n", err)
-			return err
-		}
+		r.lg.Zap.Error(errors.AskTUIConfirm, zap.Error(err))
+		messages.PrintFail(errors.AskTUIConfirm)
+		return err
 	}
+
 	if !check {
-		err = fmt.Errorf("You have not confirmed the removing of the knowledge base projec")
-		fmt.Printf("\n---\n%v\n", err)
+		err = fmt.Errorf(errors.NotConfirmErrMsg)
+		r.lg.Zap.Error(errors.NotConfirmErrMsg)
+		messages.PrintFail(errors.NotConfirmErrMsg)
 		return err
 	}
 
-	err = r.updateConfig()
-	if err != nil {
-		fmt.Printf("\n---\nAn error occurred while updating the configuration: %v\n", err)
+	if err = r.remove(cmd.Context()); err != nil {
+		r.lg.Zap.Error(errors.RemoveKnowledgeBaseErrMsg, zap.Error(err))
+		messages.PrintFail(errors.RemoveKnowledgeBaseErrMsg)
 		return err
 	}
+	messages.PrintKnowledgeBaseRemoved(r.kbUUID)
 
-	man := kbManagement.New(r.lg.Zap, *r.cfg)
-	err = man.RemoveProjectByUUID(cmd.Context(), r.kbUUID)
-	if err != nil {
-		fmt.Printf("\n---\nSomething went wrong when trying to delete a local knowledge base project: %v\n", err)
-		return err
-	}
-
-	fmt.Printf("\n---\nThe local knowledge base project was successfully removed\n")
-	return nil
+	return r.updateConfig()
 }
 
-func (r *Remove) askConfirm() (bool, error) {
-	q := "Confirm the removing of the local knowledge base project. This action cannot be undone."
-	mt := choicesTui.New(q, confirmChoices)
+func (r Remove) askTUIConfirm() (bool, error) {
+	mt := choicesTui.New(removeQuestion, removeConfirmChoices)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		r.lg.Zap.Error("Alas, there's been an error: %v", zap.Error(err))
+		r.lg.Zap.Error(errors.RunTUIProgramErrMsg, zap.Error(err))
 		return false, err
 	}
 	result, ok := m.(choicesTui.Model)
 	if !ok {
-		r.lg.Zap.Error("Received a response form that was not expected")
-		return false, fmt.Errorf("Received a response form that was not expected")
+		err = fmt.Errorf(errors.ReceivedResponseWasNotExpectedErrMsg)
+		r.lg.Zap.Error(err.Error())
+		return false, err
 	}
 
 	if result.IsQuitted {
-		return false, fmt.Errorf("Confirmation of deletion was not received")
+		err := fmt.Errorf(errors.KnowledgeBaseWasNotChosenErrMsg)
+		r.lg.Zap.Error(err.Error())
+		return false, err
 	}
-	if result.Choice == confirmChoices[0] {
+
+	if result.Choice == removeConfirmChoices[0] {
 		return true, nil
 	}
 	return false, nil
 }
 
-func (r *Remove) updateConfig() error {
+func (r Remove) remove(ctx context.Context) error {
+	kbu := kbUseCase.New(r.lg.Zap, *r.cfg)
+	err := kbu.RemoveProjectByUUID(ctx, r.kbUUID)
+	if err != nil {
+		r.lg.Zap.Error(errors.RemoveKnowledgeBaseErrMsg, zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (r Remove) updateConfig() error {
 	if r.cfg.CurrentKnowledgeBase.UUID != r.kbUUID {
 		return nil
 	}
-	r.vp.Set("CurrentKnowledgeBase.UUID", "")
-	err := r.vp.WriteConfig()
-	if err != nil {
-		r.lg.Zap.Error("fail to write config", zap.Error(err))
+	r.vp.Set(kbUUIDConfigPath, "")
+
+	if err := r.vp.WriteConfig(); err != nil {
+		r.lg.Zap.Error(errors.UpdateConfigErrMsg, zap.Error(err))
+		messages.PrintFail(errors.UpdateConfigErrMsg)
 		return err
 	}
 	return nil

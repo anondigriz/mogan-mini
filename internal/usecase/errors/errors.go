@@ -1,9 +1,21 @@
 package errors
 
 const (
-	PrepareConnectionFail          = "PingFail"
-	GetKnowledgeBaseStorageFail    = "GetKnowledgeBaseStorageFail"
-	UpdateKnowledgeBaseStorageFail = "UpdateKnowledgeBaseStorageFail"
+	PrepareConnectionFail            = "PingFail"
+	GetKnowledgeBaseStorageFail      = "GetKnowledgeBaseStorageFail"
+	UpdateKnowledgeBaseStorageFail   = "UpdateKnowledgeBaseStorageFail"
+	ReadingXMLFail                   = "ReadingXMLFail"
+	UnsupportedFormatXMLVersion      = "UnsupportedFormatXMLVersion"
+	UnknownXMLValidationError        = "UnknownXMLValidationError"
+	InsertKnowledgeBaseToStorageFail = "InsertKnowledgeBaseToStorageFail"
+	InsertXMLFileToStorageFail       = "InsertXMLFileToStorageFail"
+	InsertXMLParseJobToStorageFail   = "InsertXMLParseJobToStorageFail"
+	UnexpectedStorageFail            = "UnexpectedStorageFail"
+	NoDataFound                      = "NoDataFound"
+	NotPartOfKnowledgeBase           = "NotPartOfKnowledgeBase"
+	XMLUnmarshalFail                 = "XMLUnmarshalFail"
+	ParsingXMLFail                   = "ParsingXMLFail"
+	UnexpectedJobExecutionFail       = "UnexpectedJobExecutionFail"
 )
 
 type UseCaseErr struct {

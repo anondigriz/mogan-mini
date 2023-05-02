@@ -1,4 +1,4 @@
-package manager
+package editor
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/usecase/errors"
 )
 
-func (m Manager) Get(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
+func (m Editor) Get(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
 	st, err := m.con.GetStorageByProjectUUID(ctx, uuid)
 	if err != nil {
 		e := errors.NewPrepareConnectionErr(err)
@@ -28,7 +28,7 @@ func (m Manager) Get(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, err
 	return kb, nil
 }
 
-func (m Manager) GetAll(ctx context.Context) ([]kbEnt.KnowledgeBase, error) {
+func (m Editor) GetAll(ctx context.Context) ([]kbEnt.KnowledgeBase, error) {
 	kbs := []kbEnt.KnowledgeBase{}
 
 	paths := m.finder.FindAllProjects(ctx)

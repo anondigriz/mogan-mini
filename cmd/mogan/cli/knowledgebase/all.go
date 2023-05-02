@@ -9,11 +9,12 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	listShowTui "github.com/anondigriz/mogan-mini/internal/tui/listshow"
-	kbManagement "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management"
+	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
 )
 
 type All struct {
@@ -46,19 +47,24 @@ func (a *All) Init() {
 func (a *All) initConfig() {
 }
 
-func (a All) runE(cmd *cobra.Command, args []string) error {
-	man := kbManagement.New(a.lg.Zap, *a.cfg)
-	kbs, err := man.GetAll(cmd.Context())
+func (a *All) runE(cmd *cobra.Command, args []string) error {
+	kbu := kbUseCase.New(a.lg.Zap, *a.cfg)
+	kbs, err := kbu.GetAll(cmd.Context())
 	if err != nil {
 		a.lg.Zap.Error(errors.GetAllKnowledgeBasesErrMsg, zap.Error(err))
-		fmt.Printf(errors.ShowErrorPattern, errors.GetAllKnowledgeBasesErrMsg)
+		messages.PrintFail(errors.GetAllKnowledgeBasesErrMsg)
 		return err
+	}
+
+	if len(kbs) == 0 {
+		messages.PrintNoDataToShow()
+		return nil
 	}
 
 	err = a.showTUIKnowledgeBases(kbs)
 	if err != nil {
 		a.lg.Zap.Error(errors.ShowTUIKnowledgeBasesErrMsg, zap.Error(err))
-		fmt.Printf(errors.ShowErrorPattern, errors.ShowTUIKnowledgeBasesErrMsg)
+		messages.PrintFail(errors.ShowTUIKnowledgeBasesErrMsg)
 		return err
 	}
 	return nil
@@ -67,7 +73,7 @@ func (a All) runE(cmd *cobra.Command, args []string) error {
 func (a All) showTUIKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
 	list := make([]string, 0, len(kbs))
 	for _, v := range kbs {
-		list = append(list, fmt.Sprintf("name: %s; uuid: %s; path: %s", v.ShortName, v.ID, v.Path))
+		list = append(list, fmt.Sprintf("name: %s; id: %s; path: %s", v.ShortName, v.ID, v.Path))
 	}
 	mt := listShowTui.New(list)
 

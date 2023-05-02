@@ -9,7 +9,7 @@ import (
 	"github.com/anondigriz/mogan-core/pkg/loglevel"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	kbStorage "github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management/pathmaker"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/pathmaker"
 )
 
 type settings struct {
@@ -34,7 +34,7 @@ func New(lg *zap.Logger, cfg config.Config, pm *pathmaker.PathMaker) *Connection
 }
 
 func (c Connection) GetStorageByProjectUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
-	filePath := c.pm.GetProjectPath(uuid)
+	filePath := c.pm.MakeProjectPath(uuid)
 	return c.GetStorageByProjectPath(ctx, filePath)
 }
 
@@ -44,7 +44,7 @@ func (c Connection) GetStorageByProjectPath(ctx context.Context, filePath string
 		return nil, err
 	}
 
-	dsn := c.pm.GetStorageDSN(filePath)
+	dsn := c.pm.MakeStorageDSN(filePath)
 	st, err := kbStorage.New(ctx, c.lg, dsn, c.settings.LogLevel)
 	if err != nil {
 		c.lg.Error("fail to connect a new database for the project of the knowledge base", zap.Error(err))

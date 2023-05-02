@@ -1,4 +1,4 @@
-package knowledgebase
+package manager
 
 import (
 	"context"
@@ -6,50 +6,69 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
+	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
-	kbStorage "github.com/anondigriz/mogan-mini/internal/storage/insqlite/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/management"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/connection"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/editor"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/exchange/parser"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/finder"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/pathmaker"
+	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/project"
+	"github.com/anondigriz/mogan-mini/internal/utility/filecreator"
 )
 
 type KnowledgeBase struct {
-	lg         *zap.Logger
-	management *management.Management
+	editor  *editor.Editor
+	project *project.Project
 }
 
 func New(lg *zap.Logger, cfg config.Config) *KnowledgeBase {
-	m := management.New(lg, cfg)
+	pm := pathmaker.New(cfg)
+	f := finder.New(lg, cfg)
+	fc := filecreator.New(lg)
 
-	k := &KnowledgeBase{
-		lg:         lg,
-		management: m,
+	con := connection.New(lg, cfg, pm)
+	editor := editor.New(lg, con, f)
+	parser := parser.New(lg, cfg)
+
+	prArgs := project.NewProjectArgs{
+		Lg:     lg,
+		Cfg:    cfg,
+		Con:    con,
+		Pm:     pm,
+		Editor: editor,
+		Fc:     fc,
+		Parser: parser,
 	}
-	return k
+	p := project.New(prArgs)
+
+	m := &KnowledgeBase{
+		editor:  editor,
+		project: p,
+	}
+	return m
 }
 
-func (k KnowledgeBase) RemoveProjectByUUID(ctx context.Context, uuid string) error {
-	return k.management.RemoveProjectByUUID(ctx, uuid)
+func (kb KnowledgeBase) CreateProject(ctx context.Context, name string) (string, error) {
+	return kb.project.Create(ctx, name)
 }
 
-func (k KnowledgeBase) FindAllProjects(ctx context.Context) []kbEnt.KnowledgeBase {
-	return k.management.FindAllProjects(ctx)
+func (kb KnowledgeBase) ImportProject(ctx context.Context, arg argsCore.ImportProject) (string, error) {
+	return kb.project.Import(ctx, arg)
 }
 
-func (k KnowledgeBase) FindProjectByUUID(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
-	return k.management.FindProjectByUUID(ctx, uuid)
+func (kb KnowledgeBase) RemoveProjectByUUID(ctx context.Context, uuid string) error {
+	return kb.project.RemoveByUUID(ctx, uuid)
 }
 
-func (k KnowledgeBase) FindProjectByPath(ctx context.Context, filePath string) (kbEnt.KnowledgeBase, error) {
-	return k.management.FindProjectByPath(ctx, filePath)
+func (kb KnowledgeBase) Get(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, error) {
+	return kb.editor.Get(ctx, uuid)
 }
 
-func (k KnowledgeBase) CreateProject(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
-	return k.management.CreateProject(ctx, filePath)
+func (kb KnowledgeBase) GetAll(ctx context.Context) ([]kbEnt.KnowledgeBase, error) {
+	return kb.editor.GetAll(ctx)
 }
 
-func (k KnowledgeBase) GetStorageByProjectUUID(ctx context.Context, uuid string) (*kbStorage.Storage, error) {
-	return k.management.GetStorageByProjectUUID(ctx, uuid)
-}
-
-func (k KnowledgeBase) GetStorageByProjectPath(ctx context.Context, filePath string) (*kbStorage.Storage, error) {
-	return k.management.GetStorageByProjectPath(ctx, filePath)
+func (kb KnowledgeBase) Update(ctx context.Context, ent kbEnt.KnowledgeBase) error {
+	return kb.editor.Update(ctx, ent)
 }

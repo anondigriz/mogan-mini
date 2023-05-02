@@ -8,8 +8,7 @@ type UploadedFile interface {
 	io.Closer
 }
 
-type ImportKnowledgeBase struct {
-	KnowledgeBaseUUID string
-	XMLFile           UploadedFile
-	FileName          string
+type ImportProject struct {
+	XMLFile  UploadedFile
+	FileName string
 }

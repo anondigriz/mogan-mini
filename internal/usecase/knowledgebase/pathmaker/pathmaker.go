@@ -24,10 +24,10 @@ func New(cfg config.Config) *PathMaker {
 	return pm
 }
 
-func (pm PathMaker) GetProjectPath(uuid string) string {
+func (pm PathMaker) MakeProjectPath(uuid string) string {
 	return path.Join(pm.settings.ProjectsPath, uuid+".db")
 }
 
-func (pm PathMaker) GetStorageDSN(filePath string) string {
+func (pm PathMaker) MakeStorageDSN(filePath string) string {
 	return fmt.Sprintf("file:%s", filePath)
 }

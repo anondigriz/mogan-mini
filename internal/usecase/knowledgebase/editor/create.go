@@ -1,4 +1,4 @@
-package manager
+package editor
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/usecase/errors"
 )
 
-func (m Manager) CreateKnowledgeBase(ctx context.Context, uuid string, name string) error {
+func (m Editor) CreateKnowledgeBase(ctx context.Context, uuid string, name string) error {
 	st, err := m.con.GetStorageByProjectUUID(ctx, uuid)
 	if err != nil {
 		e := errors.NewPrepareConnectionErr(err)
