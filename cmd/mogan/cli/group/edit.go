@@ -1,6 +1,8 @@
 package group
 
 import (
+	"fmt"
+
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
@@ -41,7 +43,7 @@ func (e *Edit) initConfig() {
 
 func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 	if e.cfg.CurrentKnowledgeBase.UUID == "" {
-		err := errors.KnowledgeBaseNotChosenErr
+		err := fmt.Errorf(errors.KnowledgeBaseNotChosenErrMsg)
 		e.lg.Zap.Error(err.Error(), zap.Error(err))
 		return err
 	}

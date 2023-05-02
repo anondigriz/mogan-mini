@@ -38,7 +38,7 @@ func NewRoot(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Root {
 }
 
 func (r *Root) Init() {
-	r.Cmd.PersistentFlags().StringVar(&r.addr, "addr", ":4000", "address of UI")
+	r.Cmd.PersistentFlags().StringVar(&r.addr, "addr", "127.0.0.1:8000", "address of UI")
 	cobra.OnInitialize(r.initConfig)
 }
 

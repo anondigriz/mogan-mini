@@ -3,7 +3,7 @@ package errors
 import "fmt"
 
 func NewXMLUnmarshalFailErr(e error) error {
-	return UtilityErr{
+	return UseCaseErr{
 		Stat:    XMLUnmarshalFail,
 		Message: "fail to unmarshal the xml file",
 		Err:     e,
@@ -12,7 +12,7 @@ func NewXMLUnmarshalFailErr(e error) error {
 }
 
 func NewParsingXMLFailErr(msg string, e error) error {
-	return UtilityErr{
+	return UseCaseErr{
 		Stat:    ParsingXMLFail,
 		Message: msg,
 		Err:     e,
@@ -21,7 +21,7 @@ func NewParsingXMLFailErr(msg string, e error) error {
 }
 
 func NewReadingXMLFailErr(e error) error {
-	return UtilityErr{
+	return UseCaseErr{
 		Stat:    ReadingXMLFail,
 		Message: "fail to read the XML file",
 		Err:     e,
@@ -30,7 +30,7 @@ func NewReadingXMLFailErr(e error) error {
 }
 
 func NewUnsupportedFormatXMLVersionErr(version string) error {
-	return UtilityErr{
+	return UseCaseErr{
 		Stat:    UnsupportedFormatXMLVersion,
 		Message: fmt.Sprintf("xml exchange document file version '%s' is not supported", version),
 		Err:     nil,
@@ -39,7 +39,7 @@ func NewUnsupportedFormatXMLVersionErr(version string) error {
 }
 
 func NewUnexpectedJobExecutionFailErr(err error) error {
-	return UtilityErr{
+	return UseCaseErr{
 		Stat:    UnexpectedJobExecutionFail,
 		Message: "unexpected job execution error occurred",
 		Err:     nil,

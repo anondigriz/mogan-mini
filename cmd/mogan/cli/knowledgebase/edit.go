@@ -4,30 +4,28 @@ import (
 	"context"
 	"fmt"
 
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/spf13/cobra"
+	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
+	"github.com/anondigriz/mogan-mini/internal/config"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	editTui "github.com/anondigriz/mogan-mini/internal/tui/shared/edit"
-	tea "github.com/charmbracelet/bubbletea"
-
-	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
-	"github.com/anondigriz/mogan-mini/internal/config"
-	"github.com/anondigriz/mogan-mini/internal/utility/knowledgebase/connection"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"go.uber.org/zap"
+	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
 )
 
 type Edit struct {
 	lg  *logger.Logger
-	vp  *viper.Viper
 	cfg *config.Config
 	Cmd *cobra.Command
 }
 
-func NewEdit(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Edit {
+func NewEdit(lg *logger.Logger, cfg *config.Config) *Edit {
 	e := &Edit{
 		lg:  lg,
-		vp:  vp,
 		cfg: cfg,
 	}
 
@@ -49,69 +47,80 @@ func (e *Edit) initConfig() {
 
 func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 	if e.cfg.CurrentKnowledgeBase.UUID == "" {
-		err := errors.KnowledgeBaseNotChosenErr
-		e.lg.Zap.Error(err.Error(), zap.Error(err))
-		return err
-	}
-	con := connection.New(e.lg.Zap, *e.cfg)
-	st, err := con.GetByUUID(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
-	if err != nil {
-		e.lg.Zap.Error("Error to get connection with database connection", zap.Error(err))
-		fmt.Printf("An unexpected error occurred when opening a knowledge base project: %v\n", err)
-		return err
-	}
-	defer st.Shutdown()
-
-	kb, err := st.GetKnowledgeBase(cmd.Context())
-	if err != nil {
-		e.lg.Zap.Error("Error getting knowledge base information", zap.Error(err))
-		fmt.Printf("\n---\nError getting knowledge base information: %v\n", err)
-		return err
-	}
-	updKb, err := e.editKnowledgeBase(cmd.Context(), kb)
-	if err != nil {
-		e.lg.Zap.Error("An error occurred while editing the knowledge base", zap.Error(err))
-		fmt.Printf("\n---\nAn error occurred while editing the knowledge base: %v\n", err)
+		err := fmt.Errorf(errors.KnowledgeBaseNotChosenErrMsg)
+		e.lg.Zap.Error(err.Error())
+		messages.PrintFail(errors.KnowledgeBaseNotChosenErrMsg)
 		return err
 	}
 
-	err = st.UpdateKnowledgeBase(cmd.Context(), updKb)
+	kbu := kbUseCase.New(e.lg.Zap, *e.cfg)
+	kb, err := kbu.Get(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {
-		e.lg.Zap.Error("An error occurred while updating the knowledge base", zap.Error(err))
-		fmt.Printf("\n---\nAn error occurred while updating the knowledge base: %v\n", err)
+		e.lg.Zap.Error(errors.GetKnowledgeBaseErrMsg, zap.Error(err))
+		messages.PrintFail(errors.GetKnowledgeBaseErrMsg)
 		return err
 	}
-	fmt.Print("\n---\nGreat, you've changed the basic information about the knowledge base!\n")
-	return nil
+
+	updated, err := e.editTUIKnowledgeBase(cmd.Context(), kb)
+	if err != nil {
+		e.lg.Zap.Error(errors.EditTUIKnowledgeBaseErrMsg, zap.Error(err))
+		messages.PrintFail(errors.EditTUIKnowledgeBaseErrMsg)
+		return err
+	}
+
+	return e.commitChanges(cmd.Context(), kbu, updated)
 }
 
-func (e *Edit) editKnowledgeBase(ctx context.Context, kb kbEnt.KnowledgeBase) (kbEnt.KnowledgeBase, error) {
-	mt := editTui.New(kb.BaseInfo, kb.ExtraData.Description)
+func (e Edit) editTUIKnowledgeBase(ctx context.Context, previous kbEnt.KnowledgeBase) (kbEnt.KnowledgeBase, error) {
+	mt := editTui.New(previous.BaseInfo, previous.ExtraData.Description)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		e.lg.Zap.Error("Alas, there's been an error: %v", zap.Error(err))
+		e.lg.Zap.Error(errors.RunTUIProgramErrMsg, zap.Error(err))
 		return kbEnt.KnowledgeBase{}, err
 	}
 	result, ok := m.(editTui.Model)
 	if !ok {
-		e.lg.Zap.Error("Received a response form that was not expected")
-		return kbEnt.KnowledgeBase{}, fmt.Errorf("Received a response form that was not expected")
+		err = fmt.Errorf(errors.ReceivedResponseWasNotExpectedErrMsg)
+		e.lg.Zap.Error(err.Error())
+		return kbEnt.KnowledgeBase{}, err
 	}
+
 	if result.IsQuitted || !result.BaseInfo.IsEdited || !result.Description.IsEdited {
-		return kbEnt.KnowledgeBase{}, fmt.Errorf("Knowledge base has not been edited")
+		err = fmt.Errorf(errors.KnowledgeBaseWasNotEditedErrMsg)
+		e.lg.Zap.Error(err.Error())
+		return kbEnt.KnowledgeBase{}, err
 	}
 
 	if result.BaseInfo.ID == "" {
-		return kbEnt.KnowledgeBase{}, errors.IDIsEmptyErr
+		err = fmt.Errorf(errors.IDIsEmptyErrMsg)
+		e.lg.Zap.Error(err.Error())
+		return kbEnt.KnowledgeBase{}, err
 	}
 	if result.BaseInfo.ShortName == "" {
-		return kbEnt.KnowledgeBase{}, errors.ShortNameIsEmptyErr
+		err = fmt.Errorf(errors.ShortNameIsEmptyErrMsg)
+		e.lg.Zap.Error(err.Error())
+		return kbEnt.KnowledgeBase{}, err
 	}
-	kb.BaseInfo.ID = result.BaseInfo.ID
-	kb.BaseInfo.ShortName = result.BaseInfo.ShortName
-	kb.BaseInfo.ModifiedDate = result.BaseInfo.ModifiedDate
-	kb.ExtraData.Description = result.Description.Description
 
-	return kb, nil
+	var updated kbEnt.KnowledgeBase = previous
+	updated.BaseInfo.ID = result.BaseInfo.ID
+	updated.BaseInfo.ShortName = result.BaseInfo.ShortName
+	updated.BaseInfo.ModifiedDate = result.BaseInfo.ModifiedDate
+	updated.ExtraData.Description = result.Description.Description
+
+	return updated, nil
+}
+
+func (e Edit) commitChanges(ctx context.Context, kbu *kbUseCase.KnowledgeBase, updated kbEnt.KnowledgeBase) error {
+	messages.PrintRecivedNewEntityInfo()
+
+	err := kbu.Update(ctx, updated)
+	if err != nil {
+		e.lg.Zap.Error(errors.UpdateKnowledgeBaseErrMsg, zap.Error(err))
+		messages.PrintFail(errors.UpdateKnowledgeBaseErrMsg)
+		return err
+	}
+	messages.PrintChangesAccepted()
+	return nil
 }

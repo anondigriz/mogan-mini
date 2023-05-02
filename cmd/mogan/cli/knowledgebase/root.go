@@ -14,6 +14,10 @@ type Root struct {
 	Cmd *cobra.Command
 }
 
+const (
+	kbUUIDConfigPath string = "CurrentKnowledgeBase.UUID"
+)
+
 func NewRoot(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Root {
 	root := &Root{
 		lg:  lg,
@@ -33,7 +37,7 @@ func NewRoot(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Root {
 func (r *Root) Init() {
 	cobra.OnInitialize(r.initConfig)
 
-	create := NewCreate(r.lg, r.vp, r.cfg)
+	create := NewCreate(r.lg, r.cfg)
 	r.Cmd.AddCommand(create.Cmd)
 	create.Init()
 
@@ -45,7 +49,7 @@ func (r *Root) Init() {
 	r.Cmd.AddCommand(choose.Cmd)
 	choose.Init()
 
-	edit := NewEdit(r.lg, r.vp, r.cfg)
+	edit := NewEdit(r.lg, r.cfg)
 	r.Cmd.AddCommand(edit.Cmd)
 	edit.Init()
 
@@ -53,7 +57,7 @@ func (r *Root) Init() {
 	r.Cmd.AddCommand(remove.Cmd)
 	remove.Init()
 
-	im := NewImport(r.lg, r.vp, r.cfg)
+	im := NewImport(r.lg, r.cfg)
 	r.Cmd.AddCommand(im.Cmd)
 	im.Init()
 }

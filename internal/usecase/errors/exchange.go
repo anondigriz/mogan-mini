@@ -9,14 +9,14 @@ import (
 func WrapXMLValidationErr(err error) error {
 	var e exchangeErr.ValidatorErr
 	if errors.As(err, &e) {
-		return UtilityErr{
+		return UseCaseErr{
 			Stat:    e.Stat,
 			Message: e.Message,
 			Err:     e,
 			Dt:      e.Dt,
 		}
 	}
-	return UtilityErr{
+	return UseCaseErr{
 		Stat:    UnknownXMLValidationError,
 		Message: "unknown XML validation error has occurred",
 		Err:     err,
@@ -25,7 +25,7 @@ func WrapXMLValidationErr(err error) error {
 }
 
 func NewNotPartOfKnowledgeBaseErr() error {
-	return UtilityErr{
+	return UseCaseErr{
 		Stat:    NotPartOfKnowledgeBase,
 		Message: "entity is not part of the knowledge base",
 		Err:     nil,
