@@ -17,7 +17,7 @@ import (
 	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
 )
 
-var removeConfirmChoices = []string{"Confirm ✅", "Abort 🚫"}
+var removeConfirmChoices = []string{"Confirm ✓", "Abort ✕"}
 
 const (
 	removeQuestion string = "Confirm the removing of the local knowledge base project. This action cannot be undone."
