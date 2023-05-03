@@ -38,7 +38,8 @@ builds:
       - CXX=x86_64-linux-gnu-g++
     ldflags:
       - -extldflags "-lc -lrt -lpthread --static"
-  - id: linux-armv6
+  # Use armhfv6 for all armhf systems with v6+ architecture
+  - id: linux-armhfv6
     main: ./cmd/mogan
     binary: mogan
     goos:
@@ -52,7 +53,8 @@ builds:
       - CXX=arm-linux-gnueabihf-g++
     ldflags:
       - -extldflags "-lc -lrt -lpthread --static"
-  - id: linux-armv7
+  # Use armhfv7 for all armhf systems with v7+ architecture
+  - id: linux-armhfv7
     main: ./cmd/mogan
     binary: mogan
     goos:
@@ -66,6 +68,7 @@ builds:
       - CXX=arm-linux-gnueabihf-g++
     ldflags:
       - -extldflags "-lc -lrt -lpthread --static"
+  # Use arm64 for all v8 64-bit architectures
   - id: linux-arm64
     main: ./cmd/mogan
     binary: mogan
@@ -93,15 +96,15 @@ builds:
     ldflags:
       - -buildmode=exe
 archives:
-  - id: mogan-armv6
+  - id: mogan-armhfv6
     builds:
-      - linux-armv6
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_armv6"
+      - linux-armhfv6
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_armhfv6"
     wrap_in_directory: true
-  - id: mogan-armv7
+  - id: mogan-armhfv7
     builds:
-      - linux-armv7
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_armv7"
+      - linux-armhfv7
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_armhfv7"
     wrap_in_directory: true
   - id: mogan
     builds:
