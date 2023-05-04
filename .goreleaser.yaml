@@ -50,9 +50,10 @@ builds:
     env:
       - CC=arm-linux-gnueabihf-gcc
       - CXX=arm-linux-gnueabihf-g++
-      - CFLAGS="-march=armv6 -mfloat-abi=hard -mfpu=vfp"
+    flags:
+      - -march=armv6 -mfloat-abi=hard -mfpu=vfp
     ldflags:
-      - -extldflags "-march=armv6 -mfloat-abi=hard -mfpu=vfp"
+      - -extldflags "-lc -lrt -lpthread --static"
   - id: linux-arm64
     main: ./cmd/mogan
     binary: mogan
