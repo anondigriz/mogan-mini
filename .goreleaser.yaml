@@ -52,6 +52,10 @@ builds:
       - CXX=arm-linux-gnueabihf-g++
       - CFLAGS="-march=armv6 -mfloat-abi=hard -mfpu=vfp"
       - CXXFLAGS="-march=armv6 -mfloat-abi=hard -mfpu=vfp"
+    flags:
+      # force rebuilding of packages that are already up-to-date.
+      # https://github.com/mattn/go-sqlite3/issues/504
+      - -a
     ldflags:
       - -extldflags "-lc -lrt -lpthread --static"
   - id: linux-arm64
