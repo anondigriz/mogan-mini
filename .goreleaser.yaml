@@ -50,7 +50,7 @@ builds:
     env:
       - CC=arm-linux-gnueabihf-gcc
       - CXX=arm-linux-gnueabihf-g++
-    flags:
+    gcflags:
       - -march=armv6 -mfloat-abi=hard -mfpu=vfp
     ldflags:
       - -extldflags "-lc -lrt -lpthread --static"
