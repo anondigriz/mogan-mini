@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
@@ -51,8 +51,8 @@ func (a *All) runE(cmd *cobra.Command, args []string) error {
 	kbu := kbUseCase.New(a.lg.Zap, *a.cfg)
 	kbs, err := kbu.GetAll(cmd.Context())
 	if err != nil {
-		a.lg.Zap.Error(errors.GetAllKnowledgeBasesErrMsg, zap.Error(err))
-		messages.PrintFail(errors.GetAllKnowledgeBasesErrMsg)
+		a.lg.Zap.Error(errMsgs.GetAllKnowledgeBases, zap.Error(err))
+		messages.PrintFail(errMsgs.GetAllKnowledgeBases)
 		return err
 	}
 
@@ -63,8 +63,8 @@ func (a *All) runE(cmd *cobra.Command, args []string) error {
 
 	err = a.showTUIKnowledgeBases(kbs)
 	if err != nil {
-		a.lg.Zap.Error(errors.ShowTUIKnowledgeBasesErrMsg, zap.Error(err))
-		messages.PrintFail(errors.ShowTUIKnowledgeBasesErrMsg)
+		a.lg.Zap.Error(errMsgs.ShowTUIKnowledgeBases, zap.Error(err))
+		messages.PrintFail(errMsgs.ShowTUIKnowledgeBases)
 		return err
 	}
 	return nil
@@ -78,7 +78,7 @@ func (a All) showTUIKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
 	mt := listShowTui.New(list)
 
 	if _, err := tea.NewProgram(mt).Run(); err != nil {
-		a.lg.Zap.Error(errors.RunTUIProgramErrMsg, zap.Error(err))
+		a.lg.Zap.Error(errMsgs.RunTUIProgram, zap.Error(err))
 		return err
 	}
 	return nil

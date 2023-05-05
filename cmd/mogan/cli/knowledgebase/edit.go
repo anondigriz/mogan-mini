@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
@@ -47,24 +47,24 @@ func (e *Edit) initConfig() {
 
 func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 	if e.cfg.CurrentKnowledgeBase.UUID == "" {
-		err := fmt.Errorf(errors.KnowledgeBaseNotChosenErrMsg)
+		err := fmt.Errorf(errMsgs.KnowledgeBaseNotChosen)
 		e.lg.Zap.Error(err.Error())
-		messages.PrintFail(errors.KnowledgeBaseNotChosenErrMsg)
+		messages.PrintFail(errMsgs.KnowledgeBaseNotChosen)
 		return err
 	}
 
 	kbu := kbUseCase.New(e.lg.Zap, *e.cfg)
 	kb, err := kbu.Get(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {
-		e.lg.Zap.Error(errors.GetKnowledgeBaseErrMsg, zap.Error(err))
-		messages.PrintFail(errors.GetKnowledgeBaseErrMsg)
+		e.lg.Zap.Error(errMsgs.GetKnowledgeBase, zap.Error(err))
+		messages.PrintFail(errMsgs.GetKnowledgeBase)
 		return err
 	}
 
 	updated, err := e.editTUIKnowledgeBase(cmd.Context(), kb)
 	if err != nil {
-		e.lg.Zap.Error(errors.EditTUIKnowledgeBaseErrMsg, zap.Error(err))
-		messages.PrintFail(errors.EditTUIKnowledgeBaseErrMsg)
+		e.lg.Zap.Error(errMsgs.EditTUIKnowledgeBase, zap.Error(err))
+		messages.PrintFail(errMsgs.EditTUIKnowledgeBase)
 		return err
 	}
 
@@ -76,29 +76,29 @@ func (e Edit) editTUIKnowledgeBase(ctx context.Context, previous kbEnt.Knowledge
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		e.lg.Zap.Error(errors.RunTUIProgramErrMsg, zap.Error(err))
+		e.lg.Zap.Error(errMsgs.RunTUIProgram, zap.Error(err))
 		return kbEnt.KnowledgeBase{}, err
 	}
 	result, ok := m.(editTui.Model)
 	if !ok {
-		err = fmt.Errorf(errors.ReceivedResponseWasNotExpectedErrMsg)
+		err = fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
 		e.lg.Zap.Error(err.Error())
 		return kbEnt.KnowledgeBase{}, err
 	}
 
 	if result.IsQuitted || !result.BaseInfo.IsEdited || !result.Description.IsEdited {
-		err = fmt.Errorf(errors.KnowledgeBaseWasNotEditedErrMsg)
+		err = fmt.Errorf(errMsgs.KnowledgeBaseWasNotEdited)
 		e.lg.Zap.Error(err.Error())
 		return kbEnt.KnowledgeBase{}, err
 	}
 
 	if result.BaseInfo.ID == "" {
-		err = fmt.Errorf(errors.IDIsEmptyErrMsg)
+		err = fmt.Errorf(errMsgs.IDIsEmpty)
 		e.lg.Zap.Error(err.Error())
 		return kbEnt.KnowledgeBase{}, err
 	}
 	if result.BaseInfo.ShortName == "" {
-		err = fmt.Errorf(errors.ShortNameIsEmptyErrMsg)
+		err = fmt.Errorf(errMsgs.ShortNameIsEmpty)
 		e.lg.Zap.Error(err.Error())
 		return kbEnt.KnowledgeBase{}, err
 	}
@@ -113,12 +113,12 @@ func (e Edit) editTUIKnowledgeBase(ctx context.Context, previous kbEnt.Knowledge
 }
 
 func (e Edit) commitChanges(ctx context.Context, kbu *kbUseCase.KnowledgeBase, updated kbEnt.KnowledgeBase) error {
-	messages.PrintRecivedNewEntityInfo()
+	messages.PrintReceivedNewEntityInfo()
 
 	err := kbu.Update(ctx, updated)
 	if err != nil {
-		e.lg.Zap.Error(errors.UpdateKnowledgeBaseErrMsg, zap.Error(err))
-		messages.PrintFail(errors.UpdateKnowledgeBaseErrMsg)
+		e.lg.Zap.Error(errMsgs.UpdateKnowledgeBase, zap.Error(err))
+		messages.PrintFail(errMsgs.UpdateKnowledgeBase)
 		return err
 	}
 	messages.PrintChangesAccepted()

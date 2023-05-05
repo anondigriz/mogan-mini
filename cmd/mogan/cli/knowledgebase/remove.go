@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
@@ -60,8 +60,8 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 		choose := NewChoose(r.lg, r.vp, r.cfg)
 		uuid, err := choose.chooseKnowledgeBase(cmd.Context())
 		if err != nil {
-			r.lg.Zap.Error(errors.ChooseKnowledgeBaseErrMsg, zap.Error(err))
-			messages.PrintFail(errors.ChooseKnowledgeBaseErrMsg)
+			r.lg.Zap.Error(errMsgs.ChooseKnowledgeBase, zap.Error(err))
+			messages.PrintFail(errMsgs.ChooseKnowledgeBase)
 			return err
 		}
 		r.kbUUID = uuid
@@ -70,21 +70,21 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 
 	check, err := r.askTUIConfirm()
 	if err != nil {
-		r.lg.Zap.Error(errors.AskTUIConfirm, zap.Error(err))
-		messages.PrintFail(errors.AskTUIConfirm)
+		r.lg.Zap.Error(errMsgs.AskTUIConfirm, zap.Error(err))
+		messages.PrintFail(errMsgs.AskTUIConfirm)
 		return err
 	}
 
 	if !check {
-		err = fmt.Errorf(errors.NotConfirmErrMsg)
-		r.lg.Zap.Error(errors.NotConfirmErrMsg)
-		messages.PrintFail(errors.NotConfirmErrMsg)
+		err = fmt.Errorf(errMsgs.NotConfirm)
+		r.lg.Zap.Error(errMsgs.NotConfirm)
+		messages.PrintFail(errMsgs.NotConfirm)
 		return err
 	}
 
 	if err = r.remove(cmd.Context()); err != nil {
-		r.lg.Zap.Error(errors.RemoveKnowledgeBaseErrMsg, zap.Error(err))
-		messages.PrintFail(errors.RemoveKnowledgeBaseErrMsg)
+		r.lg.Zap.Error(errMsgs.RemoveKnowledgeBase, zap.Error(err))
+		messages.PrintFail(errMsgs.RemoveKnowledgeBase)
 		return err
 	}
 	messages.PrintKnowledgeBaseRemoved(r.kbUUID)
@@ -97,18 +97,18 @@ func (r Remove) askTUIConfirm() (bool, error) {
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		r.lg.Zap.Error(errors.RunTUIProgramErrMsg, zap.Error(err))
+		r.lg.Zap.Error(errMsgs.RunTUIProgram, zap.Error(err))
 		return false, err
 	}
 	result, ok := m.(choicesTui.Model)
 	if !ok {
-		err = fmt.Errorf(errors.ReceivedResponseWasNotExpectedErrMsg)
+		err = fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
 		r.lg.Zap.Error(err.Error())
 		return false, err
 	}
 
 	if result.IsQuitted {
-		err := fmt.Errorf(errors.KnowledgeBaseWasNotChosenErrMsg)
+		err := fmt.Errorf(errMsgs.KnowledgeBaseWasNotChosen)
 		r.lg.Zap.Error(err.Error())
 		return false, err
 	}
@@ -123,7 +123,7 @@ func (r Remove) remove(ctx context.Context) error {
 	kbu := kbUseCase.New(r.lg.Zap, *r.cfg)
 	err := kbu.RemoveProjectByUUID(ctx, r.kbUUID)
 	if err != nil {
-		r.lg.Zap.Error(errors.RemoveKnowledgeBaseErrMsg, zap.Error(err))
+		r.lg.Zap.Error(errMsgs.RemoveKnowledgeBase, zap.Error(err))
 		return err
 	}
 	return nil
@@ -136,8 +136,8 @@ func (r Remove) updateConfig() error {
 	r.vp.Set(kbUUIDConfigPath, "")
 
 	if err := r.vp.WriteConfig(); err != nil {
-		r.lg.Zap.Error(errors.UpdateConfigErrMsg, zap.Error(err))
-		messages.PrintFail(errors.UpdateConfigErrMsg)
+		r.lg.Zap.Error(errMsgs.UpdateConfig, zap.Error(err))
+		messages.PrintFail(errMsgs.UpdateConfig)
 		return err
 	}
 	return nil

@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
@@ -54,8 +54,8 @@ func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 	if c.kbUUID == "" {
 		uuid, err := c.chooseKnowledgeBase(cmd.Context())
 		if err != nil {
-			c.lg.Zap.Error(errors.ChooseKnowledgeBaseErrMsg, zap.Error(err))
-			messages.PrintFail(errors.ChooseKnowledgeBaseErrMsg)
+			c.lg.Zap.Error(errMsgs.ChooseKnowledgeBase, zap.Error(err))
+			messages.PrintFail(errMsgs.ChooseKnowledgeBase)
 			return err
 		}
 		c.kbUUID = uuid
@@ -68,7 +68,7 @@ func (c Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
 	kbu := kbUseCase.New(c.lg.Zap, *c.cfg)
 	kbs, err := kbu.GetAll(ctx)
 	if err != nil {
-		c.lg.Zap.Error(errors.GetAllKnowledgeBasesErrMsg, zap.Error(err))
+		c.lg.Zap.Error(errMsgs.GetAllKnowledgeBases, zap.Error(err))
 		return "", err
 	}
 
@@ -79,7 +79,7 @@ func (c Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
 
 	uuid, err := c.chooseTUIKnowledgeBase(kbsInfo)
 	if err != nil {
-		c.lg.Zap.Error(errors.ChooseTUIKnowledgeBaseErrMsg, zap.Error(err))
+		c.lg.Zap.Error(errMsgs.ChooseTUIKnowledgeBase, zap.Error(err))
 		return "", err
 	}
 	return uuid, nil
@@ -90,18 +90,18 @@ func (c Choose) chooseTUIKnowledgeBase(kbs []entKB.BaseInfo) (string, error) {
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		c.lg.Zap.Error(errors.RunTUIProgramErrMsg, zap.Error(err))
+		c.lg.Zap.Error(errMsgs.RunTUIProgram, zap.Error(err))
 		return "", err
 	}
 	result, ok := m.(chooseTui.Model)
 	if !ok {
-		err := fmt.Errorf(errors.ReceivedResponseWasNotExpectedErrMsg)
+		err := fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
 		c.lg.Zap.Error(err.Error())
 		return "", err
 	}
 
 	if result.IsQuitted {
-		err := fmt.Errorf(errors.KnowledgeBaseWasNotChosenErrMsg)
+		err := fmt.Errorf(errMsgs.KnowledgeBaseWasNotChosen)
 		c.lg.Zap.Error(err.Error())
 		return "", err
 	}
@@ -114,8 +114,8 @@ func (c Choose) commitChoice() error {
 	c.vp.Set(kbUUIDConfigPath, c.kbUUID)
 
 	if err := c.vp.WriteConfig(); err != nil {
-		c.lg.Zap.Error(errors.UpdateConfigErrMsg, zap.Error(err))
-		messages.PrintFail(errors.UpdateConfigErrMsg)
+		c.lg.Zap.Error(errMsgs.UpdateConfig, zap.Error(err))
+		messages.PrintFail(errMsgs.UpdateConfig)
 		return err
 	}
 	return nil

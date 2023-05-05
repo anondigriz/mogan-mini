@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
@@ -47,16 +47,16 @@ func (im *Import) initConfig() {
 
 func (im *Import) runE(cmd *cobra.Command, args []string) error {
 	if im.xmlPath == "" {
-		err := fmt.Errorf(errors.XMLFilePathIsEmptyErrMsg)
+		err := fmt.Errorf(errMsgs.XMLFilePathIsEmpty)
 		im.lg.Zap.Error(err.Error())
-		messages.PrintFail(errors.XMLFilePathIsEmptyErrMsg)
+		messages.PrintFail(errMsgs.XMLFilePathIsEmpty)
 		return err
 	}
 
 	f, err := os.Open(im.xmlPath)
 	if err != nil {
 		im.lg.Zap.Error(err.Error(), zap.Error(err))
-		messages.PrintFail(errors.XMLFileOpenErrMsg)
+		messages.PrintFail(errMsgs.XMLFileOpen)
 		return err
 	}
 	defer f.Close()
@@ -70,8 +70,8 @@ func (im *Import) runE(cmd *cobra.Command, args []string) error {
 
 	uuid, err := kbu.ImportProject(cmd.Context(), iArgs)
 	if err != nil {
-		im.lg.Zap.Error(errors.ImportProjectErrMsg, zap.Error(err))
-		messages.PrintFail(errors.ImportProjectErrMsg)
+		im.lg.Zap.Error(errMsgs.ImportProject, zap.Error(err))
+		messages.PrintFail(errMsgs.ImportProject)
 		return err
 	}
 
