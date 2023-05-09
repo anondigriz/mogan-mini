@@ -9,10 +9,11 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
+
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
-	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	chooseTui "github.com/anondigriz/mogan-mini/internal/tui/shared/choose"
 	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
@@ -72,7 +73,7 @@ func (c Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
 		return "", err
 	}
 
-	kbsInfo := make([]entKB.BaseInfo, 0, len(kbs))
+	kbsInfo := make([]kbEnt.BaseInfo, 0, len(kbs))
 	for _, kb := range kbs {
 		kbsInfo = append(kbsInfo, kb.BaseInfo)
 	}
@@ -85,7 +86,7 @@ func (c Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
 	return uuid, nil
 }
 
-func (c Choose) chooseTUIKnowledgeBase(kbs []entKB.BaseInfo) (string, error) {
+func (c Choose) chooseTUIKnowledgeBase(kbs []kbEnt.BaseInfo) (string, error) {
 	mt := chooseTui.New(kbs)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()

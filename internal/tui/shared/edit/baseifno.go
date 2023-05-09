@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -29,7 +29,7 @@ type baseInfoModel struct {
 	IsEdited      bool
 }
 
-func newBaseInfoModel(bi entKB.BaseInfo) baseInfoModel {
+func newBaseInfoModel(bi kbEnt.BaseInfo) baseInfoModel {
 	m := baseInfoModel{
 		inputs:        make([]textinput.Model, 2),
 		ID:            bi.ID,

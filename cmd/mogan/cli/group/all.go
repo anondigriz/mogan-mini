@@ -3,7 +3,7 @@ package group
 import (
 	"fmt"
 
-	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	"github.com/spf13/cobra"
@@ -43,7 +43,7 @@ func (a *All) initConfig() {
 
 func (a *All) runE(cmd *cobra.Command, args []string) error {
 	if a.cfg.CurrentKnowledgeBase.UUID == "" {
-		err := fmt.Errorf(errors.KnowledgeBaseNotChosenErrMsg)
+		err := fmt.Errorf(errMsgs.KnowledgeBaseNotChosen)
 		a.lg.Zap.Error(err.Error(), zap.Error(err))
 		return err
 	}

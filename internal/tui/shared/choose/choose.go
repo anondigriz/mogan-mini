@@ -3,7 +3,7 @@ package choose
 import (
 	"strconv"
 
-	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
@@ -20,7 +20,7 @@ type Model struct {
 	IsQuitted  bool
 }
 
-func New(kbs []entKB.BaseInfo) Model {
+func New(kbs []kbEnt.BaseInfo) Model {
 	columns := []table.Column{
 		{Title: "#", Width: 4},
 		{Title: "UUID", Width: 10},

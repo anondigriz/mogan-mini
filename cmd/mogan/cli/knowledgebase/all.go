@@ -8,10 +8,11 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
+
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
-	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	listShowTui "github.com/anondigriz/mogan-mini/internal/tui/listshow"
 	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
@@ -73,7 +74,7 @@ func (a *All) runE(cmd *cobra.Command, args []string) error {
 func (a All) showTUIKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
 	list := make([]string, 0, len(kbs))
 	for _, v := range kbs {
-		list = append(list, fmt.Sprintf("name: %s; id: %s; path: %s", v.ShortName, v.ID, v.Path))
+		list = append(list, fmt.Sprintf("Id: %s; Short name: %s; UUID: %s", v.ID, v.ShortName, v.UUID))
 	}
 	mt := listShowTui.New(list)
 

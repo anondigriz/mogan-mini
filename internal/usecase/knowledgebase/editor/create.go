@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	"go.uber.org/zap"
 
-	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/usecase/errors"
 )
 

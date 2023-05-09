@@ -1,8 +1,9 @@
 package pathmaker
 
 import (
-	"fmt"
 	"path"
+	"path/filepath"
+	"strings"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
 )
@@ -25,9 +26,9 @@ func New(cfg config.Config) *PathMaker {
 }
 
 func (pm PathMaker) MakeProjectPath(uuid string) string {
-	return path.Join(pm.settings.ProjectsPath, uuid+".db")
+	return path.Join(pm.settings.ProjectsPath, uuid+".xml")
 }
 
-func (pm PathMaker) MakeStorageDSN(filePath string) string {
-	return fmt.Sprintf("file:%s", filePath)
+func (pm PathMaker) GetProjectUUID(filePath string) string {
+	return strings.TrimSuffix(filePath, filepath.Ext(filePath))
 }

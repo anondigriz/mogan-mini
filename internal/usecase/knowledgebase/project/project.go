@@ -1,12 +1,12 @@
 package project
 
 import (
+	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/parser"
 	"go.uber.org/zap"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/connection"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/editor"
-	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/exchange/parser"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/pathmaker"
 	"github.com/anondigriz/mogan-mini/internal/utility/filecreator"
 )

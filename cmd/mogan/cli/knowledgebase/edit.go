@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -11,7 +12,6 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
-	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	editTui "github.com/anondigriz/mogan-mini/internal/tui/shared/edit"
 	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
@@ -72,7 +72,7 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 }
 
 func (e Edit) editTUIKnowledgeBase(ctx context.Context, previous kbEnt.KnowledgeBase) (kbEnt.KnowledgeBase, error) {
-	mt := editTui.New(previous.BaseInfo, previous.ExtraData.Description)
+	mt := editTui.New(previous.BaseInfo, previous.Description)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
@@ -107,7 +107,7 @@ func (e Edit) editTUIKnowledgeBase(ctx context.Context, previous kbEnt.Knowledge
 	updated.BaseInfo.ID = result.BaseInfo.ID
 	updated.BaseInfo.ShortName = result.BaseInfo.ShortName
 	updated.BaseInfo.ModifiedDate = result.BaseInfo.ModifiedDate
-	updated.ExtraData.Description = result.Description.Description
+	updated.Description = result.Description.Description
 
 	return updated, nil
 }

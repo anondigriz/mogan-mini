@@ -5,12 +5,13 @@ import (
 
 	"go.uber.org/zap"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
+	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/parser"
+
 	"github.com/anondigriz/mogan-mini/internal/config"
 	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
-	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/connection"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/editor"
-	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/exchange/parser"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/finder"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/pathmaker"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/project"
@@ -29,7 +30,7 @@ func New(lg *zap.Logger, cfg config.Config) *KnowledgeBase {
 
 	con := connection.New(lg, cfg, pm)
 	editor := editor.New(lg, con, f)
-	parser := parser.New(lg, cfg)
+	parser := parser.New(lg)
 
 	prArgs := project.NewProjectArgs{
 		Lg:     lg,
