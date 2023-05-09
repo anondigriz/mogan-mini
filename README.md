@@ -44,7 +44,7 @@ See tutorial [here](https://mini.mivar.org/docs/intro).
 
 ## Demo
 
-[![asciicast](https://asciinema.org/a/576444.svg)](https://asciinema.org/a/576444)
+[![asciicast](https://asciinema.org/a/583779.svg)](https://asciinema.org/a/583779)
 
 ## Roadmap
 
