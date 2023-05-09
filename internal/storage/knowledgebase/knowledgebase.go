@@ -6,8 +6,6 @@ import (
 
 	"github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
-	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/collector"
-	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/formats"
 	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/parser"
 	"go.uber.org/zap"
 
@@ -52,26 +50,8 @@ func (st *Storage) GetPath() string {
 }
 
 func (st *Storage) Commit() error {
-	to, err := os.Create(st.filePath)
-	if err != nil {
-		// TODO log
-		return errors.NewUnexpectedStorageFailErr(err)
-	}
-	defer to.Close()
-
-	c := collector.New(st.lg)
-	err = c.Collect(collector.ParseXMLArgs{
-		Version: formats.VersionV3M0,
-		Cont:    st.cont,
-		XMLFile: to,
-		Prefix:  "",
-		Indent:  "  ",
-	})
-
-	if err != nil {
-		return err
-	}
-	return nil
+	w := newWriter(st.lg)
+	return w.write(st.cont, st.filePath)
 }
 
 func (st *Storage) Shutdown() {
@@ -79,11 +59,6 @@ func (st *Storage) Shutdown() {
 }
 
 func (st *Storage) Ping(ctx context.Context) error {
-	return nil
-}
-
-func (st *Storage) CreateKnowledgeBase(ctx context.Context, kb knowledgebase.KnowledgeBase) error {
-	st.cont.KnowledgeBase = kb
 	return nil
 }
 

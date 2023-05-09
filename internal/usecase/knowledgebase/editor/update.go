@@ -19,11 +19,10 @@ func (m Editor) Update(ctx context.Context, ent kbEnt.KnowledgeBase) error {
 	defer st.Shutdown()
 
 	st.UpdateKnowledgeBase(ctx, ent)
-	if err != nil {
-		e := errors.NewUpdateKnowledgeBaseStorageErr(err)
-		m.lg.Error(e.Error(), zap.Error(err))
+
+	if err := st.Commit(); err != nil {
+		m.lg.Error("fail to fill the database of the knowledge base project by the data from the xml file", zap.Error(err))
 		return err
 	}
-
 	return nil
 }

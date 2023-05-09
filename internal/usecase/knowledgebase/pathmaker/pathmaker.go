@@ -30,5 +30,5 @@ func (pm PathMaker) MakeProjectPath(uuid string) string {
 }
 
 func (pm PathMaker) GetProjectUUID(filePath string) string {
-	return strings.TrimSuffix(filePath, filepath.Ext(filePath))
+	return strings.TrimSuffix(filepath.Base(filePath), filepath.Ext(filePath))
 }

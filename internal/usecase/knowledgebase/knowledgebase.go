@@ -10,6 +10,7 @@ import (
 
 	"github.com/anondigriz/mogan-mini/internal/config"
 	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
+	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/connection"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/editor"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/finder"
@@ -27,7 +28,7 @@ func New(lg *zap.Logger, cfg config.Config) *KnowledgeBase {
 	pm := pathmaker.New(cfg)
 	f := finder.New(lg, cfg)
 	fc := filecreator.New(lg)
-
+	strc := knowledgebase.NewStorageCreator(lg)
 	con := connection.New(lg, cfg, pm)
 	editor := editor.New(lg, con, f)
 	parser := parser.New(lg)
@@ -40,6 +41,7 @@ func New(lg *zap.Logger, cfg config.Config) *KnowledgeBase {
 		Editor: editor,
 		Fc:     fc,
 		Parser: parser,
+		Strc:   strc,
 	}
 	p := project.New(prArgs)
 
