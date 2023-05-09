@@ -3,9 +3,10 @@ package editor
 import (
 	"context"
 
-	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/usecase/errors"
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/internal/usecase/errors"
 )
 
 func (m Editor) Fill(ctx context.Context, cont kbEnt.Container) error {
@@ -17,8 +18,8 @@ func (m Editor) Fill(ctx context.Context, cont kbEnt.Container) error {
 	}
 	defer st.Shutdown()
 
-	err = st.FillFromContainer(ctx, cont)
-	if err != nil {
+	st.FillFromContainer(ctx, cont)
+	if err := st.Commit(); err != nil {
 		m.lg.Error("fail to fill the database of the knowledge base project by the data from the xml file", zap.Error(err))
 		return err
 	}

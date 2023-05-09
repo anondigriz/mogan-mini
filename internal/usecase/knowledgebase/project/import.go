@@ -3,9 +3,10 @@ package project
 import (
 	"context"
 
-	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
-	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/exchange/parser"
+	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/parser"
 	"go.uber.org/zap"
+
+	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
 )
 
 func (p Project) Import(ctx context.Context, args argsCore.ImportProject) (string, error) {
@@ -15,7 +16,7 @@ func (p Project) Import(ctx context.Context, args argsCore.ImportProject) (strin
 		FileName:          args.FileName,
 	}
 
-	cont, err := p.parser.Parse(ctx, pArgs)
+	cont, err := p.parser.Parse(pArgs)
 	if err != nil {
 		p.lg.Error("Fail to parse xml file", zap.Error(err))
 		return "", err

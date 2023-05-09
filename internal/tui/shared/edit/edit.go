@@ -1,7 +1,7 @@
 package edit
 
 import (
-	entKB "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -11,7 +11,7 @@ type Model struct {
 	IsQuitted   bool
 }
 
-func New(bi entKB.BaseInfo, description string) Model {
+func New(bi kbEnt.BaseInfo, description string) Model {
 	m := Model{
 		BaseInfo:    newBaseInfoModel(bi),
 		Description: newDescriptionModel(description),

@@ -2,7 +2,9 @@ package project
 
 import (
 	"context"
+	"time"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	uuidGen "github.com/google/uuid"
 	"go.uber.org/zap"
 )
@@ -16,9 +18,20 @@ func (p Project) Create(ctx context.Context, name string) (string, error) {
 		return "", err
 	}
 
-	err = p.editor.CreateKnowledgeBase(ctx, uuid, name)
+	now := time.Now().UTC()
+	kb := kbEnt.KnowledgeBase{
+		BaseInfo: kbEnt.BaseInfo{
+			UUID:         uuid,
+			ID:           uuid,
+			ShortName:    name,
+			CreatedDate:  now,
+			ModifiedDate: now,
+		},
+	}
+	err = p.strc.CreateStorage(kb, filePath)
+
 	if err != nil {
-		p.lg.Error("fail to insert knowledge base to the project's storage", zap.Error(err))
+		p.lg.Error("fail to create knowledge base int the database", zap.Error(err))
 		return "", err
 	}
 

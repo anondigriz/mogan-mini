@@ -22,7 +22,7 @@ func PrintCreatedKnowledgeBase(uuid string) {
 	fmt.Printf(MsgPattern, OkKaomoji, fmt.Sprintf("knowledge base project has been created with UUID '%s'", uuid))
 }
 
-func PrintRecivedNewEntityInfo() {
+func PrintReceivedNewEntityInfo() {
 	fmt.Printf(MsgPattern, OkKaomoji, "you have entered new information about the entity")
 }
 

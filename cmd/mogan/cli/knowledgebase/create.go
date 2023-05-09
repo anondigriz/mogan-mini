@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
@@ -50,8 +50,8 @@ func (c *Create) runE(cmd *cobra.Command, args []string) error {
 	if c.ShortName == "" {
 		name, err := c.inputTUIName()
 		if err != nil {
-			c.lg.Zap.Error(errors.InputTUINameErrMsg, zap.Error(err))
-			messages.PrintFail(errors.InputTUINameErrMsg)
+			c.lg.Zap.Error(errMsgs.InputTUIName, zap.Error(err))
+			messages.PrintFail(errMsgs.InputTUIName)
 			return err
 		}
 		c.ShortName = name
@@ -65,13 +65,13 @@ func (c Create) inputTUIName() (string, error) {
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		c.lg.Zap.Error(errors.RunTUIProgramErrMsg, zap.Error(err))
+		c.lg.Zap.Error(errMsgs.RunTUIProgram, zap.Error(err))
 		return "", err
 	}
 
 	result, ok := m.(textInputTui.Model)
 	if !ok {
-		err = fmt.Errorf(errors.ReceivedResponseWasNotExpectedErrMsg)
+		err = fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
 		c.lg.Zap.Error(err.Error())
 		return "", err
 	}
@@ -79,7 +79,7 @@ func (c Create) inputTUIName() (string, error) {
 	name := result.TextInput.Value()
 
 	if result.IsQuitted || name == "" {
-		err = fmt.Errorf(errors.NameWasNotEnteredErrMsg)
+		err = fmt.Errorf(errMsgs.NameWasNotEntered)
 		c.lg.Zap.Error(err.Error())
 		return "", err
 	}
@@ -93,8 +93,8 @@ func (c Create) createKnowledgeBase(ctx context.Context) error {
 	kbu := kbUseCase.New(c.lg.Zap, *c.cfg)
 	uuid, err := kbu.CreateProject(ctx, c.ShortName)
 	if err != nil {
-		c.lg.Zap.Error(errors.CreateKnowledgeBaseProjectErrMsg, zap.Error(err))
-		messages.PrintFail(errors.CreateKnowledgeBaseProjectErrMsg)
+		c.lg.Zap.Error(errMsgs.CreateKnowledgeBaseProject, zap.Error(err))
+		messages.PrintFail(errMsgs.CreateKnowledgeBaseProject)
 		return err
 	}
 	messages.PrintCreatedKnowledgeBase(uuid)

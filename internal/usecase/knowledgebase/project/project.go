@@ -1,12 +1,13 @@
 package project
 
 import (
+	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/parser"
 	"go.uber.org/zap"
 
 	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/connection"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/editor"
-	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/exchange/parser"
 	"github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase/pathmaker"
 	"github.com/anondigriz/mogan-mini/internal/utility/filecreator"
 )
@@ -23,6 +24,7 @@ type NewProjectArgs struct {
 	Editor *editor.Editor
 	Fc     *filecreator.FileCreator
 	Parser *parser.Parser
+	Strc   *knowledgebase.StorageCreator
 }
 
 type Project struct {
@@ -33,6 +35,7 @@ type Project struct {
 	pm       *pathmaker.PathMaker
 	editor   *editor.Editor
 	parser   *parser.Parser
+	strc     *knowledgebase.StorageCreator
 }
 
 func New(args NewProjectArgs) *Project {
@@ -43,6 +46,7 @@ func New(args NewProjectArgs) *Project {
 		fc:     args.Fc,
 		editor: args.Editor,
 		parser: args.Parser,
+		strc:   args.Strc,
 		settings: settings{
 			ProjectsPath: args.Cfg.ProjectsPath,
 		},

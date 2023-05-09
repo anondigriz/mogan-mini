@@ -37,7 +37,7 @@ func (f Finder) FindAllProjects(ctx context.Context) []string {
 			f.lg.Error(fmt.Sprintf("fail to walk the directory %s", f.settings.ProjectsPath), zap.Error(e))
 			return e
 		}
-		if filepath.Ext(d.Name()) == ".db" {
+		if filepath.Ext(d.Name()) == ".xml" {
 			paths = append(paths, p)
 		}
 		return nil

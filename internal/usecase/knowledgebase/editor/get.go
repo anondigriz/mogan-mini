@@ -3,9 +3,9 @@ package editor
 import (
 	"context"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	"go.uber.org/zap"
 
-	kbEnt "github.com/anondigriz/mogan-mini/internal/entity/knowledgebase"
 	"github.com/anondigriz/mogan-mini/internal/usecase/errors"
 )
 
@@ -18,12 +18,7 @@ func (m Editor) Get(ctx context.Context, uuid string) (kbEnt.KnowledgeBase, erro
 	}
 	defer st.Shutdown()
 
-	kb, err := st.GetKnowledgeBase(ctx)
-	if err != nil {
-		e := errors.NewGetKnowledgeBaseStorageErr(err)
-		m.lg.Error(e.Error(), zap.Error(err))
-		return kbEnt.KnowledgeBase{}, e
-	}
+	kb := st.GetKnowledgeBase(ctx)
 
 	return kb, nil
 }
@@ -42,13 +37,7 @@ func (m Editor) GetAll(ctx context.Context) ([]kbEnt.KnowledgeBase, error) {
 		}
 		defer st.Shutdown()
 
-		kb, err := st.GetKnowledgeBase(ctx)
-		if err != nil {
-			e := errors.NewGetKnowledgeBaseStorageErr(err)
-			m.lg.Error(e.Error(), zap.Error(err))
-			continue
-		}
-		kb.Path = filePath
+		kb := st.GetKnowledgeBase(ctx)
 		kbs = append(kbs, kb)
 	}
 
