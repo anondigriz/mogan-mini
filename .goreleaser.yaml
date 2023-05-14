@@ -1,6 +1,4 @@
 project_name: mogan
-env:
-  - CGO_ENABLED=1
 builds:
   - id: darwin-amd64
     main: ./cmd/mogan
@@ -47,10 +45,6 @@ builds:
       - arm
     goarm:
       - 6
-    env:
-      - CC=arm-linux-gnueabihf-gcc
-      - CXX=arm-linux-gnueabihf-g++
-      - CFLAGS="-march=armv6 -mfloat-abi=hard -mfpu=vfp"
     flags:
       # force rebuilding of packages that are already up-to-date.
       # https://github.com/mattn/go-sqlite3/issues/504
