@@ -2,7 +2,7 @@ package args
 
 import "io"
 
-type ImportProject struct {
+type ImportKnowledgeBase struct {
 	XMLFile  io.ReadSeekCloser
 	FileName string
 }

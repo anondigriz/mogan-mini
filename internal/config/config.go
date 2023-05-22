@@ -16,13 +16,15 @@ type (
 	Config struct {
 		// Test     string `mapstructure:"test"`
 		IsDebug              bool
-		ProjectsPath         string        `mapstructure:"-"`
+		WorkspaceDir         string        `mapstructure:"-"`
 		Databases            Databases     `mapstructure:"databases"`
 		CurrentKnowledgeBase KnowledgeBase `mapstructure:"currentknowledgebase"`
+		XMLPrefix            string        `mapstructure:"xmlprefix"`
+		XMLIndent            string        `mapstructure:"xmlindent"`
 	}
 )
 
-func (c *Config) Fill(lg *zap.Logger, vp *viper.Viper, debug bool, projectsPath string) error {
+func (c *Config) Fill(lg *zap.Logger, vp *viper.Viper, debug bool, workspaceDir string) error {
 	if err := vp.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			lg.Error("config file was not found", zap.Error(err))
@@ -32,7 +34,7 @@ func (c *Config) Fill(lg *zap.Logger, vp *viper.Viper, debug bool, projectsPath 
 			return err
 		}
 	}
-	c.ProjectsPath = projectsPath
+	c.WorkspaceDir = workspaceDir
 	c.setLogLevel(debug)
 	c.IsDebug = debug
 
@@ -42,6 +44,10 @@ func (c *Config) Fill(lg *zap.Logger, vp *viper.Viper, debug bool, projectsPath 
 		return err
 	}
 	lg.Debug("configuration has been set", zap.Reflect("config", c))
+
+	// TODO Make management of the following settings
+	c.XMLPrefix = ""
+	c.XMLIndent = "  "
 
 	return nil
 }

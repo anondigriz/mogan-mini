@@ -1,8 +1,11 @@
 package errors
 
+import (
+	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
+)
+
 const (
 	PingFail              = "PingFail"
-	ReadFileFail          = "ReadFileFail"
 	NoDataFound           = "NoDataFound"
 	UnexpectedStorageFail = "UnexpectedStorageFail"
 )
@@ -30,14 +33,14 @@ func (se StorageErr) Unwrap() error {
 	return se.Err
 }
 
-func (se StorageErr) FromStorage() bool {
+func (se StorageErr) IsStorageErr() bool {
 	return true
 }
 
 func NewPingFailErr(err error) error {
 	return StorageErr{
 		Stat:    PingFail,
-		Message: "storage ping fail",
+		Message: errMsgs.PingFail,
 		Err:     err,
 		Dt:      map[string]string{},
 	}
@@ -55,7 +58,7 @@ func NewNoDataFoundErr(err error, msg string) error {
 func NewUnexpectedStorageFailErr(err error) error {
 	return StorageErr{
 		Stat:    UnexpectedStorageFail,
-		Message: "unexpected error when working with the storage",
+		Message: errMsgs.UnexpectedStorageFail,
 		Err:     err,
 		Dt:      map[string]string{},
 	}

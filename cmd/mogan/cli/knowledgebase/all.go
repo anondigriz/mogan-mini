@@ -14,8 +14,9 @@ import (
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
+	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
 	listShowTui "github.com/anondigriz/mogan-mini/internal/tui/listshow"
-	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
+	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
 type All struct {
@@ -49,20 +50,16 @@ func (a *All) initConfig() {
 }
 
 func (a *All) runE(cmd *cobra.Command, args []string) error {
-	kbu := kbUseCase.New(a.lg.Zap, *a.cfg)
-	kbs, err := kbu.GetAll(cmd.Context())
-	if err != nil {
-		a.lg.Zap.Error(errMsgs.GetAllKnowledgeBases, zap.Error(err))
-		messages.PrintFail(errMsgs.GetAllKnowledgeBases)
-		return err
-	}
+	st := kbsSt.New(a.lg.Zap, *a.cfg)
+	kbsu := kbsUC.New(a.lg.Zap, st)
+	kbs := kbsu.GetAllKnowledgeBases()
 
 	if len(kbs) == 0 {
 		messages.PrintNoDataToShow()
 		return nil
 	}
 
-	err = a.showTUIKnowledgeBases(kbs)
+	err := a.showTUIKnowledgeBases(kbs)
 	if err != nil {
 		a.lg.Zap.Error(errMsgs.ShowTUIKnowledgeBases, zap.Error(err))
 		messages.PrintFail(errMsgs.ShowTUIKnowledgeBases)

@@ -13,8 +13,9 @@ import (
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
+	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
 	editTui "github.com/anondigriz/mogan-mini/internal/tui/shared/edit"
-	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
+	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
 type Edit struct {
@@ -53,8 +54,9 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	kbu := kbUseCase.New(e.lg.Zap, *e.cfg)
-	kb, err := kbu.Get(cmd.Context(), e.cfg.CurrentKnowledgeBase.UUID)
+	st := kbsSt.New(e.lg.Zap, *e.cfg)
+	kbsu := kbsUC.New(e.lg.Zap, st)
+	kb, err := kbsu.GetKnowledgeBase(e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {
 		e.lg.Zap.Error(errMsgs.GetKnowledgeBase, zap.Error(err))
 		messages.PrintFail(errMsgs.GetKnowledgeBase)
@@ -68,7 +70,7 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	return e.commitChanges(cmd.Context(), kbu, updated)
+	return e.commitChanges(cmd.Context(), kbsu, updated)
 }
 
 func (e Edit) editTUIKnowledgeBase(ctx context.Context, previous kbEnt.KnowledgeBase) (kbEnt.KnowledgeBase, error) {
@@ -112,10 +114,10 @@ func (e Edit) editTUIKnowledgeBase(ctx context.Context, previous kbEnt.Knowledge
 	return updated, nil
 }
 
-func (e Edit) commitChanges(ctx context.Context, kbu *kbUseCase.KnowledgeBase, updated kbEnt.KnowledgeBase) error {
+func (e Edit) commitChanges(ctx context.Context, kbsu *kbsUC.KnowledgeBases, updated kbEnt.KnowledgeBase) error {
 	messages.PrintReceivedNewEntityInfo()
 
-	err := kbu.Update(ctx, updated)
+	err := kbsu.UpdateKnowledgeBase(updated)
 	if err != nil {
 		e.lg.Zap.Error(errMsgs.UpdateKnowledgeBase, zap.Error(err))
 		messages.PrintFail(errMsgs.UpdateKnowledgeBase)

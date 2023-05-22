@@ -13,8 +13,9 @@ import (
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
+	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
 	choicesTui "github.com/anondigriz/mogan-mini/internal/tui/choices"
-	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
+	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
 var removeConfirmChoices = []string{"Confirm ✓", "Abort ✕"}
@@ -120,8 +121,9 @@ func (r Remove) askTUIConfirm() (bool, error) {
 }
 
 func (r Remove) remove(ctx context.Context) error {
-	kbu := kbUseCase.New(r.lg.Zap, *r.cfg)
-	err := kbu.RemoveProjectByUUID(ctx, r.kbUUID)
+	st := kbsSt.New(r.lg.Zap, *r.cfg)
+	kbsu := kbsUC.New(r.lg.Zap, st)
+	err := kbsu.RemoveKnowledgeBase(r.kbUUID)
 	if err != nil {
 		r.lg.Zap.Error(errMsgs.RemoveKnowledgeBase, zap.Error(err))
 		return err

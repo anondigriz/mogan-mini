@@ -1,21 +1,11 @@
 package errors
 
+import (
+	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
+)
+
 const (
-	PrepareConnectionFail            = "PingFail"
-	GetKnowledgeBaseStorageFail      = "GetKnowledgeBaseStorageFail"
-	UpdateKnowledgeBaseStorageFail   = "UpdateKnowledgeBaseStorageFail"
-	ReadingXMLFail                   = "ReadingXMLFail"
-	UnsupportedFormatXMLVersion      = "UnsupportedFormatXMLVersion"
-	UnknownXMLValidationError        = "UnknownXMLValidationError"
-	InsertKnowledgeBaseToStorageFail = "InsertKnowledgeBaseToStorageFail"
-	InsertXMLFileToStorageFail       = "InsertXMLFileToStorageFail"
-	InsertXMLParseJobToStorageFail   = "InsertXMLParseJobToStorageFail"
-	UnexpectedStorageFail            = "UnexpectedStorageFail"
-	NoDataFound                      = "NoDataFound"
-	NotPartOfKnowledgeBase           = "NotPartOfKnowledgeBase"
-	XMLUnmarshalFail                 = "XMLUnmarshalFail"
-	ParsingXMLFail                   = "ParsingXMLFail"
-	UnexpectedJobExecutionFail       = "UnexpectedJobExecutionFail"
+	UnexpectedUseCaseFail = "UnexpectedUseCaseFail"
 )
 
 type UseCaseErr struct {
@@ -43,4 +33,13 @@ func (se UseCaseErr) Unwrap() error {
 
 func (se UseCaseErr) FromUseCase() bool {
 	return true
+}
+
+func NewUnexpectedUseCaseFailErr(err error) error {
+	return UseCaseErr{
+		Stat:    ExchangeKnowledgeBaseFail,
+		Message: errMsgs.UnexpectedUseCaseFail,
+		Err:     err,
+		Dt:      map[string]string{},
+	}
 }

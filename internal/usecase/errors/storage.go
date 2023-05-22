@@ -1,19 +1,34 @@
 package errors
 
-func NewGetKnowledgeBaseStorageErr(err error) error {
-	return UseCaseErr{
-		Stat:    GetKnowledgeBaseStorageFail,
-		Message: "fail to get the knowledge base from the storage",
-		Err:     err,
-		Dt:      map[string]string{},
-	}
+const (
+	StorageFail = "StorageFail"
+)
+
+type storageErr interface {
+	error
+	Status() string
+	Data() map[string]string
+	IsStorageErr() bool
 }
 
-func NewUpdateKnowledgeBaseStorageErr(err error) error {
+func WrapStorageFailErr(err error) error {
+	switch e := err.(type) {
+	case storageErr:
+		{
+			switch e.Status() {
+			default:
+				return NewStorageFailErr(e)
+			}
+		}
+	}
+	return NewUnexpectedUseCaseFailErr(err)
+}
+
+func NewStorageFailErr(err storageErr) error {
 	return UseCaseErr{
-		Stat:    UpdateKnowledgeBaseStorageFail,
-		Message: "fail to update the knowledge base in the storage",
+		Stat:    StorageFail,
+		Message: err.Error(),
 		Err:     err,
-		Dt:      map[string]string{},
+		Dt:      err.Data(),
 	}
 }
