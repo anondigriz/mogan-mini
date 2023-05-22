@@ -12,7 +12,8 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/config"
 	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
 	"github.com/anondigriz/mogan-mini/internal/logger"
-	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
+	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
+	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
 type Import struct {
@@ -61,14 +62,15 @@ func (im *Import) runE(cmd *cobra.Command, args []string) error {
 	}
 	defer f.Close()
 
-	kbu := kbUseCase.New(im.lg.Zap, *im.cfg)
+	st := kbsSt.New(im.lg.Zap, *im.cfg)
+	kbsu := kbsUC.New(im.lg.Zap, st)
 
-	iArgs := argsCore.ImportProject{
+	iArgs := argsCore.ImportKnowledgeBase{
 		XMLFile:  f,
 		FileName: f.Name(),
 	}
 
-	uuid, err := kbu.ImportProject(cmd.Context(), iArgs)
+	uuid, err := kbsu.ImportKnowledgeBase(iArgs)
 	if err != nil {
 		im.lg.Zap.Error(errMsgs.ImportProject, zap.Error(err))
 		messages.PrintFail(errMsgs.ImportProject)

@@ -11,9 +11,8 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
 )
 
-
 func (st Storage) GetContainerByUUID(uuid string) (*kbEnt.Container, error) {
-	filePath := st.fb.GetFileUUID(uuid)
+	filePath := st.fb.GetFilePath(uuid)
 	return st.GetContainerByPath(filePath)
 }
 
@@ -41,7 +40,7 @@ func (st Storage) GetContainerByPath(filePath string) (*kbEnt.Container, error) 
 }
 
 func (st Storage) SaveContainer(cont *kbEnt.Container) error {
-	filePath := st.fb.GetFileUUID(cont.KnowledgeBase.UUID)
+	filePath := st.fb.GetFilePath(cont.KnowledgeBase.UUID)
 	to, err := st.fb.CreateFileByPath(filePath)
 	if err != nil {
 		st.lg.Error(errMsgs.CreateKnowledgeBaseFileFail, zap.Error(err))
@@ -53,8 +52,8 @@ func (st Storage) SaveContainer(cont *kbEnt.Container) error {
 		Version: formats.VersionV3M0,
 		Cont:    cont,
 		XMLFile: to,
-		Prefix:  st.setting.XMLPrefix,
-		Indent:  st.setting.XMLIndent,
+		Prefix:  st.cfg.XMLPrefix,
+		Indent:  st.cfg.XMLIndent,
 	})
 
 	if err != nil {

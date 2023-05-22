@@ -53,6 +53,7 @@ func (ws Workspace) InitWorkspaceDir(workspaceDir string) (string, error) {
 
 func (ws Workspace) SetCfgFile(vp *viper.Viper, workspaceDir string, cfgFile CfgFile) error {
 	vp.SetConfigType(cfgFile.Type)
+
 	if cfgFile.Path != "" {
 		// Use config file from the flag.
 		vp.SetConfigFile(cfgFile.Path)

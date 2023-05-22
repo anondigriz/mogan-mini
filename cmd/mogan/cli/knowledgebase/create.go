@@ -12,8 +12,9 @@ import (
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
+	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
 	textInputTui "github.com/anondigriz/mogan-mini/internal/tui/textinput"
-	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
+	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
 type Create struct {
@@ -90,8 +91,9 @@ func (c Create) inputTUIName() (string, error) {
 func (c Create) createKnowledgeBase(ctx context.Context) error {
 	messages.PrintEnteredShortNameKnowledgeBase(c.ShortName)
 
-	kbu := kbUseCase.New(c.lg.Zap, *c.cfg)
-	uuid, err := kbu.CreateProject(ctx, c.ShortName)
+	st := kbsSt.New(c.lg.Zap, *c.cfg)
+	kbsu := kbsUC.New(c.lg.Zap, st)
+	uuid, err := kbsu.CreateKnowledgeBase(c.ShortName)
 	if err != nil {
 		c.lg.Zap.Error(errMsgs.CreateKnowledgeBaseProject, zap.Error(err))
 		messages.PrintFail(errMsgs.CreateKnowledgeBaseProject)

@@ -15,8 +15,9 @@ import (
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
+	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
 	chooseTui "github.com/anondigriz/mogan-mini/internal/tui/shared/choose"
-	kbUseCase "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebase"
+	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
 type Choose struct {
@@ -66,12 +67,9 @@ func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 }
 
 func (c Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
-	kbu := kbUseCase.New(c.lg.Zap, *c.cfg)
-	kbs, err := kbu.GetAll(ctx)
-	if err != nil {
-		c.lg.Zap.Error(errMsgs.GetAllKnowledgeBases, zap.Error(err))
-		return "", err
-	}
+	st := kbsSt.New(c.lg.Zap, *c.cfg)
+	kbsu := kbsUC.New(c.lg.Zap, st)
+	kbs := kbsu.GetAllKnowledgeBases()
 
 	kbsInfo := make([]kbEnt.BaseInfo, 0, len(kbs))
 	for _, kb := range kbs {

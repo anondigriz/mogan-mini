@@ -10,7 +10,7 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb KnowledgeBase) Import(args argsCore.ImportProject) (string, error) {
+func (kb KnowledgeBase) Import(args argsCore.ImportKnowledgeBase) (string, error) {
 	uuid := uuidGen.New().String()
 	pArgs := parser.ParseXMLArgs{
 		KnowledgeBaseUUID: uuid,

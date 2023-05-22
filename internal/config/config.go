@@ -19,6 +19,8 @@ type (
 		WorkspaceDir         string        `mapstructure:"-"`
 		Databases            Databases     `mapstructure:"databases"`
 		CurrentKnowledgeBase KnowledgeBase `mapstructure:"currentknowledgebase"`
+		XMLPrefix            string        `mapstructure:"xmlprefix"`
+		XMLIndent            string        `mapstructure:"xmlindent"`
 	}
 )
 

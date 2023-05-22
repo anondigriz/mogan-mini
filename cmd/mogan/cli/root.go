@@ -10,7 +10,7 @@ import (
 
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
-	"github.com/anondigriz/mogan-mini/internal/utility/initializer"
+	"github.com/anondigriz/mogan-mini/internal/usecase/workspace"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -25,7 +25,9 @@ var (
 	cfgFilePath  string
 	cfgFileName  string
 	cfgFileType  string
-	projectsPath string
+	xmlPrefix    = ""
+	xmlIndent    = "  "
+	workspaceDir string
 	rootCmd      = &cobra.Command{
 		Version: "v0.1",
 		Use:     "mogan",
@@ -45,7 +47,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&isConsoleLog, "consolelog", "", false, "enable console ")
 
 	rootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "", "config file (default is \"$HOME/mogan/cfg.yaml\")")
-	rootCmd.PersistentFlags().StringVar(&projectsPath, "projects", "", "base project directory (default is \"$HOME/mogan\")")
+	rootCmd.PersistentFlags().StringVar(&workspaceDir, "workspace", "", "base workspace directory (default is \"$HOME/mogan\")")
 	rootCmd.PersistentFlags().StringVar(&cfgFileName, "cfgname", "cfg", "config file name")
 	rootCmd.PersistentFlags().StringVar(&cfgFileType, "cfgtype", "yaml", "config type")
 
@@ -72,7 +74,8 @@ func initVars() {
 }
 
 func initConfig() {
-	newProjectsPath, err := initializer.InitProjectsDir(projectsPath)
+	ws := workspace.New(lg.Zap)
+	newProjectsPath, err := ws.InitWorkspaceDir(workspaceDir)
 	if err != nil {
 		lg.Zap.Error("fail to set a project base directory", zap.Error(err))
 		os.Exit(1)
@@ -84,15 +87,13 @@ func initConfig() {
 		os.Exit(1)
 	}
 
-	in := initializer.New(lg.Zap)
-
-	cfgFile := initializer.CfgFile{
+	cfgFile := workspace.CfgFile{
 		Type: cfgFileType,
 		Path: cfgFilePath,
 		Name: cfgFileName,
 	}
 
-	err = in.SetCfgFile(vp, newProjectsPath, cfgFile)
+	err = ws.SetCfgFile(vp, newProjectsPath, cfgFile)
 	if err != nil {
 		lg.Zap.Error("fail to set config file", zap.Error(err))
 		os.Exit(1)

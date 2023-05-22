@@ -7,34 +7,29 @@ import (
 	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/collector"
 	"go.uber.org/zap"
 
+	"github.com/anondigriz/mogan-mini/internal/config"
 	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
 	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/filesbroker"
 )
 
-type Settings struct {
-	WorkspaceDir string
-	XMLPrefix    string
-	XMLIndent    string
-}
-
 type Storage struct {
-	lg      *zap.Logger
-	fb      *filesbroker.FilesBroker
-	c       *collector.Collector
-	setting Settings
+	lg  *zap.Logger
+	fb  *filesbroker.FilesBroker
+	c   *collector.Collector
+	cfg config.Config
 }
 
-func New(lg *zap.Logger, settings Settings) (*Storage, error) {
-	fb := filesbroker.New(lg, settings.WorkspaceDir)
+func New(lg *zap.Logger, cfg config.Config) *Storage {
+	fb := filesbroker.New(lg, cfg.WorkspaceDir)
 	c := collector.New(lg)
 	st := &Storage{
-		lg:      lg,
-		fb:      fb,
-		c:       c,
-		setting: settings,
+		lg:  lg,
+		fb:  fb,
+		c:   c,
+		cfg: cfg,
 	}
 
-	return st, nil
+	return st
 }
 
 func (st Storage) Shutdown() {
