@@ -25,8 +25,6 @@ var (
 	cfgFilePath  string
 	cfgFileName  string
 	cfgFileType  string
-	xmlPrefix    = ""
-	xmlIndent    = "  "
 	workspaceDir string
 	rootCmd      = &cobra.Command{
 		Version: "v0.1",

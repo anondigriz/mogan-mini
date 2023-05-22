@@ -45,6 +45,10 @@ func (c *Config) Fill(lg *zap.Logger, vp *viper.Viper, debug bool, workspaceDir 
 	}
 	lg.Debug("configuration has been set", zap.Reflect("config", c))
 
+	// TODO Make management of the following settings
+	c.XMLPrefix = ""
+	c.XMLIndent = "  "
+
 	return nil
 }
 
