@@ -143,7 +143,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} <a link="https://balabza.com/">Balabza lab</a> and <a link="https://mivar.org/">Research Institute Mivar</a>.`,
+        copyright: `Copyright © ${new Date().getFullYear()} <a href="https://balabza.com/">Balabza lab</a> and <a href="https://mivar.org/">Research Institute Mivar</a>.`,
       },
       prism: {
         theme: lightCodeTheme,
