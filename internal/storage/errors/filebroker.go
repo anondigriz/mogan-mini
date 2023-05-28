@@ -15,6 +15,7 @@ const (
 	CreateDirFail  = "CreateDirFail"
 	WriteFileFail  = "WriteFileFail"
 	ReadFileFail   = "ReadFileFail"
+	DeleteDirFail  = "DeleteDirFail"
 )
 
 func NewFileNotFoundErr(err error, filePath string) error {
@@ -101,6 +102,17 @@ func NewReadFileFailErr(err error, filePath string) error {
 		Err:     err,
 		Dt: map[string]string{
 			"path": filePath,
+		},
+	}
+}
+
+func NewDeleteDirFailErr(err error, dirPath string) error {
+	return StorageErr{
+		Stat:    DeleteDirFail,
+		Message: fmt.Sprintf("%s. Directory: '%s'", errMsgs.DeleteDirFail, dirPath),
+		Err:     err,
+		Dt: map[string]string{
+			"path": dirPath,
 		},
 	}
 }

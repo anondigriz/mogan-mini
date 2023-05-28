@@ -6,7 +6,9 @@ import (
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	"go.uber.org/zap"
 
+	"github.com/anondigriz/mogan-mini/internal/storage/errors"
 	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
+	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/filesbroker"
 )
 
 const (
@@ -94,4 +96,15 @@ func (c Container) ReadContainer() (*kbEnt.Container, error) {
 	cont.Rules = rules
 
 	return cont, nil
+}
+
+func (c Container) RemoveContainer() error {
+	fb := filesbroker.New(c.lg, c.knowledgeBaseDir, fileExtension)
+
+	err := fb.RemoveDirByPath(c.knowledgeBaseDir)
+	if err != nil {
+		c.lg.Error(errMsgs.DeleteDirFail, zap.Error(err))
+		return errors.NewDeleteDirFailErr(err, c.knowledgeBaseDir)
+	}
+	return nil
 }

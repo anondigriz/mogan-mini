@@ -30,7 +30,7 @@ func (kb KnowledgeBase) Create(name string) (string, error) {
 		Rules:      make(map[string]kbEnt.Rule),
 	}
 
-	if err := kb.st.SaveContainer(cont); err != nil {
+	if err := kb.st.CreateContainer(cont); err != nil {
 		kb.lg.Error(errMsgs.SaveContainerInStorageFail, zap.Error(err))
 		return "", errors.WrapStorageFailErr(err)
 	}

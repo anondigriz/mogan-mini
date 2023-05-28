@@ -13,12 +13,29 @@ func (st Storage) GetContainerByUUID(uuid string) (*kbEnt.Container, error) {
 	cont, err := cb.ReadContainer()
 
 	if err != nil {
-		st.lg.Error(errMsgs.GetKnowledgeFail, zap.Error(err))
+		st.lg.Error(errMsgs.GetContainerFail, zap.Error(err))
 		return nil, err
 	}
 	return cont, nil
 }
 
+func (st Storage) CreateContainer(cont *kbEnt.Container) error {
+	cb := container.New(st.lg, st.KnowledgeBasesSubDir, cont.KnowledgeBase.UUID)
+	err := cb.WriteContainer(cont)
+
+	if err != nil {
+		st.lg.Error(errMsgs.CreateContainerFail, zap.Error(err))
+		return err
+	}
+	return nil
+}
+
 func (st Storage) RemoveContainerByUUID(uuid string) error {
-	return st.fb.RemoveFileByUUID(uuid)
+	cb := container.New(st.lg, st.KnowledgeBasesSubDir, uuid)
+	err := cb.RemoveContainer()
+	if err != nil {
+		st.lg.Error(errMsgs.DeleteContainerFail, zap.Error(err))
+		return err
+	}
+	return nil
 }

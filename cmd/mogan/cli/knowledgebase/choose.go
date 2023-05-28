@@ -67,7 +67,7 @@ func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 }
 
 func (c Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
-	st := kbsSt.New(c.lg.Zap, *c.cfg)
+	st := kbsSt.New(c.lg.Zap, c.cfg.WorkspaceDir)
 	kbsu := kbsUC.New(c.lg.Zap, st)
 	kbs := kbsu.GetAllKnowledgeBases()
 

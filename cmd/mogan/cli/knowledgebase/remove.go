@@ -121,7 +121,7 @@ func (r Remove) askTUIConfirm() (bool, error) {
 }
 
 func (r Remove) remove(ctx context.Context) error {
-	st := kbsSt.New(r.lg.Zap, *r.cfg)
+	st := kbsSt.New(r.lg.Zap, r.cfg.WorkspaceDir)
 	kbsu := kbsUC.New(r.lg.Zap, st)
 	err := kbsu.RemoveKnowledgeBase(r.kbUUID)
 	if err != nil {

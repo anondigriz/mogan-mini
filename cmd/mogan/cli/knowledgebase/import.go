@@ -62,7 +62,7 @@ func (im *Import) runE(cmd *cobra.Command, args []string) error {
 	}
 	defer f.Close()
 
-	st := kbsSt.New(im.lg.Zap, *im.cfg)
+	st := kbsSt.New(im.lg.Zap, im.cfg.WorkspaceDir)
 	kbsu := kbsUC.New(im.lg.Zap, st)
 
 	iArgs := argsCore.ImportKnowledgeBase{

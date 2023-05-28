@@ -11,7 +11,6 @@ import (
 func (st Storage) GetKnowledgeBase(uuid string) (kbEnt.KnowledgeBase, error) {
 	cb := container.New(st.lg, st.KnowledgeBasesSubDir, uuid)
 	kb, err := cb.ReadKnowledgeBase(uuid)
-
 	if err != nil {
 		st.lg.Error(errMsgs.GetKnowledgeFail, zap.Error(err))
 		return kbEnt.KnowledgeBase{}, err

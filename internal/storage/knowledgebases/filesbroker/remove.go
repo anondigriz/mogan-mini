@@ -21,3 +21,11 @@ func (fb FilesBroker) RemoveFileByPath(filePath string) error {
 	}
 	return nil
 }
+
+func (fb FilesBroker) RemoveDirByPath(dirPath string) error {
+	if err := os.RemoveAll(dirPath); err != nil {
+		fb.lg.Error(errMsgs.DeleteDirFail, zap.Error(err))
+		return errors.NewDeleteDirFailErr(err, dirPath)
+	}
+	return nil
+}
