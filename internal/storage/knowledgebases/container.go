@@ -22,7 +22,6 @@ func (st Storage) GetContainerByUUID(uuid string) (*kbEnt.Container, error) {
 func (st Storage) CreateContainer(cont *kbEnt.Container) error {
 	cb := container.New(st.lg, st.KnowledgeBasesSubDir, cont.KnowledgeBase.UUID)
 	err := cb.WriteContainer(cont)
-
 	if err != nil {
 		st.lg.Error(errMsgs.CreateContainerFail, zap.Error(err))
 		return err

@@ -44,7 +44,7 @@ func (fb FilesBroker) GetAllChildDirNames() []string {
 		return []string{}
 	}
 	for _, e := range entries {
-		if !e.IsDir() {
+		if e.IsDir() {
 			paths = append(paths, e.Name())
 		}
 	}

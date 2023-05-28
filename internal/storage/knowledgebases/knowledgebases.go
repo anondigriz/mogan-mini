@@ -38,7 +38,7 @@ func (st Storage) Ping(ctx context.Context) error {
 }
 
 func (st Storage) GetAllKnowledgeBases() []kbEnt.KnowledgeBase {
-	fb := filesbroker.New(st.lg, KnowledgeBasesSubDir, "")
+	fb := filesbroker.New(st.lg, st.KnowledgeBasesSubDir, "")
 	paths := fb.GetAllChildDirNames()
 	kbs := []kbEnt.KnowledgeBase{}
 	for _, name := range paths {
