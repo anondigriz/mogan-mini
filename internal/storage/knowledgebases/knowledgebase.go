@@ -5,27 +5,25 @@ import (
 	"go.uber.org/zap"
 
 	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
+	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/container"
 )
 
 func (st Storage) GetKnowledgeBase(uuid string) (kbEnt.KnowledgeBase, error) {
-	cont, err := st.GetContainerByUUID(uuid)
-
+	cb := container.New(st.lg, st.KnowledgeBasesSubDir, uuid)
+	kb, err := cb.ReadKnowledgeBase(uuid)
 	if err != nil {
-		st.lg.Error(errMsgs.GetContainerFail, zap.Error(err))
+		st.lg.Error(errMsgs.GetKnowledgeFail, zap.Error(err))
 		return kbEnt.KnowledgeBase{}, err
 	}
-	return cont.KnowledgeBase, nil
+	return kb, nil
 }
 
 func (st Storage) UpdateKnowledgeBase(ent kbEnt.KnowledgeBase) error {
-	cont, err := st.GetContainerByUUID(ent.UUID)
-
+	cb := container.New(st.lg, st.KnowledgeBasesSubDir, ent.UUID)
+	err := cb.WriteKnowledgeBase(ent)
 	if err != nil {
-		st.lg.Error(errMsgs.GetContainerFail, zap.Error(err))
+		st.lg.Error(errMsgs.WriteFileFail, zap.Error(err))
 		return err
 	}
-
-	cont.KnowledgeBase = ent
-
-	return st.SaveContainer(cont)
+	return nil
 }

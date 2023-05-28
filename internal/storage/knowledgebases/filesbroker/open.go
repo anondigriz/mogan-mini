@@ -17,8 +17,8 @@ func (fb FilesBroker) OpenFileByUUID(uuid string) (*os.File, error) {
 func (fb FilesBroker) OpenFileByPath(filePath string) (*os.File, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		fb.lg.Error(errMsgs.OpenKnowledgeBaseFileFail, zap.Error(err))
-		return nil, errors.NewOpenKnowledgeBaseFileFailErr(err, filePath)
+		fb.lg.Error(errMsgs.OpenFileFail, zap.Error(err))
+		return nil, errors.NewOpenFileFailErr(err, filePath)
 	}
 
 	return file, nil

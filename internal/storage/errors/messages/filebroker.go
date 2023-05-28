@@ -1,9 +1,13 @@
 package messages
 
 const (
-	KnowledgeBaseFileNotFound   = "knowledge base file does not found in the workspace directory"
-	WalkInWorkspaceDirFail      = "fail to walk the workspace directory"
-	DeleteKnowledgeBaseFileFail = "fail to delete the knowledge base file"
-	CreateKnowledgeBaseFileFail = "fail to create the knowledge base file"
-	OpenKnowledgeBaseFileFail   = "fail to open the knowledge base file"
+	FileNotFound   = "file does not found in the directory"
+	WalkInDirFail  = "fail to walk the workspace directory"
+	DeleteFileFail = "fail to delete the file"
+	CreateFileFail = "fail to create the file"
+	CreateDirFail  = "fail to create directory"
+	OpenFileFail   = "fail to open the file"
+	WriteFileFail  = "fail to write to the file"
+	ReadFileFail   = "fail to read from the file"
+	DeleteDirFail  = "fail to delete the directory"
 )

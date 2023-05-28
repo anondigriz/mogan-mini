@@ -91,7 +91,7 @@ func (c Create) inputTUIName() (string, error) {
 func (c Create) createKnowledgeBase(ctx context.Context) error {
 	messages.PrintEnteredShortNameKnowledgeBase(c.ShortName)
 
-	st := kbsSt.New(c.lg.Zap, *c.cfg)
+	st := kbsSt.New(c.lg.Zap, c.cfg.WorkspaceDir)
 	kbsu := kbsUC.New(c.lg.Zap, st)
 	uuid, err := kbsu.CreateKnowledgeBase(c.ShortName)
 	if err != nil {

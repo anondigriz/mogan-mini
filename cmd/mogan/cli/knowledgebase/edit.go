@@ -54,7 +54,7 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	st := kbsSt.New(e.lg.Zap, *e.cfg)
+	st := kbsSt.New(e.lg.Zap, e.cfg.WorkspaceDir)
 	kbsu := kbsUC.New(e.lg.Zap, st)
 	kb, err := kbsu.GetKnowledgeBase(e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {

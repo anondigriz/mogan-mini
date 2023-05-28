@@ -50,7 +50,7 @@ func (a *All) initConfig() {
 }
 
 func (a *All) runE(cmd *cobra.Command, args []string) error {
-	st := kbsSt.New(a.lg.Zap, *a.cfg)
+	st := kbsSt.New(a.lg.Zap, a.cfg.WorkspaceDir)
 	kbsu := kbsUC.New(a.lg.Zap, st)
 	kbs := kbsu.GetAllKnowledgeBases()
 
