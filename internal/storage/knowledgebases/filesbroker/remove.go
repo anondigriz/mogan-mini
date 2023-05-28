@@ -16,8 +16,8 @@ func (fb FilesBroker) RemoveFileByUUID(uuid string) error {
 
 func (fb FilesBroker) RemoveFileByPath(filePath string) error {
 	if err := os.Remove(filePath); err != nil {
-		fb.lg.Error(errMsgs.DeleteKnowledgeBaseFileFail, zap.Error(err))
-		return errors.NewDeleteKnowledgeBaseFileFailErr(err, filePath)
+		fb.lg.Error(errMsgs.DeleteFileFail, zap.Error(err))
+		return errors.NewDeleteFileFailErr(err, filePath)
 	}
 	return nil
 }

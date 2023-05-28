@@ -20,7 +20,7 @@ func (st Storage) GetContainerByPath(filePath string) (*kbEnt.Container, error) 
 	uuid := st.fb.GetFileUUID(filePath)
 	from, err := st.fb.OpenFileByPath(filePath)
 	if err != nil {
-		st.lg.Error(errMsgs.OpenKnowledgeBaseFileFail, zap.Error(err))
+		st.lg.Error(errMsgs.OpenFileFail, zap.Error(err))
 		return nil, err
 	}
 	defer from.Close()
@@ -43,7 +43,7 @@ func (st Storage) SaveContainer(cont *kbEnt.Container) error {
 	filePath := st.fb.GetFilePath(cont.KnowledgeBase.UUID)
 	to, err := st.fb.CreateFileByPath(filePath)
 	if err != nil {
-		st.lg.Error(errMsgs.CreateKnowledgeBaseFileFail, zap.Error(err))
+		st.lg.Error(errMsgs.CreateFileFail, zap.Error(err))
 		return err
 	}
 	defer to.Close()

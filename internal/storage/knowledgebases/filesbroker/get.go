@@ -13,7 +13,7 @@ import (
 )
 
 func (fb FilesBroker) GetFilePath(uuid string) string {
-	return path.Join(fb.settings.KnowledgeBaseDir, uuid+fileExtension)
+	return path.Join(fb.currentDir, uuid+fb.fileExtension)
 }
 
 func (fb FilesBroker) GetFileUUID(filePath string) string {
@@ -22,12 +22,12 @@ func (fb FilesBroker) GetFileUUID(filePath string) string {
 
 func (fb FilesBroker) GetAllFilesPaths() []string {
 	var paths []string
-	filepath.WalkDir(fb.settings.KnowledgeBaseDir, func(p string, d fs.DirEntry, e error) error {
+	filepath.WalkDir(fb.currentDir, func(p string, d fs.DirEntry, e error) error {
 		if e != nil {
-			fb.lg.Error(errMsgs.WalkInWorkspaceDirFail, zap.Error(e))
-			return errors.NewWalkInWorkspaceDirFailErr(e, fb.settings.KnowledgeBaseDir)
+			fb.lg.Error(errMsgs.WalkInDirFail, zap.Error(e))
+			return errors.NewWalkInDirFailErr(e, fb.currentDir)
 		}
-		if filepath.Ext(d.Name()) == fileExtension {
+		if filepath.Ext(d.Name()) == fb.fileExtension {
 			paths = append(paths, p)
 		}
 		return nil

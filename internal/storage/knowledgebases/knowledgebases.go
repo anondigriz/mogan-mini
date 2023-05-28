@@ -20,7 +20,7 @@ type Storage struct {
 }
 
 func New(lg *zap.Logger, cfg config.Config) *Storage {
-	fb := filesbroker.New(lg, cfg.WorkspaceDir)
+	fb := filesbroker.New(lg, cfg.WorkspaceDir, "knowledgeBase")
 	c := collector.New(lg)
 	st := &Storage{
 		lg:  lg,

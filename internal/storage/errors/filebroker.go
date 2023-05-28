@@ -7,17 +7,20 @@ import (
 )
 
 const (
-	KnowledgeBaseFileNotFound   = "KnowledgeBaseFileNotFound"
-	WalkInWorkspaceDirFail      = "WalkInWorkspaceDirFail"
-	DeleteKnowledgeBaseFileFail = "DeleteKnowledgeBaseFileFail"
-	CreateKnowledgeBaseFileFail = "CreateKnowledgeBaseFileFail"
-	OpenKnowledgeBaseFileFail   = "OpenKnowledgeBaseFileFail"
+	FileNotFound   = "FileNotFound"
+	WalkInDirFail  = "WalkInDirFail"
+	DeleteFileFail = "DeleteFileFail"
+	CreateFileFail = "CreateFileFail"
+	OpenFileFail   = "OpenFileFail"
+	CreateDirFail  = "CreateDirFail"
+	WriteFail      = "WriteFail"
+	ReadFail       = "ReadFail"
 )
 
-func NewKnowledgeBaseFileNotFoundErr(err error, filePath string) error {
+func NewFileNotFoundErr(err error, filePath string) error {
 	return StorageErr{
-		Stat:    KnowledgeBaseFileNotFound,
-		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.KnowledgeBaseFileNotFound, filePath),
+		Stat:    FileNotFound,
+		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.FileNotFound, filePath),
 		Err:     err,
 		Dt: map[string]string{
 			"path": filePath,
@@ -25,32 +28,21 @@ func NewKnowledgeBaseFileNotFoundErr(err error, filePath string) error {
 	}
 }
 
-func NewWalkInWorkspaceDirFailErr(err error, workspaceDir string) error {
+func NewWalkInDirFailErr(err error, dirPath string) error {
 	return StorageErr{
-		Stat:    WalkInWorkspaceDirFail,
-		Message: fmt.Sprintf("%s. Workspace directory: '%s'", errMsgs.WalkInWorkspaceDirFail, workspaceDir),
+		Stat:    WalkInDirFail,
+		Message: fmt.Sprintf("%s. Directory: '%s'", errMsgs.WalkInDirFail, dirPath),
 		Err:     err,
 		Dt: map[string]string{
-			"path": workspaceDir,
+			"path": dirPath,
 		},
 	}
 }
 
-func NewDeleteKnowledgeBaseFileFailErr(err error, filePath string) error {
+func NewDeleteFileFailErr(err error, filePath string) error {
 	return StorageErr{
-		Stat:    DeleteKnowledgeBaseFileFail,
-		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.DeleteKnowledgeBaseFileFail, filePath),
-		Err:     err,
-		Dt: map[string]string{
-			"path": filePath,
-		},
-	}
-}
-
-func NewCreateKnowledgeBaseFileFailErr(err error, filePath string) error {
-	return StorageErr{
-		Stat:    CreateKnowledgeBaseFileFail,
-		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.CreateKnowledgeBaseFileFail, filePath),
+		Stat:    DeleteFileFail,
+		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.DeleteFileFail, filePath),
 		Err:     err,
 		Dt: map[string]string{
 			"path": filePath,
@@ -58,10 +50,54 @@ func NewCreateKnowledgeBaseFileFailErr(err error, filePath string) error {
 	}
 }
 
-func NewOpenKnowledgeBaseFileFailErr(err error, filePath string) error {
+func NewCreateFileFailErr(err error, filePath string) error {
 	return StorageErr{
-		Stat:    OpenKnowledgeBaseFileFail,
-		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.OpenKnowledgeBaseFileFail, filePath),
+		Stat:    CreateFileFail,
+		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.CreateFileFail, filePath),
+		Err:     err,
+		Dt: map[string]string{
+			"path": filePath,
+		},
+	}
+}
+
+func NewCreateDirFailErr(err error, dirPath string) error {
+	return StorageErr{
+		Stat:    CreateDirFail,
+		Message: fmt.Sprintf("%s. Directory: '%s'", errMsgs.CreateDirFail, dirPath),
+		Err:     err,
+		Dt: map[string]string{
+			"path": dirPath,
+		},
+	}
+}
+
+func NewOpenFileFailErr(err error, filePath string) error {
+	return StorageErr{
+		Stat:    OpenFileFail,
+		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.OpenFileFail, filePath),
+		Err:     err,
+		Dt: map[string]string{
+			"path": filePath,
+		},
+	}
+}
+
+func NewWriteFailErr(err error, filePath string) error {
+	return StorageErr{
+		Stat:    WriteFail,
+		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.WriteFail, filePath),
+		Err:     err,
+		Dt: map[string]string{
+			"path": filePath,
+		},
+	}
+}
+
+func NewReadFailErr(err error, filePath string) error {
+	return StorageErr{
+		Stat:    ReadFail,
+		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.ReadFail, filePath),
 		Err:     err,
 		Dt: map[string]string{
 			"path": filePath,
