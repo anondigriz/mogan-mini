@@ -21,8 +21,8 @@ func (c Container) writeFile(data []byte, uuid, subDir string) error {
 	}
 	_, err = file.Write(data)
 	if err != nil {
-		c.lg.Error(errMsgs.WriteFail, zap.Error(err))
-		return errors.NewWriteFailErr(err, fb.GetFilePath(uuid))
+		c.lg.Error(errMsgs.WriteFileFail, zap.Error(err))
+		return errors.NewWriteFileFailErr(err, fb.GetFilePath(uuid))
 	}
 	return nil
 }

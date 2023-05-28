@@ -2,31 +2,28 @@ package knowledgebases
 
 import (
 	"context"
+	"path"
 
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
-	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/collector"
 	"go.uber.org/zap"
 
-	"github.com/anondigriz/mogan-mini/internal/config"
 	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
 	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/filesbroker"
 )
 
+const (
+	KnowledgeBasesSubDir = "knowledgebases"
+)
+
 type Storage struct {
-	lg  *zap.Logger
-	fb  *filesbroker.FilesBroker
-	c   *collector.Collector
-	cfg config.Config
+	lg                   *zap.Logger
+	KnowledgeBasesSubDir string
 }
 
-func New(lg *zap.Logger, cfg config.Config) *Storage {
-	fb := filesbroker.New(lg, cfg.WorkspaceDir, "knowledgeBase")
-	c := collector.New(lg)
+func New(lg *zap.Logger, workspaceDir string) *Storage {
 	st := &Storage{
-		lg:  lg,
-		fb:  fb,
-		c:   c,
-		cfg: cfg,
+		lg:                   lg,
+		KnowledgeBasesSubDir: path.Join(workspaceDir, KnowledgeBasesSubDir),
 	}
 
 	return st
@@ -41,11 +38,11 @@ func (st Storage) Ping(ctx context.Context) error {
 }
 
 func (st Storage) GetAllKnowledgeBases() []kbEnt.KnowledgeBase {
-	paths := st.fb.GetAllFilesPaths()
-
+	fb := filesbroker.New(st.lg, KnowledgeBasesSubDir, "")
+	paths := fb.GetAllChildDirNames()
 	kbs := []kbEnt.KnowledgeBase{}
-	for _, filePath := range paths {
-		kb, err := st.GetKnowledgeBase(st.fb.GetFileUUID(filePath))
+	for _, name := range paths {
+		kb, err := st.GetKnowledgeBase(name)
 		if err != nil {
 			st.lg.Error(errMsgs.GetKnowledgeFail, zap.Error(err))
 			continue

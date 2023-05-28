@@ -2,6 +2,7 @@ package filesbroker
 
 import (
 	"io/fs"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -32,5 +33,20 @@ func (fb FilesBroker) GetAllFilesPaths() []string {
 		}
 		return nil
 	})
+	return paths
+}
+
+func (fb FilesBroker) GetAllChildDirNames() []string {
+	var paths []string
+	entries, err := os.ReadDir(fb.currentDir)
+	if err != nil {
+		fb.lg.Error(errMsgs.WalkInDirFail, zap.Error(err))
+		return []string{}
+	}
+	for _, e := range entries {
+		if !e.IsDir() {
+			paths = append(paths, e.Name())
+		}
+	}
 	return paths
 }

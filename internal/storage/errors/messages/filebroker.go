@@ -7,6 +7,6 @@ const (
 	CreateFileFail = "fail to create the file"
 	CreateDirFail  = "fail to create directory"
 	OpenFileFail   = "fail to open the file"
-	WriteFail      = "fail to write to the file"
-	ReadFail       = "fail to read from the file"
+	WriteFileFail  = "fail to write to the file"
+	ReadFileFail   = "fail to read from the file"
 )

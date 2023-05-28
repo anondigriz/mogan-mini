@@ -23,8 +23,8 @@ func (c Container) readFile(uuid, subDir string) ([]byte, error) {
 
 	data, err := io.ReadAll(file)
 	if err != nil {
-		c.lg.Error(errMsgs.ReadFail, zap.Error(err))
-		return []byte{}, errors.NewReadFailErr(err, fb.GetFilePath(uuid))
+		c.lg.Error(errMsgs.ReadFileFail, zap.Error(err))
+		return []byte{}, errors.NewReadFileFailErr(err, fb.GetFilePath(uuid))
 	}
 	return data, nil
 }

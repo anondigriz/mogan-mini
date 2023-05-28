@@ -13,8 +13,8 @@ const (
 	CreateFileFail = "CreateFileFail"
 	OpenFileFail   = "OpenFileFail"
 	CreateDirFail  = "CreateDirFail"
-	WriteFail      = "WriteFail"
-	ReadFail       = "ReadFail"
+	WriteFileFail  = "WriteFileFail"
+	ReadFileFail   = "ReadFileFail"
 )
 
 func NewFileNotFoundErr(err error, filePath string) error {
@@ -83,10 +83,10 @@ func NewOpenFileFailErr(err error, filePath string) error {
 	}
 }
 
-func NewWriteFailErr(err error, filePath string) error {
+func NewWriteFileFailErr(err error, filePath string) error {
 	return StorageErr{
-		Stat:    WriteFail,
-		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.WriteFail, filePath),
+		Stat:    WriteFileFail,
+		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.WriteFileFail, filePath),
 		Err:     err,
 		Dt: map[string]string{
 			"path": filePath,
@@ -94,10 +94,10 @@ func NewWriteFailErr(err error, filePath string) error {
 	}
 }
 
-func NewReadFailErr(err error, filePath string) error {
+func NewReadFileFailErr(err error, filePath string) error {
 	return StorageErr{
-		Stat:    ReadFail,
-		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.ReadFail, filePath),
+		Stat:    ReadFileFail,
+		Message: fmt.Sprintf("%s. File path: '%s'", errMsgs.ReadFileFail, filePath),
 		Err:     err,
 		Dt: map[string]string{
 			"path": filePath,
