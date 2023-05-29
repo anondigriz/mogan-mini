@@ -8,41 +8,41 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/container"
 )
 
-func (st Storage) CreateGroup(knowledgeBaseUUID string, group kbEnt.Group) error {
+func (st Storage) CreateParameter(knowledgeBaseUUID string, parameter kbEnt.Parameter) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
-	err := cb.WriteGroup(group)
+	err := cb.WriteParameter(parameter)
 	if err != nil {
-		st.lg.Error(errMsgs.CreateGroupFail, zap.Error(err))
+		st.lg.Error(errMsgs.CreateParameterFail, zap.Error(err))
 		return err
 	}
 	return nil
 }
 
-func (st Storage) GetGroup(knowledgeBaseUUID string, uuid string) (kbEnt.Group, error) {
+func (st Storage) GetParameter(knowledgeBaseUUID string, uuid string) (kbEnt.Parameter, error) {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
-	gr, err := cb.ReadGroup(uuid)
+	gr, err := cb.ReadParameter(uuid)
 	if err != nil {
-		st.lg.Error(errMsgs.GetGroupFail, zap.Error(err))
-		return kbEnt.Group{}, err
+		st.lg.Error(errMsgs.GetParameterFail, zap.Error(err))
+		return kbEnt.Parameter{}, err
 	}
 	return gr, nil
 }
 
-func (st Storage) UpdateGroup(ent kbEnt.Group) error {
+func (st Storage) UpdateParameter(ent kbEnt.Parameter) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, ent.UUID)
-	err := cb.WriteGroup(ent)
+	err := cb.WriteParameter(ent)
 	if err != nil {
-		st.lg.Error(errMsgs.UpdateGroupFail, zap.Error(err))
+		st.lg.Error(errMsgs.UpdateParameterFail, zap.Error(err))
 		return err
 	}
 	return nil
 }
 
-func (st Storage) RemoveGroup(knowledgeBaseUUID string, uuid string) error {
+func (st Storage) RemoveParameter(knowledgeBaseUUID string, uuid string) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
-	err := cb.RemoveGroup(uuid)
+	err := cb.RemoveParameter(uuid)
 	if err != nil {
-		st.lg.Error(errMsgs.RemoveGroupFail, zap.Error(err))
+		st.lg.Error(errMsgs.RemoveParameterFail, zap.Error(err))
 		return err
 	}
 	return nil

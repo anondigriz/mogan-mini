@@ -22,7 +22,7 @@ func (st Storage) UpdateKnowledgeBase(ent kbEnt.KnowledgeBase) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, ent.UUID)
 	err := cb.WriteKnowledgeBase(ent)
 	if err != nil {
-		st.lg.Error(errMsgs.WriteFileFail, zap.Error(err))
+		st.lg.Error(errMsgs.UpdateKnowledgeFail, zap.Error(err))
 		return err
 	}
 	return nil
