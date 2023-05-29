@@ -52,14 +52,18 @@ func (a *All) initConfig() {
 func (a *All) runE(cmd *cobra.Command, args []string) error {
 	st := kbsSt.New(a.lg.Zap, a.cfg.WorkspaceDir)
 	kbsu := kbsUC.New(a.lg.Zap, st)
-	kbs := kbsu.GetAllKnowledgeBases()
-
-	if len(kbs) == 0 {
+	knowledgeBases := kbsu.GetAllKnowledgeBases()
+	if len(knowledgeBases) == 0 {
 		messages.PrintNoDataToShow()
 		return nil
 	}
 
-	err := a.showTUIKnowledgeBases(kbs)
+	kbsEntities := make([]kbEnt.KnowledgeBase, 0, len(knowledgeBases))
+	for _, v := range knowledgeBases {
+		kbsEntities = append(kbsEntities, v)
+	}
+
+	err := a.showTUIKnowledgeBases(kbsEntities)
 	if err != nil {
 		a.lg.Zap.Error(errMsgs.ShowTUIKnowledgeBases, zap.Error(err))
 		messages.PrintFail(errMsgs.ShowTUIKnowledgeBases)

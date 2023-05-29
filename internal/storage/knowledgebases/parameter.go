@@ -47,3 +47,13 @@ func (st Storage) RemoveParameter(knowledgeBaseUUID string, uuid string) error {
 	}
 	return nil
 }
+
+func (st Storage) GetAllParameters(knowledgeBaseUUID string) (map[string]kbEnt.Parameter, error) {
+	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
+	result, err := cb.ReadParameters()
+	if err != nil {
+		st.lg.Error(errMsgs.GetParametersFail, zap.Error(err))
+		return nil, err
+	}
+	return result, nil
+}

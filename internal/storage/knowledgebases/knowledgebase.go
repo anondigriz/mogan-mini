@@ -6,6 +6,7 @@ import (
 
 	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
 	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/container"
+	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/filesbroker"
 )
 
 func (st Storage) GetKnowledgeBase(uuid string) (kbEnt.KnowledgeBase, error) {
@@ -26,4 +27,20 @@ func (st Storage) UpdateKnowledgeBase(ent kbEnt.KnowledgeBase) error {
 		return err
 	}
 	return nil
+}
+
+func (st Storage) GetAllKnowledgeBases() map[string]kbEnt.KnowledgeBase {
+	fb := filesbroker.New(st.lg, st.KnowledgeBasesDir, "")
+	uuids := fb.GetAllChildDirNames()
+	result := make(map[string]kbEnt.KnowledgeBase, len(uuids))
+	for _, uuid := range uuids {
+		kb, err := st.GetKnowledgeBase(uuid)
+		if err != nil {
+			st.lg.Error(errMsgs.GetKnowledgeFail, zap.Error(err))
+			continue
+		}
+		result[uuid] = kb
+	}
+
+	return result
 }

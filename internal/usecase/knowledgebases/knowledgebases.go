@@ -29,6 +29,6 @@ func New(lg *zap.Logger, st *kbSt.Storage) *KnowledgeBases {
 	return m
 }
 
-func (kbs KnowledgeBases) GetAllKnowledgeBases() []kbEnt.KnowledgeBase {
+func (kbs KnowledgeBases) GetAllKnowledgeBases() map[string]kbEnt.KnowledgeBase {
 	return kbs.st.GetAllKnowledgeBases()
 }

@@ -8,51 +8,51 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/container"
 )
 
-func (st Storage) CreateGroup(knowledgeBaseUUID string, group kbEnt.Group) error {
+func (st Storage) CreateRule(knowledgeBaseUUID string, rule kbEnt.Rule) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
-	err := cb.WriteGroup(group)
+	err := cb.WriteRule(rule)
 	if err != nil {
-		st.lg.Error(errMsgs.CreateGroupFail, zap.Error(err))
+		st.lg.Error(errMsgs.CreateRuleFail, zap.Error(err))
 		return err
 	}
 	return nil
 }
 
-func (st Storage) GetGroup(knowledgeBaseUUID string, uuid string) (kbEnt.Group, error) {
+func (st Storage) GetRule(knowledgeBaseUUID string, uuid string) (kbEnt.Rule, error) {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
-	gr, err := cb.ReadGroup(uuid)
+	gr, err := cb.ReadRule(uuid)
 	if err != nil {
-		st.lg.Error(errMsgs.GetGroupFail, zap.Error(err))
-		return kbEnt.Group{}, err
+		st.lg.Error(errMsgs.GetRuleFail, zap.Error(err))
+		return kbEnt.Rule{}, err
 	}
 	return gr, nil
 }
 
-func (st Storage) UpdateGroup(ent kbEnt.Group) error {
+func (st Storage) UpdateRule(ent kbEnt.Rule) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, ent.UUID)
-	err := cb.WriteGroup(ent)
+	err := cb.WriteRule(ent)
 	if err != nil {
-		st.lg.Error(errMsgs.UpdateGroupFail, zap.Error(err))
+		st.lg.Error(errMsgs.UpdateRuleFail, zap.Error(err))
 		return err
 	}
 	return nil
 }
 
-func (st Storage) RemoveGroup(knowledgeBaseUUID string, uuid string) error {
+func (st Storage) RemoveRule(knowledgeBaseUUID string, uuid string) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
-	err := cb.RemoveGroup(uuid)
+	err := cb.RemoveRule(uuid)
 	if err != nil {
-		st.lg.Error(errMsgs.RemoveGroupFail, zap.Error(err))
+		st.lg.Error(errMsgs.RemoveRuleFail, zap.Error(err))
 		return err
 	}
 	return nil
 }
 
-func (st Storage) GetAllGroups(knowledgeBaseUUID string) (map[string]kbEnt.Group, error) {
+func (st Storage) GetAllRules(knowledgeBaseUUID string) (map[string]kbEnt.Rule, error) {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
-	result, err := cb.ReadGroups()
+	result, err := cb.ReadRules()
 	if err != nil {
-		st.lg.Error(errMsgs.GetGroupsFail, zap.Error(err))
+		st.lg.Error(errMsgs.GetRulesFail, zap.Error(err))
 		return nil, err
 	}
 	return result, nil
