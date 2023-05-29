@@ -16,14 +16,14 @@ const (
 )
 
 type Storage struct {
-	lg                   *zap.Logger
-	KnowledgeBasesSubDir string
+	lg                *zap.Logger
+	KnowledgeBasesDir string
 }
 
 func New(lg *zap.Logger, workspaceDir string) *Storage {
 	st := &Storage{
-		lg:                   lg,
-		KnowledgeBasesSubDir: path.Join(workspaceDir, KnowledgeBasesSubDir),
+		lg:                lg,
+		KnowledgeBasesDir: path.Join(workspaceDir, KnowledgeBasesSubDir),
 	}
 
 	return st
@@ -38,7 +38,7 @@ func (st Storage) Ping(ctx context.Context) error {
 }
 
 func (st Storage) GetAllKnowledgeBases() []kbEnt.KnowledgeBase {
-	fb := filesbroker.New(st.lg, st.KnowledgeBasesSubDir, "")
+	fb := filesbroker.New(st.lg, st.KnowledgeBasesDir, "")
 	paths := fb.GetAllChildDirNames()
 	kbs := []kbEnt.KnowledgeBase{}
 	for _, name := range paths {

@@ -8,8 +8,18 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/container"
 )
 
-func (st Storage) GetContainerByUUID(uuid string) (*kbEnt.Container, error) {
-	cb := container.New(st.lg, st.KnowledgeBasesSubDir, uuid)
+func (st Storage) CreateContainer(cont *kbEnt.Container) error {
+	cb := container.New(st.lg, st.KnowledgeBasesDir, cont.KnowledgeBase.UUID)
+	err := cb.WriteContainer(cont)
+	if err != nil {
+		st.lg.Error(errMsgs.CreateContainerFail, zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (st Storage) GetContainer(uuid string) (*kbEnt.Container, error) {
+	cb := container.New(st.lg, st.KnowledgeBasesDir, uuid)
 	cont, err := cb.ReadContainer()
 
 	if err != nil {
@@ -19,18 +29,8 @@ func (st Storage) GetContainerByUUID(uuid string) (*kbEnt.Container, error) {
 	return cont, nil
 }
 
-func (st Storage) CreateContainer(cont *kbEnt.Container) error {
-	cb := container.New(st.lg, st.KnowledgeBasesSubDir, cont.KnowledgeBase.UUID)
-	err := cb.WriteContainer(cont)
-	if err != nil {
-		st.lg.Error(errMsgs.CreateContainerFail, zap.Error(err))
-		return err
-	}
-	return nil
-}
-
-func (st Storage) RemoveContainerByUUID(uuid string) error {
-	cb := container.New(st.lg, st.KnowledgeBasesSubDir, uuid)
+func (st Storage) RemoveContainer(uuid string) error {
+	cb := container.New(st.lg, st.KnowledgeBasesDir, uuid)
 	err := cb.RemoveContainer()
 	if err != nil {
 		st.lg.Error(errMsgs.DeleteContainerFail, zap.Error(err))

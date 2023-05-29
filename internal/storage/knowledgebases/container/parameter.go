@@ -1,14 +1,12 @@
 package container
 
 import (
-	"path"
-
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/storage/errors"
-	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
-	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/filesbroker"
 	"github.com/pelletier/go-toml/v2"
 	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/internal/storage/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
 )
 
 func (c Container) WriteParameters(ps map[string]kbEnt.Parameter) error {
@@ -39,11 +37,9 @@ func (c Container) WriteParameter(p kbEnt.Parameter) error {
 }
 
 func (c Container) ReadParameters() (map[string]kbEnt.Parameter, error) {
-	fb := filesbroker.New(c.lg, path.Join(c.knowledgeBaseDir, ParametersSubDir), fileExtension)
-	paths := fb.GetAllFilesPaths()
-	result := make(map[string]kbEnt.Parameter, len(paths))
-	for _, v := range paths {
-		uuid := fb.GetFileUUID(v)
+	uuids := c.getFilesUUIDsInDir(ParametersSubDir)
+	result := make(map[string]kbEnt.Parameter, len(uuids))
+	for _, uuid := range uuids {
 		p, err := c.ReadParameter(uuid)
 		if err != nil {
 			c.lg.Error(errMsgs.ReadFileFail, zap.Error(err))
@@ -69,4 +65,8 @@ func (c Container) ReadParameter(uuid string) (kbEnt.Parameter, error) {
 	}
 
 	return p, nil
+}
+
+func (c Container) RemoveParameter(uuid string) error {
+	return c.removeFile(uuid, ParametersSubDir)
 }

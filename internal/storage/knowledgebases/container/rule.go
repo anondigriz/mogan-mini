@@ -1,14 +1,12 @@
 package container
 
 import (
-	"path"
-
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/storage/errors"
-	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
-	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/filesbroker"
 	"github.com/pelletier/go-toml/v2"
 	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/internal/storage/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
 )
 
 func (c Container) WriteRules(ps map[string]kbEnt.Rule) error {
@@ -39,11 +37,9 @@ func (c Container) WriteRule(r kbEnt.Rule) error {
 }
 
 func (c Container) ReadRules() (map[string]kbEnt.Rule, error) {
-	fb := filesbroker.New(c.lg, path.Join(c.knowledgeBaseDir, RulesSubDir), fileExtension)
-	paths := fb.GetAllFilesPaths()
-	result := make(map[string]kbEnt.Rule, len(paths))
-	for _, v := range paths {
-		uuid := fb.GetFileUUID(v)
+	uuids := c.getFilesUUIDsInDir(RulesSubDir)
+	result := make(map[string]kbEnt.Rule, len(uuids))
+	for _, uuid := range uuids {
 		r, err := c.ReadRule(uuid)
 		if err != nil {
 			c.lg.Error(errMsgs.ReadFileFail, zap.Error(err))
@@ -69,4 +65,8 @@ func (c Container) ReadRule(uuid string) (kbEnt.Rule, error) {
 	}
 
 	return r, nil
+}
+
+func (c Container) RemoveRule(uuid string) error {
+	return c.removeFile(uuid, RulesSubDir)
 }

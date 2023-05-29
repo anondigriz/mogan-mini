@@ -1,14 +1,12 @@
 package container
 
 import (
-	"path"
-
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/storage/errors"
-	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
-	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/filesbroker"
 	"github.com/pelletier/go-toml/v2"
 	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/internal/storage/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
 )
 
 func (c Container) WritePatterns(ps map[string]kbEnt.Pattern) error {
@@ -39,11 +37,9 @@ func (c Container) WritePattern(p kbEnt.Pattern) error {
 }
 
 func (c Container) ReadPatterns() (map[string]kbEnt.Pattern, error) {
-	fb := filesbroker.New(c.lg, path.Join(c.knowledgeBaseDir, PatternsSubDir), fileExtension)
-	paths := fb.GetAllFilesPaths()
-	result := make(map[string]kbEnt.Pattern, len(paths))
-	for _, v := range paths {
-		uuid := fb.GetFileUUID(v)
+	uuids := c.getFilesUUIDsInDir(PatternsSubDir)
+	result := make(map[string]kbEnt.Pattern, len(uuids))
+	for _, uuid := range uuids {
 		p, err := c.ReadPattern(uuid)
 		if err != nil {
 			c.lg.Error(errMsgs.ReadFileFail, zap.Error(err))
@@ -69,4 +65,8 @@ func (c Container) ReadPattern(uuid string) (kbEnt.Pattern, error) {
 	}
 
 	return p, nil
+}
+
+func (c Container) RemovePattern(uuid string) error {
+	return c.removeFile(uuid, PatternsSubDir)
 }

@@ -1,14 +1,12 @@
 package container
 
 import (
-	"path"
-
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
-	"github.com/anondigriz/mogan-mini/internal/storage/errors"
-	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
-	"github.com/anondigriz/mogan-mini/internal/storage/knowledgebases/filesbroker"
 	"github.com/pelletier/go-toml/v2"
 	"go.uber.org/zap"
+
+	"github.com/anondigriz/mogan-mini/internal/storage/errors"
+	errMsgs "github.com/anondigriz/mogan-mini/internal/storage/errors/messages"
 )
 
 func (c Container) WriteGroups(gs map[string]kbEnt.Group) error {
@@ -39,11 +37,9 @@ func (c Container) WriteGroup(g kbEnt.Group) error {
 }
 
 func (c Container) ReadGroups() (map[string]kbEnt.Group, error) {
-	fb := filesbroker.New(c.lg, path.Join(c.knowledgeBaseDir, GroupsSubDir), fileExtension)
-	paths := fb.GetAllFilesPaths()
-	result := make(map[string]kbEnt.Group, len(paths))
-	for _, v := range paths {
-		uuid := fb.GetFileUUID(v)
+	uuids := c.getFilesUUIDsInDir(GroupsSubDir)
+	result := make(map[string]kbEnt.Group, len(uuids))
+	for _, uuid := range uuids {
 		g, err := c.ReadGroup(uuid)
 		if err != nil {
 			c.lg.Error(errMsgs.ReadFileFail, zap.Error(err))
@@ -69,4 +65,8 @@ func (c Container) ReadGroup(uuid string) (kbEnt.Group, error) {
 	}
 
 	return g, nil
+}
+
+func (c Container) RemoveGroup(uuid string) error {
+	return c.removeFile(uuid, GroupsSubDir)
 }

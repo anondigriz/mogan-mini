@@ -8,7 +8,7 @@ import (
 )
 
 func (kb KnowledgeBase) Remove(uuid string) error {
-	if err := kb.st.RemoveContainerByUUID(uuid); err != nil {
+	if err := kb.st.RemoveContainer(uuid); err != nil {
 		kb.lg.Error(errMsgs.SaveContainerInStorageFail, zap.Error(err))
 		return errors.WrapStorageFailErr(err)
 	}
