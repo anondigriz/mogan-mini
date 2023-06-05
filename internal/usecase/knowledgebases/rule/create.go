@@ -1,4 +1,4 @@
-package group
+package rule
 
 import (
 	"time"
@@ -11,10 +11,10 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb Group) Create(knowledgeBaseUUID, shortName string) (string, error) {
+func (kb Rule) Create(knowledgeBaseUUID, shortName string) (string, error) {
 	uuid := uuidGen.New().String()
 	now := time.Now().UTC()
-	group := kbEnt.Group{
+	rule := kbEnt.Rule{
 		BaseInfo: kbEnt.BaseInfo{
 			UUID:         uuid,
 			ID:           uuid,
@@ -22,13 +22,13 @@ func (kb Group) Create(knowledgeBaseUUID, shortName string) (string, error) {
 			CreatedDate:  now,
 			ModifiedDate: now,
 		},
-		Groups:     make(map[string]kbEnt.Group),
-		Parameters: []string{},
-		Rules:      []string{},
+
+		InputParameters:  []kbEnt.ParameterRule{},
+		OutputParameters: []kbEnt.ParameterRule{},
 	}
 
-	if err := kb.st.CreateGroup(knowledgeBaseUUID, group); err != nil {
-		kb.lg.Error(errMsgs.CreateGroupInStorageFail, zap.Error(err))
+	if err := kb.st.CreateRule(knowledgeBaseUUID, rule); err != nil {
+		kb.lg.Error(errMsgs.CreateRuleInStorageFail, zap.Error(err))
 		return "", errors.WrapStorageFailErr(err)
 	}
 

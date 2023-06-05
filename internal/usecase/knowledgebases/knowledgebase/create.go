@@ -11,7 +11,7 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb KnowledgeBase) Create(name string) (string, error) {
+func (kb KnowledgeBase) Create(shortName string) (string, error) {
 	uuid := uuidGen.New().String()
 	now := time.Now().UTC()
 	cont := &kbEnt.Container{
@@ -19,7 +19,7 @@ func (kb KnowledgeBase) Create(name string) (string, error) {
 			BaseInfo: kbEnt.BaseInfo{
 				UUID:         uuid,
 				ID:           uuid,
-				ShortName:    name,
+				ShortName:    shortName,
 				CreatedDate:  now,
 				ModifiedDate: now,
 			},
