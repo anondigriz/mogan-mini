@@ -25,7 +25,7 @@ func (kb KnowledgeBase) Import(args argsCore.ImportKnowledgeBase) (string, error
 	}
 
 	if err := kb.st.CreateContainer(&cont); err != nil {
-		kb.lg.Error(errMsgs.SaveContainerInStorageFail, zap.Error(err))
+		kb.lg.Error(errMsgs.CreateContainerInStorageFail, zap.Error(err))
 		return "", errors.WrapStorageFailErr(err)
 	}
 

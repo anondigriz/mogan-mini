@@ -1,4 +1,4 @@
-package knowledgebase
+package group
 
 import (
 	"go.uber.org/zap"
@@ -7,9 +7,9 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb KnowledgeBase) Remove(uuid string) error {
-	if err := kb.st.RemoveContainer(uuid); err != nil {
-		kb.lg.Error(errMsgs.RemoveContainerFromStorageFail, zap.Error(err))
+func (kb Group) Remove(knowledgeBaseUUID, uuid string) error {
+	if err := kb.st.RemoveGroup(knowledgeBaseUUID, uuid); err != nil {
+		kb.lg.Error(errMsgs.RemoveGroupFromStorageFail, zap.Error(err))
 		return errors.WrapStorageFailErr(err)
 	}
 
