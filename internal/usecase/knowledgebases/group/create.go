@@ -1,8 +1,6 @@
 package group
 
 import (
-	"time"
-
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	uuidGen "github.com/google/uuid"
 	"go.uber.org/zap"
@@ -11,26 +9,12 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb Group) Create(knowledgeBaseUUID, shortName string) (string, error) {
-	uuid := uuidGen.New().String()
-	now := time.Now().UTC()
-	group := kbEnt.Group{
-		BaseInfo: kbEnt.BaseInfo{
-			UUID:         uuid,
-			ID:           uuid,
-			ShortName:    shortName,
-			CreatedDate:  now,
-			ModifiedDate: now,
-		},
-		Groups:     make(map[string]kbEnt.Group),
-		Parameters: []string{},
-		Rules:      []string{},
-	}
-
+func (kb Group) Create(knowledgeBaseUUID string, group kbEnt.Group) (string, error) {
+	group.UUID = uuidGen.New().String()
 	if err := kb.st.CreateGroup(knowledgeBaseUUID, group); err != nil {
 		kb.lg.Error(errMsgs.CreateGroupInStorageFail, zap.Error(err))
 		return "", errors.WrapStorageFailErr(err)
 	}
 
-	return uuid, nil
+	return group.UUID, nil
 }

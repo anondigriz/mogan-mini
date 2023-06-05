@@ -3,11 +3,13 @@ package knowledgebase
 import (
 	"context"
 	"fmt"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
@@ -93,7 +95,15 @@ func (c Create) createKnowledgeBase(ctx context.Context) error {
 
 	st := kbsSt.New(c.lg.Zap, c.cfg.WorkspaceDir)
 	kbsu := kbsUC.New(c.lg.Zap, st)
-	uuid, err := kbsu.CreateKnowledgeBase(c.ShortName)
+	now := time.Now().UTC()
+	knowledgeBase := kbEnt.KnowledgeBase{
+		BaseInfo: kbEnt.BaseInfo{
+			ShortName:    c.ShortName,
+			CreatedDate:  now,
+			ModifiedDate: now,
+		},
+	}
+	uuid, err := kbsu.CreateKnowledgeBase(knowledgeBase)
 	if err != nil {
 		c.lg.Zap.Error(errMsgs.CreateKnowledgeBaseProject, zap.Error(err))
 		messages.PrintFail(errMsgs.CreateKnowledgeBaseProject)

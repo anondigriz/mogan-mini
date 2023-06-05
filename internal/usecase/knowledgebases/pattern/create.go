@@ -1,4 +1,4 @@
-package rule
+package pattern
 
 import (
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
@@ -9,12 +9,12 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb Rule) Create(knowledgeBaseUUID string, rule kbEnt.Rule) (string, error) {
-	rule.UUID = uuidGen.New().String()
-	if err := kb.st.CreateRule(knowledgeBaseUUID, rule); err != nil {
-		kb.lg.Error(errMsgs.CreateRuleInStorageFail, zap.Error(err))
+func (kb Pattern) Create(knowledgeBaseUUID string, pattern kbEnt.Pattern) (string, error) {
+	pattern.UUID = uuidGen.New().String()
+	if err := kb.st.CreatePattern(knowledgeBaseUUID, pattern); err != nil {
+		kb.lg.Error(errMsgs.CreatePatternInStorageFail, zap.Error(err))
 		return "", errors.WrapStorageFailErr(err)
 	}
 
-	return rule.UUID, nil
+	return pattern.UUID, nil
 }

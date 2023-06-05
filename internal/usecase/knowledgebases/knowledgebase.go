@@ -9,8 +9,8 @@ func (kb KnowledgeBases) RemoveKnowledgeBase(uuid string) error {
 	return kb.kb.Remove(uuid)
 }
 
-func (kb KnowledgeBases) CreateKnowledgeBase(name string) (string, error) {
-	return kb.kb.Create(name)
+func (kb KnowledgeBases) CreateKnowledgeBase(knowledgeBase kbEnt.KnowledgeBase) (string, error) {
+	return kb.kb.Create(knowledgeBase)
 }
 
 func (kb KnowledgeBases) ImportKnowledgeBase(args argsCore.ImportKnowledgeBase) (string, error) {
