@@ -57,7 +57,7 @@ func (im *Import) runE(cmd *cobra.Command, args []string) error {
 	f, err := os.Open(im.xmlPath)
 	if err != nil {
 		im.lg.Zap.Error(err.Error(), zap.Error(err))
-		messages.PrintFail(errMsgs.XMLFileOpen)
+		messages.PrintFail(errMsgs.XMLFileOpenFail)
 		return err
 	}
 	defer f.Close()
@@ -72,8 +72,8 @@ func (im *Import) runE(cmd *cobra.Command, args []string) error {
 
 	uuid, err := kbsu.ImportKnowledgeBase(iArgs)
 	if err != nil {
-		im.lg.Zap.Error(errMsgs.ImportProject, zap.Error(err))
-		messages.PrintFail(errMsgs.ImportProject)
+		im.lg.Zap.Error(errMsgs.ImportProjectFail, zap.Error(err))
+		messages.PrintFail(errMsgs.ImportProjectFail)
 		return err
 	}
 

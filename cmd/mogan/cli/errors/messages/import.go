@@ -2,6 +2,6 @@ package messages
 
 const (
 	XMLFilePathIsEmpty = "path to the xml file should not be empty"
-	XMLFileOpen        = "fail to open the xml file"
-	ImportProject      = "fail to import the knowledge base"
+	XMLFileOpenFail    = "fail to open the xml file"
+	ImportProjectFail  = "fail to import the knowledge base"
 )

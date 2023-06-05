@@ -71,8 +71,8 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 
 	check, err := r.askTUIConfirm()
 	if err != nil {
-		r.lg.Zap.Error(errMsgs.AskTUIConfirm, zap.Error(err))
-		messages.PrintFail(errMsgs.AskTUIConfirm)
+		r.lg.Zap.Error(errMsgs.AskTUIConfirmFail, zap.Error(err))
+		messages.PrintFail(errMsgs.AskTUIConfirmFail)
 		return err
 	}
 
@@ -98,7 +98,7 @@ func (r Remove) askTUIConfirm() (bool, error) {
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		r.lg.Zap.Error(errMsgs.RunTUIProgram, zap.Error(err))
+		r.lg.Zap.Error(errMsgs.RunTUIProgramFail, zap.Error(err))
 		return false, err
 	}
 	result, ok := m.(choicesTui.Model)

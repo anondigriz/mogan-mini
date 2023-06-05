@@ -65,8 +65,8 @@ func (a *All) runE(cmd *cobra.Command, args []string) error {
 
 	err := a.showTUIKnowledgeBases(kbsEntities)
 	if err != nil {
-		a.lg.Zap.Error(errMsgs.ShowTUIKnowledgeBases, zap.Error(err))
-		messages.PrintFail(errMsgs.ShowTUIKnowledgeBases)
+		a.lg.Zap.Error(errMsgs.ShowTUIKnowledgeBasesFail, zap.Error(err))
+		messages.PrintFail(errMsgs.ShowTUIKnowledgeBasesFail)
 		return err
 	}
 	return nil
@@ -80,7 +80,7 @@ func (a All) showTUIKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
 	mt := listShowTui.New(list)
 
 	if _, err := tea.NewProgram(mt).Run(); err != nil {
-		a.lg.Zap.Error(errMsgs.RunTUIProgram, zap.Error(err))
+		a.lg.Zap.Error(errMsgs.RunTUIProgramFail, zap.Error(err))
 		return err
 	}
 	return nil

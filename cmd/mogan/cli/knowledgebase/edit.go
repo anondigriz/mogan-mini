@@ -65,8 +65,8 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 
 	updated, err := e.editTUIKnowledgeBase(cmd.Context(), kb)
 	if err != nil {
-		e.lg.Zap.Error(errMsgs.EditTUIKnowledgeBase, zap.Error(err))
-		messages.PrintFail(errMsgs.EditTUIKnowledgeBase)
+		e.lg.Zap.Error(errMsgs.EditTUIKnowledgeBaseFail, zap.Error(err))
+		messages.PrintFail(errMsgs.EditTUIKnowledgeBaseFail)
 		return err
 	}
 
@@ -78,7 +78,7 @@ func (e Edit) editTUIKnowledgeBase(ctx context.Context, previous kbEnt.Knowledge
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		e.lg.Zap.Error(errMsgs.RunTUIProgram, zap.Error(err))
+		e.lg.Zap.Error(errMsgs.RunTUIProgramFail, zap.Error(err))
 		return kbEnt.KnowledgeBase{}, err
 	}
 	result, ok := m.(editTui.Model)

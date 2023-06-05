@@ -78,7 +78,7 @@ func (c Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
 
 	uuid, err := c.chooseTUIKnowledgeBase(kbsInfo)
 	if err != nil {
-		c.lg.Zap.Error(errMsgs.ChooseTUIKnowledgeBase, zap.Error(err))
+		c.lg.Zap.Error(errMsgs.ChooseTUIKnowledgeBaseFail, zap.Error(err))
 		return "", err
 	}
 	return uuid, nil
@@ -89,7 +89,7 @@ func (c Choose) chooseTUIKnowledgeBase(kbs []kbEnt.BaseInfo) (string, error) {
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
-		c.lg.Zap.Error(errMsgs.RunTUIProgram, zap.Error(err))
+		c.lg.Zap.Error(errMsgs.RunTUIProgramFail, zap.Error(err))
 		return "", err
 	}
 	result, ok := m.(chooseTui.Model)
@@ -111,7 +111,6 @@ func (c Choose) chooseTUIKnowledgeBase(kbs []kbEnt.BaseInfo) (string, error) {
 func (c Choose) commitChoice() error {
 	messages.PrintChosenKnowledgeBase(c.kbUUID)
 	c.vp.Set(kbUUIDConfigPath, c.kbUUID)
-
 	if err := c.vp.WriteConfig(); err != nil {
 		c.lg.Zap.Error(errMsgs.UpdateConfig, zap.Error(err))
 		messages.PrintFail(errMsgs.UpdateConfig)

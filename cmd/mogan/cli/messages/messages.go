@@ -15,7 +15,11 @@ func PrintChosenKnowledgeBase(uuid string) {
 }
 
 func PrintEnteredShortNameKnowledgeBase(shortName string) {
-	fmt.Printf(MsgPattern, OkKaomoji, fmt.Sprintf("you have entered the knowledge base name '%s'", shortName))
+	fmt.Printf(MsgPattern, OkKaomoji, fmt.Sprintf("you have entered the short name of the knowledge base: '%s'", shortName))
+}
+
+func PrintEnteredIDKnowledgeBase(id string) {
+	fmt.Printf(MsgPattern, OkKaomoji, fmt.Sprintf("you have entered the ID of the knowledge base:'%s'", id))
 }
 
 func PrintCreatedKnowledgeBase(uuid string) {
@@ -28,7 +32,6 @@ func PrintReceivedNewEntityInfo() {
 
 func PrintKnowledgeBaseRemoved(uuid string) {
 	fmt.Printf(MsgPattern, OkKaomoji, fmt.Sprintf("knowledge base project with UUID '%s' successfully deleted", uuid))
-
 }
 
 func PrintNoDataToShow() {
