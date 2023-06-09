@@ -5,6 +5,7 @@ const (
 	ChooseKnowledgeBaseFail        = "fail when choosing a knowledge base from the base project directory"
 	ChooseGroupFail                = "fail when choosing a group of the knowledge base"
 	KnowledgeBaseWasNotChosen      = "knowledge base was not chosen"
+	ObjectWasNotChosen             = "object was not chosen"
 	CreateKnowledgeBaseProjectFail = "fail to create the knowledge base project"
 	GetKnowledgeBaseFail           = "fail to get the knowledge base information"
 	InitGroupChooserFail           = "fail to init the groups' chooser"

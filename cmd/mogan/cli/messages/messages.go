@@ -50,3 +50,7 @@ func PrintFail(msg string) {
 func PrintChooseGroup() {
 	fmt.Printf(MsgPattern, "Choose group")
 }
+
+func PrintChosenGroup(uuid string) {
+	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("you have chosen the group with UUID '%s'", uuid))
+}

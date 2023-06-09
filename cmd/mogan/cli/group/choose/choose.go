@@ -55,7 +55,7 @@ func (c Choose) ChooseTUI(allow chooseTui.AllowArgs, show chooseTui.ShowArgs) (s
 	}
 
 	if result.IsQuitted {
-		err := fmt.Errorf(errMsgs.KnowledgeBaseWasNotChosen)
+		err := fmt.Errorf(errMsgs.ObjectWasNotChosen)
 		c.lg.Error(err.Error())
 		return "", err
 	}

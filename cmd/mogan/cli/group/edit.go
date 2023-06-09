@@ -70,7 +70,7 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 		e.grUUID = uuid
 	}
 
-	//TODO
+	messages.PrintChosenGroup(e.grUUID)
 
 	return nil
 }
