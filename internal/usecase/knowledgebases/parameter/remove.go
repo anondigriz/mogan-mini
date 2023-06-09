@@ -1,4 +1,4 @@
-package pattern
+package parameter
 
 import (
 	"go.uber.org/zap"
@@ -7,9 +7,9 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (p Pattern) Remove(knowledgeBaseUUID, uuid string) error {
-	if err := p.st.RemovePattern(knowledgeBaseUUID, uuid); err != nil {
-		p.lg.Error(errMsgs.RemovePatternFromStorageFail, zap.Error(err))
+func (p Parameter) Remove(knowledgeBaseUUID, uuid string) error {
+	if err := p.st.RemoveParameter(knowledgeBaseUUID, uuid); err != nil {
+		p.lg.Error(errMsgs.RemoveParameterFromStorageFail, zap.Error(err))
 		return errors.WrapStorageFailErr(err)
 	}
 

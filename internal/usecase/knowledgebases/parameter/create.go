@@ -1,4 +1,4 @@
-package group
+package parameter
 
 import (
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
@@ -9,10 +9,10 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (g Group) Create(knowledgeBaseUUID string, ent kbEnt.Group) (string, error) {
+func (p Parameter) Create(knowledgeBaseUUID string, ent kbEnt.Parameter) (string, error) {
 	ent.UUID = uuidGen.New().String()
-	if err := g.st.CreateGroup(knowledgeBaseUUID, ent); err != nil {
-		g.lg.Error(errMsgs.CreateGroupInStorageFail, zap.Error(err))
+	if err := p.st.CreateParameter(knowledgeBaseUUID, ent); err != nil {
+		p.lg.Error(errMsgs.CreateRuleInStorageFail, zap.Error(err))
 		return "", errors.WrapStorageFailErr(err)
 	}
 

@@ -9,10 +9,10 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb KnowledgeBase) Create(knowledgeBase kbEnt.KnowledgeBase) (string, error) {
-	knowledgeBase.UUID = uuidGen.New().String()
+func (kb KnowledgeBase) Create(ent kbEnt.KnowledgeBase) (string, error) {
+	ent.UUID = uuidGen.New().String()
 	cont := &kbEnt.Container{
-		KnowledgeBase: knowledgeBase,
+		KnowledgeBase: ent,
 		Groups:        make(map[string]kbEnt.Group),
 		Parameters:    make(map[string]kbEnt.Parameter),
 		Patterns:      make(map[string]kbEnt.Pattern),
@@ -24,5 +24,5 @@ func (kb KnowledgeBase) Create(knowledgeBase kbEnt.KnowledgeBase) (string, error
 		return "", errors.WrapStorageFailErr(err)
 	}
 
-	return knowledgeBase.UUID, nil
+	return ent.UUID, nil
 }

@@ -60,7 +60,7 @@ func (c Container) getFilesUUIDsInDir(subDir string) []string {
 	dir := path.Join(c.knowledgeBaseDir, subDir)
 	fb := filesbroker.New(c.lg, dir, fileExtension)
 	paths := fb.GetAllFilesPaths()
-	result := make([]string, len(paths))
+	result := make([]string, 0, len(paths))
 	for _, v := range paths {
 		uuid := fb.GetFileUUID(v)
 		result = append(result, uuid)

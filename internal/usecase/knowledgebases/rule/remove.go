@@ -7,9 +7,9 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb Rule) Remove(knowledgeBaseUUID, uuid string) error {
-	if err := kb.st.RemoveRule(knowledgeBaseUUID, uuid); err != nil {
-		kb.lg.Error(errMsgs.RemoveRuleFromStorageFail, zap.Error(err))
+func (r Rule) Remove(knowledgeBaseUUID, uuid string) error {
+	if err := r.st.RemoveRule(knowledgeBaseUUID, uuid); err != nil {
+		r.lg.Error(errMsgs.RemoveRuleFromStorageFail, zap.Error(err))
 		return errors.WrapStorageFailErr(err)
 	}
 

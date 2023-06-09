@@ -8,9 +8,9 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb Rule) Update(ent kbEnt.Rule) error {
-	if err := kb.st.UpdateRule(ent); err != nil {
-		kb.lg.Error(errMsgs.UpdateRuleInStorageFail, zap.Error(err))
+func (r Rule) Update(knowledgeBaseUUID string, ent kbEnt.Rule) error {
+	if err := r.st.UpdateRule(knowledgeBaseUUID, ent); err != nil {
+		r.lg.Error(errMsgs.UpdateRuleInStorageFail, zap.Error(err))
 		return errors.WrapStorageFailErr(err)
 	}
 

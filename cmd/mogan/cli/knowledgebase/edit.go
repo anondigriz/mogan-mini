@@ -58,8 +58,8 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 	kbsu := kbsUC.New(e.lg.Zap, st)
 	kb, err := kbsu.GetKnowledgeBase(e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {
-		e.lg.Zap.Error(errMsgs.GetKnowledgeBase, zap.Error(err))
-		messages.PrintFail(errMsgs.GetKnowledgeBase)
+		e.lg.Zap.Error(errMsgs.GetKnowledgeBaseFail, zap.Error(err))
+		messages.PrintFail(errMsgs.GetKnowledgeBaseFail)
 		return err
 	}
 
@@ -119,8 +119,8 @@ func (e Edit) commitChanges(ctx context.Context, kbsu *kbsUC.KnowledgeBases, upd
 
 	err := kbsu.UpdateKnowledgeBase(updated)
 	if err != nil {
-		e.lg.Zap.Error(errMsgs.UpdateKnowledgeBase, zap.Error(err))
-		messages.PrintFail(errMsgs.UpdateKnowledgeBase)
+		e.lg.Zap.Error(errMsgs.UpdateKnowledgeBaseFail, zap.Error(err))
+		messages.PrintFail(errMsgs.UpdateKnowledgeBaseFail)
 		return err
 	}
 	messages.PrintChangesAccepted()

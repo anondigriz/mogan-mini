@@ -1,4 +1,4 @@
-package pattern
+package parameter
 
 import (
 	"go.uber.org/zap"
@@ -6,15 +6,15 @@ import (
 	kbSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
 )
 
-type Pattern struct {
+type Parameter struct {
 	st *kbSt.Storage
 	lg *zap.Logger
 }
 
-func New(lg *zap.Logger, st *kbSt.Storage) *Pattern {
-	m := &Pattern{
+func New(lg *zap.Logger, st *kbSt.Storage) *Parameter {
+	p := &Parameter{
 		st: st,
 		lg: lg,
 	}
-	return m
+	return p
 }

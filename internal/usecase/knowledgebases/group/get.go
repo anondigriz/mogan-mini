@@ -8,12 +8,16 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb Group) Get(knowledgeBaseUUID, uuid string) (kbEnt.Group, error) {
-	k, err := kb.st.GetGroup(knowledgeBaseUUID, uuid)
+func (g Group) Get(knowledgeBaseUUID, uuid string) (kbEnt.Group, error) {
+	group, err := g.st.GetGroup(knowledgeBaseUUID, uuid)
 	if err != nil {
-		kb.lg.Error(errMsgs.GetGroupFromStorageFail, zap.Error(err))
+		g.lg.Error(errMsgs.GetGroupFromStorageFail, zap.Error(err))
 		return kbEnt.Group{}, errors.WrapStorageFailErr(err)
 	}
 
-	return k, nil
+	return group, nil
+}
+
+func (g Group) GetAll(knowledgeBaseUUID string) (map[string]kbEnt.Group, error) {
+	return g.st.GetAllGroups(knowledgeBaseUUID)
 }

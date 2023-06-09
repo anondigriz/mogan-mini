@@ -18,7 +18,7 @@ func (st Storage) CreateRule(knowledgeBaseUUID string, rule kbEnt.Rule) error {
 	return nil
 }
 
-func (st Storage) GetRule(knowledgeBaseUUID string, uuid string) (kbEnt.Rule, error) {
+func (st Storage) GetRule(knowledgeBaseUUID, uuid string) (kbEnt.Rule, error) {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	gr, err := cb.ReadRule(uuid)
 	if err != nil {
@@ -28,8 +28,8 @@ func (st Storage) GetRule(knowledgeBaseUUID string, uuid string) (kbEnt.Rule, er
 	return gr, nil
 }
 
-func (st Storage) UpdateRule(ent kbEnt.Rule) error {
-	cb := container.New(st.lg, st.KnowledgeBasesDir, ent.UUID)
+func (st Storage) UpdateRule(knowledgeBaseUUID string, ent kbEnt.Rule) error {
+	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	err := cb.WriteRule(ent)
 	if err != nil {
 		st.lg.Error(errMsgs.UpdateRuleFail, zap.Error(err))
@@ -38,7 +38,7 @@ func (st Storage) UpdateRule(ent kbEnt.Rule) error {
 	return nil
 }
 
-func (st Storage) RemoveRule(knowledgeBaseUUID string, uuid string) error {
+func (st Storage) RemoveRule(knowledgeBaseUUID, uuid string) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	err := cb.RemoveRule(uuid)
 	if err != nil {

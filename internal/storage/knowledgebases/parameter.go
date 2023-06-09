@@ -18,7 +18,7 @@ func (st Storage) CreateParameter(knowledgeBaseUUID string, parameter kbEnt.Para
 	return nil
 }
 
-func (st Storage) GetParameter(knowledgeBaseUUID string, uuid string) (kbEnt.Parameter, error) {
+func (st Storage) GetParameter(knowledgeBaseUUID, uuid string) (kbEnt.Parameter, error) {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	gr, err := cb.ReadParameter(uuid)
 	if err != nil {
@@ -28,8 +28,8 @@ func (st Storage) GetParameter(knowledgeBaseUUID string, uuid string) (kbEnt.Par
 	return gr, nil
 }
 
-func (st Storage) UpdateParameter(ent kbEnt.Parameter) error {
-	cb := container.New(st.lg, st.KnowledgeBasesDir, ent.UUID)
+func (st Storage) UpdateParameter(knowledgeBaseUUID string, ent kbEnt.Parameter) error {
+	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	err := cb.WriteParameter(ent)
 	if err != nil {
 		st.lg.Error(errMsgs.UpdateParameterFail, zap.Error(err))
@@ -38,7 +38,7 @@ func (st Storage) UpdateParameter(ent kbEnt.Parameter) error {
 	return nil
 }
 
-func (st Storage) RemoveParameter(knowledgeBaseUUID string, uuid string) error {
+func (st Storage) RemoveParameter(knowledgeBaseUUID, uuid string) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	err := cb.RemoveParameter(uuid)
 	if err != nil {

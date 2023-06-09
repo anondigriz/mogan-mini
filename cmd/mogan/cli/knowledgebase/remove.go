@@ -59,10 +59,10 @@ func (r *Remove) initConfig() {
 func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 	if r.kbUUID == "" {
 		choose := NewChoose(r.lg, r.vp, r.cfg)
-		uuid, err := choose.chooseKnowledgeBase(cmd.Context())
+		uuid, err := choose.chooseKnowledgeBase()
 		if err != nil {
-			r.lg.Zap.Error(errMsgs.ChooseKnowledgeBase, zap.Error(err))
-			messages.PrintFail(errMsgs.ChooseKnowledgeBase)
+			r.lg.Zap.Error(errMsgs.ChooseKnowledgeBaseFail, zap.Error(err))
+			messages.PrintFail(errMsgs.ChooseKnowledgeBaseFail)
 			return err
 		}
 		r.kbUUID = uuid
@@ -84,8 +84,8 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 	}
 
 	if err = r.remove(cmd.Context()); err != nil {
-		r.lg.Zap.Error(errMsgs.RemoveKnowledgeBase, zap.Error(err))
-		messages.PrintFail(errMsgs.RemoveKnowledgeBase)
+		r.lg.Zap.Error(errMsgs.RemoveKnowledgeBaseFail, zap.Error(err))
+		messages.PrintFail(errMsgs.RemoveKnowledgeBaseFail)
 		return err
 	}
 	messages.PrintKnowledgeBaseRemoved(r.kbUUID)
@@ -125,7 +125,7 @@ func (r Remove) remove(ctx context.Context) error {
 	kbsu := kbsUC.New(r.lg.Zap, st)
 	err := kbsu.RemoveKnowledgeBase(r.kbUUID)
 	if err != nil {
-		r.lg.Zap.Error(errMsgs.RemoveKnowledgeBase, zap.Error(err))
+		r.lg.Zap.Error(errMsgs.RemoveKnowledgeBaseFail, zap.Error(err))
 		return err
 	}
 	return nil

@@ -18,7 +18,7 @@ func (st Storage) CreateGroup(knowledgeBaseUUID string, group kbEnt.Group) error
 	return nil
 }
 
-func (st Storage) GetGroup(knowledgeBaseUUID string, uuid string) (kbEnt.Group, error) {
+func (st Storage) GetGroup(knowledgeBaseUUID, uuid string) (kbEnt.Group, error) {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	gr, err := cb.ReadGroup(uuid)
 	if err != nil {
@@ -28,8 +28,8 @@ func (st Storage) GetGroup(knowledgeBaseUUID string, uuid string) (kbEnt.Group, 
 	return gr, nil
 }
 
-func (st Storage) UpdateGroup(ent kbEnt.Group) error {
-	cb := container.New(st.lg, st.KnowledgeBasesDir, ent.UUID)
+func (st Storage) UpdateGroup(knowledgeBaseUUID string, ent kbEnt.Group) error {
+	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	err := cb.WriteGroup(ent)
 	if err != nil {
 		st.lg.Error(errMsgs.UpdateGroupFail, zap.Error(err))
@@ -38,7 +38,7 @@ func (st Storage) UpdateGroup(ent kbEnt.Group) error {
 	return nil
 }
 
-func (st Storage) RemoveGroup(knowledgeBaseUUID string, uuid string) error {
+func (st Storage) RemoveGroup(knowledgeBaseUUID, uuid string) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	err := cb.RemoveGroup(uuid)
 	if err != nil {

@@ -1,4 +1,4 @@
-package group
+package pattern
 
 import (
 	"go.uber.org/zap"
@@ -6,15 +6,15 @@ import (
 	kbSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
 )
 
-type Group struct {
+type Pattern struct {
 	st *kbSt.Storage
 	lg *zap.Logger
 }
 
-func New(lg *zap.Logger, st *kbSt.Storage) *Group {
-	g := &Group{
+func New(lg *zap.Logger, st *kbSt.Storage) *Pattern {
+	p := &Pattern{
 		st: st,
 		lg: lg,
 	}
-	return g
+	return p
 }

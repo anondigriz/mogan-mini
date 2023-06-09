@@ -8,12 +8,16 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb Pattern) Get(knowledgeBaseUUID, uuid string) (kbEnt.Pattern, error) {
-	k, err := kb.st.GetPattern(knowledgeBaseUUID, uuid)
+func (p Pattern) Get(knowledgeBaseUUID, uuid string) (kbEnt.Pattern, error) {
+	pattern, err := p.st.GetPattern(knowledgeBaseUUID, uuid)
 	if err != nil {
-		kb.lg.Error(errMsgs.GetPatternFromStorageFail, zap.Error(err))
+		p.lg.Error(errMsgs.GetPatternFromStorageFail, zap.Error(err))
 		return kbEnt.Pattern{}, errors.WrapStorageFailErr(err)
 	}
 
-	return k, nil
+	return pattern, nil
+}
+
+func (p Pattern) GetAll(knowledgeBaseUUID string) (map[string]kbEnt.Pattern, error) {
+	return p.st.GetAllPatterns(knowledgeBaseUUID)
 }

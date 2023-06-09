@@ -1,4 +1,4 @@
-package group
+package parameter
 
 import (
 	"github.com/anondigriz/mogan-mini/internal/usecase/errors"
@@ -8,9 +8,9 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (g Group) Update(knowledgeBaseUUID string, ent kbEnt.Group) error {
-	if err := g.st.UpdateGroup(knowledgeBaseUUID, ent); err != nil {
-		g.lg.Error(errMsgs.UpdateGroupInStorageFail, zap.Error(err))
+func (p Parameter) Update(knowledgeBaseUUID string, ent kbEnt.Parameter) error {
+	if err := p.st.UpdateParameter(knowledgeBaseUUID, ent); err != nil {
+		p.lg.Error(errMsgs.UpdateParameterInStorageFail, zap.Error(err))
 		return errors.WrapStorageFailErr(err)
 	}
 

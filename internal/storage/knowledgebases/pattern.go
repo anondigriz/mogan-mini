@@ -18,7 +18,7 @@ func (st Storage) CreatePattern(knowledgeBaseUUID string, pattern kbEnt.Pattern)
 	return nil
 }
 
-func (st Storage) GetPattern(knowledgeBaseUUID string, uuid string) (kbEnt.Pattern, error) {
+func (st Storage) GetPattern(knowledgeBaseUUID, uuid string) (kbEnt.Pattern, error) {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	gr, err := cb.ReadPattern(uuid)
 	if err != nil {
@@ -28,8 +28,8 @@ func (st Storage) GetPattern(knowledgeBaseUUID string, uuid string) (kbEnt.Patte
 	return gr, nil
 }
 
-func (st Storage) UpdatePattern(ent kbEnt.Pattern) error {
-	cb := container.New(st.lg, st.KnowledgeBasesDir, ent.UUID)
+func (st Storage) UpdatePattern(knowledgeBaseUUID string, ent kbEnt.Pattern) error {
+	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	err := cb.WritePattern(ent)
 	if err != nil {
 		st.lg.Error(errMsgs.UpdatePatternFail, zap.Error(err))
@@ -38,7 +38,7 @@ func (st Storage) UpdatePattern(ent kbEnt.Pattern) error {
 	return nil
 }
 
-func (st Storage) RemovePattern(knowledgeBaseUUID string, uuid string) error {
+func (st Storage) RemovePattern(knowledgeBaseUUID, uuid string) error {
 	cb := container.New(st.lg, st.KnowledgeBasesDir, knowledgeBaseUUID)
 	err := cb.RemovePattern(uuid)
 	if err != nil {

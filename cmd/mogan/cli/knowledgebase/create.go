@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
@@ -145,8 +145,8 @@ func (c Create) createKnowledgeBase(ctx context.Context) error {
 	}
 	uuid, err := kbsu.CreateKnowledgeBase(knowledgeBase)
 	if err != nil {
-		c.lg.Zap.Error(errMsgs.CreateKnowledgeBaseProject, zap.Error(err))
-		messages.PrintFail(errMsgs.CreateKnowledgeBaseProject)
+		c.lg.Zap.Error(errMsgs.CreateKnowledgeBaseProjectFail, zap.Error(err))
+		messages.PrintFail(errMsgs.CreateKnowledgeBaseProjectFail)
 		return err
 	}
 	messages.PrintCreatedKnowledgeBase(uuid)

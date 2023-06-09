@@ -1,15 +1,13 @@
 package knowledgebase
 
 import (
-	"context"
 	"fmt"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-
-	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
@@ -54,10 +52,10 @@ func (c *Choose) initConfig() {
 
 func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 	if c.kbUUID == "" {
-		uuid, err := c.chooseKnowledgeBase(cmd.Context())
+		uuid, err := c.chooseKnowledgeBase()
 		if err != nil {
-			c.lg.Zap.Error(errMsgs.ChooseKnowledgeBase, zap.Error(err))
-			messages.PrintFail(errMsgs.ChooseKnowledgeBase)
+			c.lg.Zap.Error(errMsgs.ChooseKnowledgeBaseFail, zap.Error(err))
+			messages.PrintFail(errMsgs.ChooseKnowledgeBaseFail)
 			return err
 		}
 		c.kbUUID = uuid
@@ -66,7 +64,7 @@ func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 	return c.commitChoice()
 }
 
-func (c Choose) chooseKnowledgeBase(ctx context.Context) (string, error) {
+func (c Choose) chooseKnowledgeBase() (string, error) {
 	st := kbsSt.New(c.lg.Zap, c.cfg.WorkspaceDir)
 	kbsu := kbsUC.New(c.lg.Zap, st)
 	kbs := kbsu.GetAllKnowledgeBases()

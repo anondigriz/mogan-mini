@@ -7,9 +7,9 @@ import (
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 
-func (kb Group) Remove(knowledgeBaseUUID, uuid string) error {
-	if err := kb.st.RemoveGroup(knowledgeBaseUUID, uuid); err != nil {
-		kb.lg.Error(errMsgs.RemoveGroupFromStorageFail, zap.Error(err))
+func (g Group) Remove(knowledgeBaseUUID, uuid string) error {
+	if err := g.st.RemoveGroup(knowledgeBaseUUID, uuid); err != nil {
+		g.lg.Error(errMsgs.RemoveGroupFromStorageFail, zap.Error(err))
 		return errors.WrapStorageFailErr(err)
 	}
 

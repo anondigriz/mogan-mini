@@ -9,11 +9,15 @@ import (
 )
 
 func (kb KnowledgeBase) Get(uuid string) (kbEnt.KnowledgeBase, error) {
-	k, err := kb.st.GetKnowledgeBase(uuid)
+	knowledgeBase, err := kb.st.GetKnowledgeBase(uuid)
 	if err != nil {
 		kb.lg.Error(errMsgs.GetKnowledgeBaseFromStorageFail, zap.Error(err))
 		return kbEnt.KnowledgeBase{}, errors.WrapStorageFailErr(err)
 	}
 
-	return k, nil
+	return knowledgeBase, nil
+}
+
+func (kb KnowledgeBase) GetAll() map[string]kbEnt.KnowledgeBase {
+	return kb.st.GetAllKnowledgeBases()
 }
