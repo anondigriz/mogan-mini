@@ -3,10 +3,10 @@ package choose
 import (
 	"fmt"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 	"go.uber.org/zap"
 
-	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	chooseTUI "github.com/anondigriz/mogan-mini/internal/tui/baseinfo/choose"
 )

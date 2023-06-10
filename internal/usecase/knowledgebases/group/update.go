@@ -1,10 +1,10 @@
 package group
 
 import (
-	"github.com/anondigriz/mogan-mini/internal/usecase/errors"
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	"go.uber.org/zap"
 
-	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
+	"github.com/anondigriz/mogan-mini/internal/usecase/errors"
 	errMsgs "github.com/anondigriz/mogan-mini/internal/usecase/errors/messages"
 )
 

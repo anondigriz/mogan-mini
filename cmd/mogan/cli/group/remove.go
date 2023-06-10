@@ -3,12 +3,13 @@ package group
 import (
 	"fmt"
 
-	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
-	"github.com/anondigriz/mogan-mini/internal/config"
-	"github.com/anondigriz/mogan-mini/internal/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+
+	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 )
 
 type Remove struct {

@@ -2,6 +2,7 @@ package knowledgebases
 
 import (
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
+
 	argsCore "github.com/anondigriz/mogan-mini/internal/core/args"
 )
 

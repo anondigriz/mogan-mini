@@ -62,14 +62,13 @@ func (im *Import) runE(cmd *cobra.Command, args []string) error {
 	}
 	defer f.Close()
 
-	st := kbsSt.New(im.lg.Zap, im.cfg.WorkspaceDir)
-	kbsu := kbsUC.New(im.lg.Zap, st)
+	kbsu := kbsUC.New(im.lg.Zap,
+		kbsSt.New(im.lg.Zap, im.cfg.WorkspaceDir))
 
 	iArgs := argsCore.ImportKnowledgeBase{
 		XMLFile:  f,
 		FileName: f.Name(),
 	}
-
 	uuid, err := kbsu.ImportKnowledgeBase(iArgs)
 	if err != nil {
 		im.lg.Zap.Error(errMsgs.ImportProjectFail, zap.Error(err))

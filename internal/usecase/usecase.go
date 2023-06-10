@@ -1,9 +1,10 @@
 package usecase
 
 import (
+	"go.uber.org/zap"
+
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/core"
-	"go.uber.org/zap"
 )
 
 type UseCase struct {

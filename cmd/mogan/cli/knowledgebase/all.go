@@ -3,12 +3,11 @@ package knowledgebase
 import (
 	"fmt"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-
-	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
@@ -50,8 +49,8 @@ func (a *All) initConfig() {
 }
 
 func (a *All) runE(cmd *cobra.Command, args []string) error {
-	st := kbsSt.New(a.lg.Zap, a.cfg.WorkspaceDir)
-	kbsu := kbsUC.New(a.lg.Zap, st)
+	kbsu := kbsUC.New(a.lg.Zap,
+		kbsSt.New(a.lg.Zap, a.cfg.WorkspaceDir))
 	knowledgeBases := kbsu.GetAllKnowledgeBases()
 	if len(knowledgeBases) == 0 {
 		messages.PrintNoDataToShow()

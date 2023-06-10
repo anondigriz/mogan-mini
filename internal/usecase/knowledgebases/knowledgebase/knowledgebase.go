@@ -1,9 +1,8 @@
 package knowledgebase
 
 import (
-	"go.uber.org/zap"
-
 	"github.com/anondigriz/mogan-core/pkg/exchange/knowledgebase/parser"
+	"go.uber.org/zap"
 
 	kbSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
 )

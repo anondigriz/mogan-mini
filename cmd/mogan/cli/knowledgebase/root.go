@@ -1,10 +1,11 @@
 package knowledgebase
 
 import (
-	"github.com/anondigriz/mogan-mini/internal/config"
-	"github.com/anondigriz/mogan-mini/internal/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/logger"
 )
 
 type Root struct {

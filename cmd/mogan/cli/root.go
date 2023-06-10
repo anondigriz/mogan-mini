@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"os"
 
-	grCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/group"
-	kbCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/knowledgebase"
-	uiCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/ui"
-
-	"github.com/anondigriz/mogan-mini/internal/config"
-	"github.com/anondigriz/mogan-mini/internal/logger"
-	"github.com/anondigriz/mogan-mini/internal/usecase/workspace"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+
+	grCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/group"
+	kbCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/knowledgebase"
+	uiCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/ui"
+	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/logger"
+	"github.com/anondigriz/mogan-mini/internal/usecase/workspace"
 )
 
 var (

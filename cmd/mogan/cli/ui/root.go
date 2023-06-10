@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/anondigriz/mogan-mini/internal/config"
-	"github.com/anondigriz/mogan-mini/internal/logger"
-	"github.com/anondigriz/mogan-mini/ui"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/anondigriz/mogan-mini/internal/config"
+	"github.com/anondigriz/mogan-mini/internal/logger"
+	"github.com/anondigriz/mogan-mini/ui"
 )
 
 type Root struct {
