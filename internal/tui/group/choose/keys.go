@@ -15,7 +15,7 @@ type keyMap struct {
 // ShortHelp returns keybindings to be shown in the mini help view. It's part
 // of the key.Map interface.
 func (k keyMap) ShortHelp() []key.Binding {
-	return []key.Binding{k.Help, k.Quit}
+	return []key.Binding{k.Help, k.Choose, k.Quit}
 }
 
 // FullHelp returns keybindings for the expanded help view. It's part of the
@@ -31,15 +31,15 @@ func (k keyMap) FullHelp() [][]key.Binding {
 var keys = keyMap{
 	Open: key.NewBinding(
 		key.WithKeys("enter"),
-		key.WithHelp("enter", "open group"),
+		key.WithHelp("enter", "open"),
 	),
 	Choose: key.NewBinding(
 		key.WithKeys("c"),
-		key.WithHelp("c", "choose object"),
+		key.WithHelp("c", "choose"),
 	),
 	Back: key.NewBinding(
 		key.WithKeys("esc"),
-		key.WithHelp("esc", "parent group"),
+		key.WithHelp("esc", "back"),
 	),
 	Help: key.NewBinding(
 		key.WithKeys("f1"),
