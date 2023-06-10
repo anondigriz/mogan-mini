@@ -10,11 +10,8 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-const (
-	timeFormat = "02.01.2006 15:04:05"
-)
-
 var (
+	timeFormat  = "02.01.2006 15:04:05"
 	tableHeight = 7
 	baseStyle   = lipgloss.NewStyle().
 			BorderStyle(lipgloss.NormalBorder()).

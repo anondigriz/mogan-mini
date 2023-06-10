@@ -14,7 +14,7 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
-	choicesTui "github.com/anondigriz/mogan-mini/internal/tui/choices"
+	choicesTUI "github.com/anondigriz/mogan-mini/internal/tui/choices"
 	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
@@ -58,8 +58,9 @@ func (r *Remove) initConfig() {
 
 func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 	if r.kbUUID == "" {
-		choose := NewChoose(r.lg, r.vp, r.cfg)
-		uuid, err := choose.chooseKnowledgeBase()
+		st := kbsSt.New(r.lg.Zap, r.cfg.WorkspaceDir)
+		kbsu := kbsUC.New(r.lg.Zap, st)
+		uuid, err := chooseKnowledgeBase(r.lg.Zap, kbsu)
 		if err != nil {
 			r.lg.Zap.Error(errMsgs.ChooseKnowledgeBaseFail, zap.Error(err))
 			messages.PrintFail(errMsgs.ChooseKnowledgeBaseFail)
@@ -94,14 +95,14 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 }
 
 func (r Remove) askTUIConfirm() (bool, error) {
-	mt := choicesTui.New(removeQuestion, removeConfirmChoices)
+	mt := choicesTUI.New(removeQuestion, removeConfirmChoices)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
 		r.lg.Zap.Error(errMsgs.RunTUIProgramFail, zap.Error(err))
 		return false, err
 	}
-	result, ok := m.(choicesTui.Model)
+	result, ok := m.(choicesTUI.Model)
 	if !ok {
 		err = fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
 		r.lg.Zap.Error(err.Error())

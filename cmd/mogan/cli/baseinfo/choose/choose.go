@@ -3,19 +3,16 @@ package choose
 import (
 	"fmt"
 
-	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	tea "github.com/charmbracelet/bubbletea"
 	"go.uber.org/zap"
 
+	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
-	chooseTUI "github.com/anondigriz/mogan-mini/internal/tui/group/choose"
+	chooseTUI "github.com/anondigriz/mogan-mini/internal/tui/baseinfo/choose"
 )
 
 type Choose struct {
-	lg         *zap.Logger
-	Parameters map[string]kbEnt.Parameter
-	Rules      map[string]kbEnt.Rule
-	Root       *chooseTUI.Group
+	lg *zap.Logger
 }
 
 func New(lg *zap.Logger) *Choose {
@@ -25,9 +22,8 @@ func New(lg *zap.Logger) *Choose {
 	return c
 }
 
-func (c Choose) ChooseTUI(allow chooseTUI.AllowArgs, show chooseTUI.ShowArgs) (string, error) {
-	mt := chooseTUI.New(c.Root, allow, show)
-
+func (c Choose) ChooseTUI(info []kbEnt.BaseInfo) (string, error) {
+	mt := chooseTUI.New(info)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
@@ -37,13 +33,13 @@ func (c Choose) ChooseTUI(allow chooseTUI.AllowArgs, show chooseTUI.ShowArgs) (s
 	result, ok := m.(chooseTUI.Model)
 	if !ok {
 		err := fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
-		c.lg.Error(err.Error())
+		c.lg.Error(err.Error(), zap.Error(err))
 		return "", err
 	}
 
 	if result.IsQuitted {
 		err := fmt.Errorf(errMsgs.ObjectWasNotChosen)
-		c.lg.Error(err.Error())
+		c.lg.Error(err.Error(), zap.Error(err))
 		return "", err
 	}
 

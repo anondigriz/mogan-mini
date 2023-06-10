@@ -15,7 +15,7 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
-	listShowTui "github.com/anondigriz/mogan-mini/internal/tui/listshow"
+	listShowTUI "github.com/anondigriz/mogan-mini/internal/tui/listshow"
 	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
@@ -77,7 +77,7 @@ func (a All) showTUIKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
 	for _, v := range kbs {
 		list = append(list, fmt.Sprintf("Id: %s; Short name: %s; UUID: %s", v.ID, v.ShortName, v.UUID))
 	}
-	mt := listShowTui.New(list)
+	mt := listShowTUI.New(list)
 
 	if _, err := tea.NewProgram(mt).Run(); err != nil {
 		a.lg.Zap.Error(errMsgs.RunTUIProgramFail, zap.Error(err))

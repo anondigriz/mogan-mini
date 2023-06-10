@@ -15,7 +15,7 @@ import (
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
-	textInputTui "github.com/anondigriz/mogan-mini/internal/tui/textinput"
+	textInputTUI "github.com/anondigriz/mogan-mini/internal/tui/textinput"
 	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
@@ -79,7 +79,7 @@ func (c *Create) runE(cmd *cobra.Command, args []string) error {
 }
 
 func (c Create) inputTUIShortName() (string, error) {
-	mt := textInputTui.New("What is the short name of the knowledge base?", "Awesome knowledge base")
+	mt := textInputTUI.New("What is the short name of the knowledge base?", "Awesome knowledge base")
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
@@ -87,7 +87,7 @@ func (c Create) inputTUIShortName() (string, error) {
 		return "", err
 	}
 
-	result, ok := m.(textInputTui.Model)
+	result, ok := m.(textInputTUI.Model)
 	if !ok {
 		err = fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
 		c.lg.Zap.Error(err.Error())
@@ -105,7 +105,7 @@ func (c Create) inputTUIShortName() (string, error) {
 }
 
 func (c Create) inputTUIID() (string, error) {
-	mt := textInputTui.New("What is the ID of the knowledge base?", "00000000-1111-2222-3333-444444444444")
+	mt := textInputTUI.New("What is the ID of the knowledge base?", "00000000-1111-2222-3333-444444444444")
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
@@ -113,7 +113,7 @@ func (c Create) inputTUIID() (string, error) {
 		return "", err
 	}
 
-	result, ok := m.(textInputTui.Model)
+	result, ok := m.(textInputTUI.Model)
 	if !ok {
 		err = fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
 		c.lg.Zap.Error(err.Error())

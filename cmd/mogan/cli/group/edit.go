@@ -1,14 +1,12 @@
 package group
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/checks"
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
-	chooseCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/group/choose"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
@@ -50,10 +48,7 @@ func (e *Edit) initConfig() {
 }
 
 func (e *Edit) runE(cmd *cobra.Command, args []string) error {
-	if e.cfg.CurrentKnowledgeBase.UUID == "" {
-		err := fmt.Errorf(errMsgs.KnowledgeBaseNotChosen)
-		e.lg.Zap.Error(err.Error())
-		messages.PrintFail(errMsgs.KnowledgeBaseNotChosen)
+	if err := checks.IsKnowledgeBaseChosen(*e.lg.Zap, e.cfg.CurrentKnowledgeBase.UUID); err != nil {
 		return err
 	}
 
@@ -61,7 +56,7 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 		kbsSt.New(e.lg.Zap, e.cfg.WorkspaceDir))
 
 	if e.grUUID == "" {
-		uuid, err := e.chooseGroup(kbsu)
+		uuid, err := chooseGroup(e.lg.Zap, kbsu, e.cfg.CurrentKnowledgeBase.UUID)
 		if err != nil {
 			e.lg.Zap.Error(errMsgs.ChooseGroupFail, zap.Error(err))
 			messages.PrintFail(errMsgs.ChooseGroupFail)
@@ -73,19 +68,4 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 	messages.PrintChosenGroup(e.grUUID)
 
 	return nil
-}
-
-func (e *Edit) chooseGroup(kbsu *kbsUC.KnowledgeBases) (string, error) {
-	ch := chooseCLI.New(e.lg.Zap)
-	if err := ch.Init(kbsu, e.cfg.CurrentKnowledgeBase.UUID); err != nil {
-		e.lg.Zap.Error(errMsgs.InitGroupChooserFail, zap.Error(err))
-		messages.PrintFail(errMsgs.InitGroupChooserFail)
-		return "", err
-	}
-	uuid, err := ch.ChooseGroup()
-	if err != nil {
-		e.lg.Zap.Error(errMsgs.ChooseGroupFail, zap.Error(err))
-		return "", err
-	}
-	return uuid, nil
 }

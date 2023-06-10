@@ -1,20 +1,17 @@
 package knowledgebase
 
 import (
-	"fmt"
-
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	chooseCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/baseinfo/choose"
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
-	chooseTui "github.com/anondigriz/mogan-mini/internal/tui/shared/choose"
 	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
@@ -52,7 +49,9 @@ func (c *Choose) initConfig() {
 
 func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 	if c.kbUUID == "" {
-		uuid, err := c.chooseKnowledgeBase()
+		kbsu := kbsUC.New(c.lg.Zap,
+			kbsSt.New(c.lg.Zap, c.cfg.WorkspaceDir))
+		uuid, err := chooseKnowledgeBase(c.lg.Zap, kbsu)
 		if err != nil {
 			c.lg.Zap.Error(errMsgs.ChooseKnowledgeBaseFail, zap.Error(err))
 			messages.PrintFail(errMsgs.ChooseKnowledgeBaseFail)
@@ -64,46 +63,21 @@ func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 	return c.commitChoice()
 }
 
-func (c Choose) chooseKnowledgeBase() (string, error) {
-	st := kbsSt.New(c.lg.Zap, c.cfg.WorkspaceDir)
-	kbsu := kbsUC.New(c.lg.Zap, st)
+func chooseKnowledgeBase(lg *zap.Logger, kbsu *kbsUC.KnowledgeBases) (string, error) {
 	kbs := kbsu.GetAllKnowledgeBases()
-
-	kbsInfo := make([]kbEnt.BaseInfo, 0, len(kbs))
+	info := make([]kbEnt.BaseInfo, 0, len(kbs))
 	for _, kb := range kbs {
-		kbsInfo = append(kbsInfo, kb.BaseInfo)
+		info = append(info, kb.BaseInfo)
 	}
 
-	uuid, err := c.chooseTUIKnowledgeBase(kbsInfo)
+	ch := chooseCLI.New(lg)
+	messages.PrintChooseKnowledgeBase()
+	uuid, err := ch.ChooseTUI(info)
 	if err != nil {
-		c.lg.Zap.Error(errMsgs.ChooseTUIKnowledgeBaseFail, zap.Error(err))
+		lg.Error(errMsgs.ChooseTUIKnowledgeBaseFail, zap.Error(err))
 		return "", err
 	}
 	return uuid, nil
-}
-
-func (c Choose) chooseTUIKnowledgeBase(kbs []kbEnt.BaseInfo) (string, error) {
-	mt := chooseTui.New(kbs)
-	p := tea.NewProgram(mt)
-	m, err := p.Run()
-	if err != nil {
-		c.lg.Zap.Error(errMsgs.RunTUIProgramFail, zap.Error(err))
-		return "", err
-	}
-	result, ok := m.(chooseTui.Model)
-	if !ok {
-		err := fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
-		c.lg.Zap.Error(err.Error())
-		return "", err
-	}
-
-	if result.IsQuitted {
-		err := fmt.Errorf(errMsgs.KnowledgeBaseWasNotChosen)
-		c.lg.Zap.Error(err.Error())
-		return "", err
-	}
-
-	return result.ChosenUUID, nil
 }
 
 func (c Choose) commitChoice() error {

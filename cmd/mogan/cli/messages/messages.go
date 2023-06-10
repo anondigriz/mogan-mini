@@ -51,6 +51,14 @@ func PrintChooseGroup() {
 	fmt.Printf(MsgPattern, "Choose group")
 }
 
+func PrintChooseKnowledgeBase() {
+	fmt.Printf(MsgPattern, "Choose knowledge base")
+}
+
 func PrintChosenGroup(uuid string) {
 	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("you have chosen the group with UUID '%s'", uuid))
+}
+
+func PrintBaseInfoNotEdited() {
+	fmt.Printf(MsgPatternKaomoji, OkKaomoji, "base info about the object was not edited")
 }

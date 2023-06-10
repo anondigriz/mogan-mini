@@ -1,7 +1,7 @@
 package messages
 
 const (
-	KnowledgeBaseNotChosen         = "knowledge base is not chosen. Please select the knowledge base using the `kb choose` command."
+	KnowledgeBaseNotChosen         = "knowledge base is not chosen. Please select the knowledge base using the `kb choose` command"
 	ChooseKnowledgeBaseFail        = "fail when choosing a knowledge base from the base project directory"
 	ChooseGroupFail                = "fail when choosing a group of the knowledge base"
 	KnowledgeBaseWasNotChosen      = "knowledge base was not chosen"
@@ -13,6 +13,6 @@ const (
 	GetParametersFail              = "fail to get the information about the parameters"
 	GetRulesFail                   = "fail to get the information about the rules"
 	UpdateKnowledgeBaseFail        = "fail to update the knowledge base information"
-	KnowledgeBaseWasNotEdited      = "knowledge base was not edited"
+	BaseInfoNotEdited              = "base info about the object was not edited"
 	RemoveKnowledgeBaseFail        = "fail to remove the knowledge base project"
 )
