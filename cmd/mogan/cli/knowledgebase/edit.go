@@ -70,7 +70,7 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 }
 
 func (e Edit) commitChanges(kbsu *kbsUC.KnowledgeBases, updated kbEnt.KnowledgeBase) error {
-	messages.PrintReceivedNewObjectInfo()
+	messages.PrintNewObjectInfoReceived()
 
 	err := kbsu.UpdateKnowledgeBase(updated)
 	if err != nil {

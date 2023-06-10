@@ -62,17 +62,17 @@ func (c *Create) runE(cmd *cobra.Command, args []string) error {
 }
 
 func (c Create) createKnowledgeBase(info kbEnt.BaseInfo) error {
-	st := kbsSt.New(c.lg.Zap, c.cfg.WorkspaceDir)
-	kbsu := kbsUC.New(c.lg.Zap, st)
+	kbsu := kbsUC.New(c.lg.Zap,
+		kbsSt.New(c.lg.Zap, c.cfg.WorkspaceDir))
 	knowledgeBase := kbEnt.KnowledgeBase{
 		BaseInfo: info,
 	}
 	uuid, err := kbsu.CreateKnowledgeBase(knowledgeBase)
 	if err != nil {
-		c.lg.Zap.Error(errMsgs.CreateKnowledgeBaseProjectFail, zap.Error(err))
-		messages.PrintFail(errMsgs.CreateKnowledgeBaseProjectFail)
+		c.lg.Zap.Error(errMsgs.CreateKnowledgeBaseFail, zap.Error(err))
+		messages.PrintFail(errMsgs.CreateKnowledgeBaseFail)
 		return err
 	}
-	messages.PrintCreatedKnowledgeBase(uuid)
+	messages.PrintKnowledgeBaseCreated(uuid)
 	return nil
 }

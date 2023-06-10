@@ -65,7 +65,7 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 		e.grUUID = uuid
 	}
 
-	messages.PrintChosenGroup(e.grUUID)
+	messages.PrintGroupChosen(e.grUUID)
 
 	return nil
 }

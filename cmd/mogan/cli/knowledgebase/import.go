@@ -76,6 +76,6 @@ func (im *Import) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	messages.PrintCreatedKnowledgeBase(uuid)
+	messages.PrintKnowledgeBaseCreated(uuid)
 	return nil
 }

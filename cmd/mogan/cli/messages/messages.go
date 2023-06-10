@@ -11,28 +11,28 @@ const (
 	MsgPatternKaomoji = "\n---\n%v %v\n"
 )
 
-func PrintChosenKnowledgeBase(uuid string) {
+func PrintKnowledgeBaseChosen(uuid string) {
 	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("you have chosen the knowledge base with UUID '%s'", uuid))
 }
 
-func PrintEnteredShortNameKnowledgeBase(shortName string) {
+func PrintShortNameKnowledgeBaseEntered(shortName string) {
 	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("you have entered the short name of the knowledge base: '%s'", shortName))
 }
 
-func PrintEnteredIDKnowledgeBase(id string) {
-	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("you have entered the ID of the knowledge base:'%s'", id))
+func PrintKnowledgeBaseCreated(uuid string) {
+	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("knowledge base has been created with UUID '%s'", uuid))
 }
 
-func PrintCreatedKnowledgeBase(uuid string) {
-	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("knowledge base project has been created with UUID '%s'", uuid))
+func PrintGroupCreated(uuid string) {
+	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("group has been created with UUID '%s'", uuid))
 }
 
-func PrintReceivedNewObjectInfo() {
+func PrintNewObjectInfoReceived() {
 	fmt.Printf(MsgPatternKaomoji, OkKaomoji, "you have entered new information about the object")
 }
 
 func PrintKnowledgeBaseRemoved(uuid string) {
-	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("knowledge base project with UUID '%s' successfully deleted", uuid))
+	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("knowledge base with UUID '%s' successfully deleted", uuid))
 }
 
 func PrintNoDataToShow() {
@@ -47,7 +47,7 @@ func PrintFail(msg string) {
 	fmt.Printf(MsgPatternKaomoji, FailKaomoji, msg)
 }
 
-func PrintChosenGroup(uuid string) {
+func PrintGroupChosen(uuid string) {
 	fmt.Printf(MsgPatternKaomoji, OkKaomoji, fmt.Sprintf("you have chosen the group with UUID '%s'", uuid))
 }
 
@@ -62,6 +62,7 @@ func PrintChooseGroup() {
 func PrintChooseKnowledgeBase() {
 	fmt.Printf(MsgPattern, "Choose knowledge base")
 }
+
 func PrintEditDescription() {
 	fmt.Printf(MsgPattern, "Edit the description of the object")
 }
@@ -72,4 +73,8 @@ func PrintEditIDShortName() {
 
 func PrintConfirmRemoveKnowledgeBase() {
 	fmt.Printf(MsgPattern, "Confirm the removing of the local knowledge base project. This action cannot be undone.")
+}
+
+func PrintAllKnowledgeBases() {
+	fmt.Printf(MsgPattern, "All knowledge bases")
 }

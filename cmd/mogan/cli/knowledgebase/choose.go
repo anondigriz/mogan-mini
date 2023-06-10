@@ -81,7 +81,7 @@ func chooseKnowledgeBase(lg *zap.Logger, kbsu *kbsUC.KnowledgeBases) (string, er
 }
 
 func (c Choose) commitChoice() error {
-	messages.PrintChosenKnowledgeBase(c.kbUUID)
+	messages.PrintKnowledgeBaseChosen(c.kbUUID)
 	c.vp.Set(kbUUIDConfigPath, c.kbUUID)
 	if err := c.vp.WriteConfig(); err != nil {
 		c.lg.Zap.Error(errMsgs.UpdateConfig, zap.Error(err))

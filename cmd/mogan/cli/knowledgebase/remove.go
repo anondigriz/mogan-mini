@@ -70,7 +70,7 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 		}
 		r.kbUUID = uuid
 	}
-	messages.PrintChosenKnowledgeBase(r.kbUUID)
+	messages.PrintKnowledgeBaseChosen(r.kbUUID)
 
 	check, err := r.askTUIConfirm()
 	if err != nil {

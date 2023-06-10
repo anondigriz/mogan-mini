@@ -1,20 +1,17 @@
 package knowledgebase
 
 import (
-	"fmt"
-
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	chooseCLI "github.com/anondigriz/mogan-mini/cmd/mogan/cli/baseinfo/choose"
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	"github.com/anondigriz/mogan-mini/internal/config"
 	"github.com/anondigriz/mogan-mini/internal/logger"
 	kbsSt "github.com/anondigriz/mogan-mini/internal/storage/knowledgebases"
-	listShowTUI "github.com/anondigriz/mogan-mini/internal/tui/listshow"
 	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
@@ -49,21 +46,7 @@ func (a *All) initConfig() {
 }
 
 func (a *All) runE(cmd *cobra.Command, args []string) error {
-	kbsu := kbsUC.New(a.lg.Zap,
-		kbsSt.New(a.lg.Zap, a.cfg.WorkspaceDir))
-	knowledgeBases := kbsu.GetAllKnowledgeBases()
-	if len(knowledgeBases) == 0 {
-		messages.PrintNoDataToShow()
-		return nil
-	}
-
-	kbsEntities := make([]kbEnt.KnowledgeBase, 0, len(knowledgeBases))
-	for _, v := range knowledgeBases {
-		kbsEntities = append(kbsEntities, v)
-	}
-
-	err := a.showTUIKnowledgeBases(kbsEntities)
-	if err != nil {
+	if err := a.showTUIKnowledgeBases(); err != nil {
 		a.lg.Zap.Error(errMsgs.ShowTUIKnowledgeBasesFail, zap.Error(err))
 		messages.PrintFail(errMsgs.ShowTUIKnowledgeBasesFail)
 		return err
@@ -71,16 +54,18 @@ func (a *All) runE(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func (a All) showTUIKnowledgeBases(kbs []kbEnt.KnowledgeBase) error {
-	list := make([]string, 0, len(kbs))
-	for _, v := range kbs {
-		list = append(list, fmt.Sprintf("Id: %s; Short name: %s; UUID: %s", v.ID, v.ShortName, v.UUID))
+func (a All) showTUIKnowledgeBases() error {
+	messages.PrintAllKnowledgeBases()
+	kbsu := kbsUC.New(a.lg.Zap,
+		kbsSt.New(a.lg.Zap, a.cfg.WorkspaceDir))
+	kbs := kbsu.GetAllKnowledgeBases()
+	info := make([]kbEnt.BaseInfo, 0, len(kbs))
+	for _, kb := range kbs {
+		info = append(info, kb.BaseInfo)
 	}
-	mt := listShowTUI.New(list)
 
-	if _, err := tea.NewProgram(mt).Run(); err != nil {
-		a.lg.Zap.Error(errMsgs.RunTUIProgramFail, zap.Error(err))
-		return err
-	}
+	ch := chooseCLI.New(a.lg.Zap)
+	ch.ChooseTUI(info)
+
 	return nil
 }
