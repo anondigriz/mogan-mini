@@ -30,8 +30,8 @@ func NewCreate(lg *logger.Logger, cfg *config.Config) *Create {
 
 	c.Cmd = &cobra.Command{
 		Use:   "new",
-		Short: "Create a local knowledge base",
-		Long:  `Create a local knowledge base in the base project directory`,
+		Short: "Create a knowledge base",
+		Long:  `Create a knowledge base in the working directory`,
 		RunE:  c.runE,
 	}
 	return c

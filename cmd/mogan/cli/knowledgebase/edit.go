@@ -29,8 +29,8 @@ func NewEdit(lg *logger.Logger, cfg *config.Config) *Edit {
 
 	e.Cmd = &cobra.Command{
 		Use:   "edit",
-		Short: "Editing the database",
-		Long:  `Editing basic information about the knowledge base`,
+		Short: "Editing the knowledge base",
+		Long:  `Editing information about the knowledge base`,
 		RunE:  e.runE,
 	}
 	return e

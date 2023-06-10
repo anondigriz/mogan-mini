@@ -29,7 +29,7 @@ func NewRoot(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Root {
 	root.Cmd = &cobra.Command{
 		Use:   "kb",
 		Short: "Knowledge base management",
-		Long:  `Local knowledge bases projects management`,
+		Long:  `Knowledge base management in the working directory`,
 		Run:   root.run,
 	}
 	return root

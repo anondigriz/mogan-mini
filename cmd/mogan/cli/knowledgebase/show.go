@@ -45,7 +45,7 @@ func NewShow(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Show {
 }
 
 func (s *Show) Init() {
-	s.Cmd.PersistentFlags().StringVar(&s.kbUUID, "uuid", "", "knowledge base project UUID")
+	s.Cmd.PersistentFlags().StringVar(&s.kbUUID, "uuid", "", "UUID of the knowledge base")
 	cobra.OnInitialize(s.initConfig)
 }
 

@@ -43,15 +43,15 @@ func NewRemove(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Remove {
 
 	remove.Cmd = &cobra.Command{
 		Use:   "rm",
-		Short: "Remove the local knowledge base",
-		Long:  `Remove the local knowledge base from the project base directory`,
+		Short: "Remove the knowledge base",
+		Long:  `Remove the knowledge base from the working directory`,
 		RunE:  remove.runE,
 	}
 	return remove
 }
 
 func (r *Remove) Init() {
-	r.Cmd.PersistentFlags().StringVar(&r.kbUUID, "uuid", "", "knowledge base project UUID")
+	r.Cmd.PersistentFlags().StringVar(&r.kbUUID, "uuid", "", "UUID of the knowledge base")
 	cobra.OnInitialize(r.initConfig)
 }
 

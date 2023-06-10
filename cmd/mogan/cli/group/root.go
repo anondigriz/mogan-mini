@@ -34,9 +34,9 @@ func NewRoot(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Root {
 func (r *Root) Init() {
 	cobra.OnInitialize(r.initConfig)
 
-	all := NewAll(r.lg, r.vp, r.cfg)
-	r.Cmd.AddCommand(all.Cmd)
-	all.Init()
+	show := NewShow(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(show.Cmd)
+	show.Init()
 
 	create := NewCreate(r.lg, r.vp, r.cfg)
 	r.Cmd.AddCommand(create.Cmd)

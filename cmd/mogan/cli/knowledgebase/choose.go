@@ -40,7 +40,7 @@ func NewChoose(lg *logger.Logger, vp *viper.Viper, cfg *config.Config) *Choose {
 }
 
 func (c *Choose) Init() {
-	c.Cmd.PersistentFlags().StringVar(&c.kbUUID, "uuid", "", "knowledge base project UUID")
+	c.Cmd.PersistentFlags().StringVar(&c.kbUUID, "uuid", "", "UUID of the knowledge base")
 	cobra.OnInitialize(c.initConfig)
 }
 

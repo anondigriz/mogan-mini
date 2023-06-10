@@ -82,3 +82,7 @@ func PrintAllKnowledgeBases() {
 func PrintKnowledgeBaseInfo() {
 	fmt.Printf(MsgPattern, "Information about the knowledge base")
 }
+
+func PrintGroupInfo() {
+	fmt.Printf(MsgPattern, "Information about the group")
+}

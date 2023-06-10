@@ -32,7 +32,7 @@ func NewImport(lg *logger.Logger, cfg *config.Config) *Import {
 	im.Cmd = &cobra.Command{
 		Use:   "import",
 		Short: "Import the knowledge base",
-		Long:  `Import the knowledge base to the local workspace`,
+		Long:  `Import the knowledge base to the working directory`,
 		RunE:  im.runE,
 	}
 	return im
