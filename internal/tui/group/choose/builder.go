@@ -29,7 +29,7 @@ func (m *Model) buildTable() {
 			v.UUID,
 			v.ID,
 			groupTypeShortName,
-			v.ModifiedDate.Format(timeFormat)})
+			v.ModifiedDate.Local().Format(timeFormat)})
 	}
 
 	if m.Show.Parameter {
@@ -39,7 +39,7 @@ func (m *Model) buildTable() {
 				v.UUID,
 				v.ID,
 				parameterTypeShortName,
-				v.ModifiedDate.Format(timeFormat)})
+				v.ModifiedDate.Local().Format(timeFormat)})
 		}
 	}
 
@@ -50,7 +50,7 @@ func (m *Model) buildTable() {
 				v.UUID,
 				v.ID,
 				ruleTypeShortName,
-				v.ModifiedDate.Format(timeFormat)})
+				v.ModifiedDate.Local().Format(timeFormat)})
 		}
 	}
 

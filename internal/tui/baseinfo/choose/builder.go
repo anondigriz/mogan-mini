@@ -16,7 +16,7 @@ func (m *Model) buildTable() {
 			v.ShortName,
 			v.UUID,
 			v.ID,
-			v.ModifiedDate.Format(timeFormat)})
+			v.ModifiedDate.Local().Format(timeFormat)})
 	}
 
 	t := table.New(

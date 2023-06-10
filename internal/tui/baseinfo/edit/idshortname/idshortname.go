@@ -146,7 +146,7 @@ func (m Model) View() string {
 		fmt.Fprintf(&b, "%s\n", "Error: ID cannot be empty!")
 	}
 	if m.inputs[1].Value() == "" {
-		fmt.Fprintf(&b, "%s\n", "Short name cannot be empty!")
+		fmt.Fprintf(&b, "%s\n", "Error: short name cannot be empty!")
 	}
 
 	for i := range m.inputs {

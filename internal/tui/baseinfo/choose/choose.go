@@ -67,7 +67,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.IsQuitted = true
 			return m, tea.Quit
 		case key.Matches(msg, m.keys.Choose):
-			m.ChosenUUID = m.table.SelectedRow()[1]
+			m.ChosenUUID = m.table.SelectedRow()[2]
 			m.IsChosen = true
 			return m, tea.Quit
 		}

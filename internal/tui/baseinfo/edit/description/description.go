@@ -22,6 +22,7 @@ type Model struct {
 	Info      kbEnt.BaseInfo
 	IsEdited  bool
 	IsQuitted bool
+	Err       error
 }
 
 func New(info kbEnt.BaseInfo) Model {
@@ -79,7 +80,11 @@ func (m Model) View() string {
 
 	helpView := m.help.View(m.keys)
 	textareaView := m.textarea.View()
-	height := strings.Count(textareaView, "\n") + strings.Count(helpView, "\n")
+
+	height := 2
+	if strings.Count(helpView, "\n") > 0 {
+		height = 1
+	}
 
 	return textareaView + strings.Repeat("\n", height) + helpView
 }

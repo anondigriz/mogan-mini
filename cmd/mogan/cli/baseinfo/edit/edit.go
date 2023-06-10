@@ -8,6 +8,7 @@ import (
 
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
+	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
 	editDesTUI "github.com/anondigriz/mogan-mini/internal/tui/baseinfo/edit/description"
 	editISTUI "github.com/anondigriz/mogan-mini/internal/tui/baseinfo/edit/idshortname"
 )
@@ -24,12 +25,14 @@ func New(lg *zap.Logger) *Edit {
 }
 
 func (e Edit) EditTUI(info kbEnt.BaseInfo) (kbEnt.BaseInfo, error) {
+	messages.PrintEditIDShortName()
 	info, err := e.editIdShortNameTUI(info)
 	if err != nil {
 		e.lg.Error(errMsgs.EditTUIIDShortNameFail, zap.Error(err))
 		return kbEnt.BaseInfo{}, err
 	}
 
+	messages.PrintEditDescription()
 	info, err = e.editDescriptionTUI(info)
 	if err != nil {
 		e.lg.Error(errMsgs.EditTUIDescriptionFail, zap.Error(err))

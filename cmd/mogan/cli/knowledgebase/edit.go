@@ -48,8 +48,8 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	st := kbsSt.New(e.lg.Zap, e.cfg.WorkspaceDir)
-	kbsu := kbsUC.New(e.lg.Zap, st)
+	kbsu := kbsUC.New(e.lg.Zap,
+		kbsSt.New(e.lg.Zap, e.cfg.WorkspaceDir))
 	kb, err := kbsu.GetKnowledgeBase(e.cfg.CurrentKnowledgeBase.UUID)
 	if err != nil {
 		e.lg.Zap.Error(errMsgs.GetKnowledgeBaseFail, zap.Error(err))
@@ -70,7 +70,7 @@ func (e *Edit) runE(cmd *cobra.Command, args []string) error {
 }
 
 func (e Edit) commitChanges(kbsu *kbsUC.KnowledgeBases, updated kbEnt.KnowledgeBase) error {
-	messages.PrintReceivedNewEntityInfo()
+	messages.PrintReceivedNewObjectInfo()
 
 	err := kbsu.UpdateKnowledgeBase(updated)
 	if err != nil {

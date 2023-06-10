@@ -10,6 +10,7 @@ const (
 	InputTUIShortNameFail      = "fail when entering the short name"
 	InputTUIIDFail             = "fail when entering the name ID"
 	EditTUIKnowledgeBaseFail   = "fail to edit the knowledge base information"
+	CreateTUIKnowledgeBaseFail = "fail to get the knowledge base information"
 	EditTUIIDShortNameFail     = "fail to edit the id and short name of the object"
 	EditTUIDescriptionFail     = "fail to edit the description of the object"
 	AskTUIConfirmFail          = "fail to get confirmation"

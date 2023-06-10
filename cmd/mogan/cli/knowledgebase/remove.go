@@ -18,10 +18,12 @@ import (
 	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
-var removeConfirmChoices = []string{"Confirm ✓", "Abort ✕"}
-
 const (
-	removeQuestion string = "Confirm the removing of the local knowledge base project. This action cannot be undone."
+	removeQuestion string = "Are you sure?"
+)
+
+var (
+	removeConfirmChoices = []string{"Confirm ✓", "Abort ✕"}
 )
 
 type Remove struct {
@@ -58,8 +60,8 @@ func (r *Remove) initConfig() {
 
 func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 	if r.kbUUID == "" {
-		st := kbsSt.New(r.lg.Zap, r.cfg.WorkspaceDir)
-		kbsu := kbsUC.New(r.lg.Zap, st)
+		kbsu := kbsUC.New(r.lg.Zap,
+			kbsSt.New(r.lg.Zap, r.cfg.WorkspaceDir))
 		uuid, err := chooseKnowledgeBase(r.lg.Zap, kbsu)
 		if err != nil {
 			r.lg.Zap.Error(errMsgs.ChooseKnowledgeBaseFail, zap.Error(err))
@@ -95,6 +97,7 @@ func (r *Remove) runE(cmd *cobra.Command, args []string) error {
 }
 
 func (r Remove) askTUIConfirm() (bool, error) {
+	messages.PrintConfirmRemoveKnowledgeBase()
 	mt := choicesTUI.New(removeQuestion, removeConfirmChoices)
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
