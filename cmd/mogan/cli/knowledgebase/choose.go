@@ -59,7 +59,6 @@ func (c *Choose) runE(cmd *cobra.Command, args []string) error {
 		}
 		c.kbUUID = uuid
 	}
-
 	return c.commitChoice()
 }
 

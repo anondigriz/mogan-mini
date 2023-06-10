@@ -78,3 +78,7 @@ func PrintConfirmRemoveKnowledgeBase() {
 func PrintAllKnowledgeBases() {
 	fmt.Printf(MsgPattern, "All knowledge bases")
 }
+
+func PrintKnowledgeBaseInfo() {
+	fmt.Printf(MsgPattern, "Information about the knowledge base")
+}

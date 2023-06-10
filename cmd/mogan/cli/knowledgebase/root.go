@@ -42,9 +42,9 @@ func (r *Root) Init() {
 	r.Cmd.AddCommand(create.Cmd)
 	create.Init()
 
-	all := NewAll(r.lg, r.vp, r.cfg)
-	r.Cmd.AddCommand(all.Cmd)
-	all.Init()
+	show := NewShow(r.lg, r.vp, r.cfg)
+	r.Cmd.AddCommand(show.Cmd)
+	show.Init()
 
 	choose := NewChoose(r.lg, r.vp, r.cfg)
 	r.Cmd.AddCommand(choose.Cmd)
