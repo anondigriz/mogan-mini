@@ -1,4 +1,4 @@
-package choose
+package navigator
 
 import (
 	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"

@@ -3,48 +3,36 @@ package choose
 import (
 	"strings"
 
-	kbEnt "github.com/anondigriz/mogan-core/pkg/entities/containers/knowledgebase"
-
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
-var (
-	timeFormat  = "02.01.2006 15:04:05"
-	tableHeight = 7
-	baseStyle   = lipgloss.NewStyle().
-			BorderStyle(lipgloss.NormalBorder()).
-			BorderForeground(lipgloss.Color("240"))
-	columns = []table.Column{
-		{Title: "#", Width: 4},
-		{Title: "Short name", Width: 15},
-		{Title: "UUID", Width: 10},
-		{Title: "ID", Width: 10},
-		{Title: "Modified", Width: 20},
-	}
-)
-
-type Model struct {
-	keys       keyMap
-	table      table.Model
-	help       help.Model
-	info       []kbEnt.BaseInfo
-	IsQuitted  bool
-	IsChosen   bool
-	ChosenUUID string
+type Navigator interface {
+	Build() table.Model
+	Render(t table.Model) string
+	Open(r table.Row) bool
+	Back() bool
+	Choose(r table.Row) bool
 }
 
-func New(info []kbEnt.BaseInfo) Model {
+type Model struct {
+	keys      keyMap
+	table     table.Model
+	help      help.Model
+	Nav       Navigator
+	IsQuitted bool
+	IsChosen  bool
+}
+
+func New(nav Navigator) Model {
 	m := Model{
 		keys: keys,
 		help: help.New(),
-		info: info,
+		Nav:  nav,
 	}
-	m.buildTable()
-
+	m.table = m.Nav.Build()
 	return m
 }
 
@@ -63,13 +51,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch {
 		case key.Matches(msg, m.keys.Help):
 			m.help.ShowAll = !m.help.ShowAll
+		case key.Matches(msg, m.keys.Back):
+			if m.Nav.Back() {
+				m.table = m.Nav.Build()
+			}
 		case key.Matches(msg, m.keys.Quit):
 			m.IsQuitted = true
 			return m, tea.Quit
 		case key.Matches(msg, m.keys.Choose):
-			m.ChosenUUID = m.table.SelectedRow()[2]
-			m.IsChosen = true
-			return m, tea.Quit
+			if m.Nav.Choose(m.table.SelectedRow()) {
+				m.IsChosen = true
+				return m, tea.Quit
+			}
+		case key.Matches(msg, m.keys.Open):
+			if m.Nav.Open(m.table.SelectedRow()) {
+				m.table = m.Nav.Build()
+			}
 		}
 	}
 	m.table, cmd = m.table.Update(msg)
@@ -82,8 +79,11 @@ func (m Model) View() string {
 	}
 
 	helpView := m.help.View(m.keys)
-	tableView := baseStyle.Render(m.table.View())
-	height := tableHeight + 5 - strings.Count(tableView, "\n") - strings.Count(helpView, "\n")
+	tableView := m.Nav.Render(m.table)
 
+	height := 2
+	if strings.Count(helpView, "\n") > 0 {
+		height = 1
+	}
 	return tableView + strings.Repeat("\n", height) + helpView
 }

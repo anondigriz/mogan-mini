@@ -7,7 +7,7 @@ import (
 
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
 	"github.com/anondigriz/mogan-mini/cmd/mogan/cli/messages"
-	chooseTUI "github.com/anondigriz/mogan-mini/internal/tui/group/choose"
+	navigatorTUI "github.com/anondigriz/mogan-mini/internal/tui/group/navigator"
 	kbsUC "github.com/anondigriz/mogan-mini/internal/usecase/knowledgebases"
 )
 
@@ -39,8 +39,8 @@ func (c *Choose) Init(kbsu *kbsUC.KnowledgeBases, knowledgeBaseUUID string) erro
 	return nil
 }
 
-func (c *Choose) buildRootGroup(groups map[string]kbEnt.Group) *chooseTUI.Group {
-	root := &chooseTUI.Group{}
+func (c *Choose) buildRootGroup(groups map[string]kbEnt.Group) *navigatorTUI.Group {
+	root := &navigatorTUI.Group{}
 
 	var unusedParameters, unusedRules []string
 	for k := range c.Parameters {
@@ -77,8 +77,8 @@ func remove(slice []string, s string) []string {
 	return append(slice[:index], slice[index+1:]...)
 }
 
-func (c *Choose) buildChildGroup(group kbEnt.Group, parent *chooseTUI.Group) (*chooseTUI.Group, []string, []string) {
-	root := &chooseTUI.Group{
+func (c *Choose) buildChildGroup(group kbEnt.Group, parent *navigatorTUI.Group) (*navigatorTUI.Group, []string, []string) {
+	root := &navigatorTUI.Group{
 		BaseInfo: group.BaseInfo,
 		Parent:   parent,
 	}
@@ -95,10 +95,10 @@ func (c *Choose) buildChildGroup(group kbEnt.Group, parent *chooseTUI.Group) (*c
 	return root, usedParameters, usedRules
 }
 
-func (c *Choose) addParameters(root *chooseTUI.Group, parameters []string, usedParameters []string) []string {
+func (c *Choose) addParameters(root *navigatorTUI.Group, parameters []string, usedParameters []string) []string {
 	for _, v := range parameters {
 		if p, ok := c.Parameters[v]; ok {
-			root.Parameters = append(root.Parameters, &chooseTUI.Parameter{
+			root.Parameters = append(root.Parameters, &navigatorTUI.Parameter{
 				BaseInfo: p.BaseInfo})
 			usedParameters = append(usedParameters, v)
 		}
@@ -106,10 +106,10 @@ func (c *Choose) addParameters(root *chooseTUI.Group, parameters []string, usedP
 	return usedParameters
 }
 
-func (c *Choose) addRules(root *chooseTUI.Group, rules []string, usedRules []string) []string {
+func (c *Choose) addRules(root *navigatorTUI.Group, rules []string, usedRules []string) []string {
 	for _, v := range rules {
 		if p, ok := c.Rules[v]; ok {
-			root.Rules = append(root.Rules, &chooseTUI.Rule{
+			root.Rules = append(root.Rules, &navigatorTUI.Rule{
 				BaseInfo: p.BaseInfo})
 			usedRules = append(usedRules, v)
 		}

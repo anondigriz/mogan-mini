@@ -1,4 +1,4 @@
-package choose
+package navigator
 
 type TypeObject int
 

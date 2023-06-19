@@ -8,7 +8,8 @@ import (
 	"go.uber.org/zap"
 
 	errMsgs "github.com/anondigriz/mogan-mini/cmd/mogan/cli/errors/messages"
-	chooseTUI "github.com/anondigriz/mogan-mini/internal/tui/baseinfo/choose"
+	navigatorTUI "github.com/anondigriz/mogan-mini/internal/tui/baseinfo/navigator"
+	chooseTUI "github.com/anondigriz/mogan-mini/internal/tui/table/choose"
 )
 
 type Choose struct {
@@ -23,7 +24,7 @@ func New(lg *zap.Logger) *Choose {
 }
 
 func (c Choose) ChooseTUI(info []kbEnt.BaseInfo) (string, error) {
-	mt := chooseTUI.New(info)
+	mt := chooseTUI.New(navigatorTUI.New(info))
 	p := tea.NewProgram(mt)
 	m, err := p.Run()
 	if err != nil {
@@ -43,5 +44,12 @@ func (c Choose) ChooseTUI(info []kbEnt.BaseInfo) (string, error) {
 		return "", err
 	}
 
-	return result.ChosenUUID, nil
+	nav, ok := result.Nav.(*navigatorTUI.Navigator)
+	if !ok {
+		err := fmt.Errorf(errMsgs.ReceivedResponseWasNotExpected)
+		c.lg.Error(err.Error())
+		return "", err
+	}
+
+	return nav.ChosenUUID, nil
 }
